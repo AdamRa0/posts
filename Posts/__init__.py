@@ -1,4 +1,7 @@
 import os
+from .users import user_routes
+from .database import db
+
 from flask import Flask
 
 def create_app():
@@ -9,12 +12,10 @@ def create_app():
     except OSError:
         pass
 
-    @app.route('/')
-    def test_path():
-        return 'Hello from flask'
-    
-    @app.route('/response')
-    def test_response_path():
-        return 'Some response'
+    app.config.from_pyfile('config.py', silent=True)
+
+    db.init_db_tables(app)
+
+    app.register_blueprint(user_routes)
 
     return app
