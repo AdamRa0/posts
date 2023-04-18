@@ -7,6 +7,6 @@ Twitter Clone
 - Flask
 - Flask-Pydantic
 - PostgreSQL
-- Pyscopg2
+- Flask-SQLAlchemy
 - Pydantic
 - PyTest

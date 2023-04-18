@@ -4,6 +4,8 @@ email-validator==2.0.0.post1
 exceptiongroup==1.1.1
 Flask==2.2.3
 Flask-Pydantic==0.11.0
+Flask-SQLAlchemy==3.0.3
+greenlet==2.0.2
 idna==3.4
 iniconfig==2.0.0
 itsdangerous==2.1.2
@@ -11,9 +13,9 @@ Jinja2==3.1.2
 MarkupSafe==2.1.2
 packaging==23.0
 pluggy==1.0.0
-psycopg2-binary==2.9.6
 pydantic==1.10.7
 pytest==7.3.0
+SQLAlchemy==2.0.9
 tomli==2.0.1
 typing_extensions==4.5.0
 Werkzeug==2.2.3
