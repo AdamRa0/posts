@@ -68,3 +68,6 @@ def init_db_tables(app: Flask):
     """
     app.teardown_appcontext(_close_db)
     app.cli.add_command(create_tables_command)
+
+def get_db():
+    return _init_db()

@@ -1,5 +1,5 @@
 import os
-from .users import user_routes
+from .users.routes.user_routes import user_routes
 from .database import db
 
 from flask import Flask
