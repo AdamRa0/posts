@@ -10,3 +10,4 @@ Twitter Clone
 - Flask-SQLAlchemy
 - Pydantic
 - PyTest
+- Psycopg2

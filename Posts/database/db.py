@@ -1,32 +1,30 @@
-from flask import current_app
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 
-DB_NAME: str = current_app.config['DB_NAME']
-DB_USER: str = current_app.config['DB_USER']
-DB_PASSWORD: str = current_app.config['DB_PASSWORD']
+db = SQLAlchemy()
 
-URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@localhost:5432/{DB_NAME}"
+URI = f"postgresql://postgres:secret@localhost:5432/posts"
 
-engine = create_engine(URL)
 
-db_session = scoped_session(sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-))
-
-Base = declarative_base()
-Base.query = db_session.query_property()
-
-def init_db():
+def init_app(app: Flask):
     """
-    Create and return database connection
+    Initialize Flask-SQLAlchemy for use by application
+    """
+    app.config['SQLALCHEMY_DATABASE_URI'] = URI
+    db.init_app(app)
+
+
+def create_tables():
+    """
+    Create database tables
     """
     from ..users.models.data_models.user_model import UserModel
-    Base.metadata.create_all(bind=engine)
+    db.create_all()
 
-def shutdown_session(exception=None):
-    db_session.remove()
+
+def get_db():
+    """
+    Returns db session for use in inserting to, querying and modifying data in database.
+    """
+    return db

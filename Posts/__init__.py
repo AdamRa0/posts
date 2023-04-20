@@ -1,8 +1,9 @@
 import os
 from .users.routes.user_routes import user_routes
-from .database.db import init_db ,shutdown_session
+from .database.db import create_tables, init_app
 
 from flask import Flask
+
 
 def create_app():
     """
@@ -18,11 +19,10 @@ def create_app():
 
     app.config.from_pyfile('config.py', silent=True)
 
-    # Create table if not exists before first request to app
-    app.before_first_request(init_db)
+    init_app(app)
 
-    # Close database session after request or after application shuts down
-    app.teardown_appcontext(shutdown_session)
+    # Create table if not exists before first request to app
+    app.before_first_request(create_tables)
 
     app.register_blueprint(user_routes)
 
