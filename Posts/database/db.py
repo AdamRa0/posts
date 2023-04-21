@@ -20,6 +20,7 @@ def create_tables():
     Create database tables
     """
     from ..users.models.data_models.user_model import UserModel
+    from ..posts_.models.data_models.post_model import PostModel
     db.create_all()
 
 
