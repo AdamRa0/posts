@@ -1,10 +1,11 @@
 from ..controllers.account_creation_and_use.create_user import create_new_user
 from ..controllers.account_creation_and_use.get_user import get_user_by_handle, get_user_by_id
 from ..controllers.account_management.delete_user import del_user
+from ..controllers.account_management.profile_customization import change_username, change_handle, change_email_address
 from ..models.request_models.user_signin import UserIn
 from ..models.response_models.user_signin_response import UserOut
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_pydantic import validate
 
 
@@ -73,7 +74,6 @@ def get_user_profile_by_id(user_id: str):
 
 
 @user_routes.route('/<user_id>', methods=['DELETE'])
-@validate()
 def delete_user(user_id: str):
     user = get_user_by_id(user_id)
 
@@ -95,3 +95,25 @@ def delete_user(user_id: str):
     #     }), 400
     
     return jsonify({}), 204
+
+
+@user_routes.route('/profile/<user_id>', methods=['PATCH'])
+@validate()
+def update_user_details(user_id: str):
+    user = get_user_by_id(user_id)
+    
+    username = request.json.get('username')
+    email_address = request.json.get('email_address')
+    handle = request.json.get('handle')
+
+    if username is not None: change_username(user, username)
+    if email_address is not None: change_email_address(user, email_address)
+    if handle is not None: change_handle(user, handle)
+
+    updated_user = get_user_by_id(user_id)
+
+    return UserOut(
+        username=updated_user.username,
+        email_address=updated_user.email_address,
+        handle=updated_user.handle
+    ), 200
