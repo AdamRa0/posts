@@ -29,3 +29,10 @@ def get_user_by_id(user_id: str):
     user = db.session.execute(db.select(UserModel).filter_by(id=user_id)).scalar_one()
 
     return user
+
+def get_all_registered_users():
+    """
+    Returns all registered users
+    """
+
+    return db.session.execute(db.select(UserModel)).scalars()
