@@ -8,6 +8,8 @@ Twitter Clone
 - Flask-Pydantic
 - PostgreSQL
 - Flask-SQLAlchemy
+- Flask-Marshmallow
+- Flask-Migrate
 - Pydantic
 - PyTest
 - Psycopg2

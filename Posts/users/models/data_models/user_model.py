@@ -10,6 +10,7 @@ db = get_db()
 class UserModel(db.Model):
     __tablename__ = 'users'
     id = Column(UUID, primary_key=True, default=uuid4())
+    author = db.relationship('PostModel', backref='author')
     username = Column(String, nullable=False)
     email_address = Column(String, unique=True, nullable=False)
     handle = Column(String, unique=True, nullable=False)

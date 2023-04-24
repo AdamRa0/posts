@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -16,6 +17,7 @@ def init_app(app: Flask):
     """
     app.config['SQLALCHEMY_DATABASE_URI'] = URI
     db.init_app(app)
+    Migrate(app, db)
     ma.init_app(app)
 
 def create_tables():
