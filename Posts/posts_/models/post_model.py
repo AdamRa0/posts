@@ -19,3 +19,4 @@ class PostModel(db.Model):
     reposts = Column(Integer, default=0)
     comments = Column(Integer, default=0)
     time_created = Column(DateTime(timezone=True), default=func.now())
+    time_edited = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())

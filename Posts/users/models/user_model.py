@@ -1,4 +1,4 @@
-from .. ..database.db import get_db
+from ...database.db import get_db
 
 from uuid import uuid4
 

@@ -1,5 +1,5 @@
 from .. ..database.db import get_db
-from .. .models.data_models.user_model import UserModel
+from ...models.user_model import UserModel
 
 db = get_db()
 

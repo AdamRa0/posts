@@ -2,8 +2,8 @@ from ..controllers.account_creation_and_use.create_user import create_new_user
 from ..controllers.account_creation_and_use.get_user import get_user_by_handle, get_user_by_id, get_all_registered_users
 from ..controllers.account_management.delete_user import del_user
 from ..controllers.account_management.profile_customization import change_username, change_handle, change_email_address
-from ..models.request_models.user_signin import UserIn
-from ..models.response_models.user_schema import UserSchema
+from ..models.user_signin import UserIn
+from ..models.user_schema import UserSchema
 
 from flask import Blueprint, jsonify, request
 from flask_pydantic import validate

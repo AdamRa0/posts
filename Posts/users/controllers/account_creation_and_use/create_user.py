@@ -1,6 +1,6 @@
 from .. ..database.db import get_db
-from .. .models.data_models.user_model import UserModel
-from .. .models.request_models.user_signin import UserIn
+from ...models.user_model import UserModel
+from ...models.user_signin import UserIn
 from .. .controllers.account_creation_and_use.get_user import get_user_by_handle
 
 def create_new_user(req_body: UserIn):

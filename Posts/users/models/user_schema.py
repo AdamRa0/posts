@@ -1,5 +1,5 @@
-from ....database.db import get_marshmallow_obj
-from .. ..posts_.models.post_schema import PostSchema
+from ...database.db import get_marshmallow_obj
+from ...posts_.models.post_schema import PostSchema
 
 from marshmallow import fields
 
