@@ -16,8 +16,6 @@ class UserModel(db.Model):
     handle = Column(String, unique=True, nullable=False)
     password = Column(String)
     bio = Column(String, default='New to posts')
-    followers = Column(Integer, default=0)
-    following = Column(Integer, default=0)
     is_active = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
     date_created = Column(DateTime(timezone=True), default=func.now())
