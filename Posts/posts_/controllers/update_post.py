@@ -1,6 +1,5 @@
 from ..controllers.get_post import get_post
 from .. .database.db import get_db
-from ..models.post_model import PostModel
 from ..models.post_update_model import PostUpdateModel
 
 

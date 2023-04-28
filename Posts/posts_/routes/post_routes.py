@@ -2,6 +2,7 @@ from ..controllers.create_post import create_post
 from ..controllers.delete_post import delete_post
 from ..controllers.get_post import get_post, get_post_by_author_id
 from ..controllers.get_posts import get_posts, get_posts_by_user
+from ..controllers.like_dislike_post import like_post, dislike_post
 from ..controllers.update_post import update_post
 
 from ..models.post_schema import PostSchema
@@ -54,6 +55,24 @@ def patch_post(body: PostUpdateModel):
     updated_post = update_post(body)
 
     return post_schema.dump(updated_post), 200
+
+
+@post_routes.route('/<post_id>/approve', methods=['PATCH'])
+def approve_post(post_id: str):
+    like_post(post_id)
+
+    return jsonify({
+        'status': 'success'
+    }), 200
+
+
+@post_routes.route('/<post_id>/disapprove', methods=['PATCH'])
+def disapprove_post(post_id: str):
+    dislike_post(post_id)
+
+    return jsonify({
+        'status': 'success'
+    }), 200
 
 
 @post_routes.route('/<post_id>', methods=['DELETE'])
