@@ -1,18 +1,27 @@
 from ...database.db import get_db
+from .. .follow.models.follow_model import subscribers
 
 from uuid import uuid4
 
 from sqlalchemy.sql import func
-from sqlalchemy import Column, UUID, String, Integer, Boolean, DateTime
+from sqlalchemy import Column, UUID, String, Boolean, DateTime
 
 db = get_db()
 
 class UserModel(db.Model):
     __tablename__ = 'users'
     id = Column(UUID, primary_key=True, default=uuid4())
-    author = db.relationship('PostModel', backref='author')
+    posts = db.relationship('PostModel', backref='author')
     username = Column(String, nullable=False)
     email_address = Column(String, unique=True, nullable=False)
+    network = db.relationship(
+        'UserModel',
+        secondary=subscribers,
+        primaryjoin=(subscribers.c.subscribee_id == id),
+        secondaryjoin=(subscribers.c.subscriber_id == id),
+        backref=db.backref('subscribers', lazy='dynamic'),
+        lazy='dynamic'
+    )
     handle = Column(String, unique=True, nullable=False)
     password = Column(String)
     bio = Column(String, default='New to posts')

@@ -1,5 +1,7 @@
 from ..controllers.account_creation_and_use.create_user import create_new_user
 from ..controllers.account_creation_and_use.get_user import get_user_by_handle, get_user_by_id, get_all_registered_users
+from .. .follow.controllers.sub_unsub import sub, unsub
+from .. .follow.controllers.get_sub_subees import get_subscribers, get_subscribees
 from ..controllers.account_management.delete_user import del_user
 from ..controllers.account_management.profile_customization import change_username, change_handle, change_email_address
 from ..models.user_signin import UserIn
@@ -94,3 +96,33 @@ def update_user_details(user_id: str):
     updated_user = get_user_by_id(user_id)
 
     return user_schema.dump(updated_user), 200
+
+
+@user_routes.route('/<user_id>/subscribe', methods=['PATCH'])
+def subscribe_to_user(user_id: str):
+    subscriber: str = request.json.get('subscriber_id')
+    sub(user_id, subscriber)
+
+    return jsonify({'status': 'success'}), 200
+
+
+@user_routes.route('/<user_id>/unsubscribe', methods=['PATCH'])
+def unsubscribe_to_user(user_id: str):
+    subscriber: str = request.json.get('unsubscriber_id')
+    unsub(user_id, subscriber)
+
+    return jsonify({'status': 'success'}), 200
+
+
+@user_routes.route('/<user_id>/subscribers')
+def subscribers_to_user(user_id: str):
+    subscribers = get_subscribers(user_id)
+
+    return users_schemas.dump(subscribers), 200
+
+
+@user_routes.route('/<user_id>/subscribees')
+def users_subscribed_by_user(user_id: str):
+    subscribees = get_subscribees(user_id)
+
+    return user_schema.dump(subscribees), 200

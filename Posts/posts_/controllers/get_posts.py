@@ -1,7 +1,6 @@
 from .. .database.db import get_db
 from ..models.post_model import PostModel
 
-
 db = get_db()
 
 
