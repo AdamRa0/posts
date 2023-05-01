@@ -1,19 +1,23 @@
 from .. ..database.db import get_db
 from ...models.user_model import UserModel
-from ...models.user_signin import UserIn
+from ....auth.models.user_signup import UserSignUp
 from .. .controllers.account_creation_and_use.get_user import get_user_by_handle
 
-def create_new_user(req_body: UserIn):
+from werkzeug.security import generate_password_hash
+
+def create_new_user(req_body: UserSignUp):
     """
     Insert new user data to database and return newly created data
     """
     db = get_db()
 
+    hashed_password = generate_password_hash(req_body.password)
+
     new_user: UserModel = UserModel(
         req_body.username,
         req_body.email_address,
         req_body.handle,
-        req_body.password
+        hashed_password
     )
 
     db.session.add(new_user)

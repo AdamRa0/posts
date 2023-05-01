@@ -17,6 +17,19 @@ def get_user_by_handle(user_handle: str):
     return user
 
 
+def get_user_by_email(user_email: str):
+    """
+    Get user by their email.
+
+    Arguments
+    ---------
+    user_email: Account holder email
+    """
+    user = db.session.execute(db.select(UserModel).filter_by(email_address=user_email)).scalar_one()
+
+    return user
+
+
 def get_user_by_id(user_id: str):
     """
     Get user by id

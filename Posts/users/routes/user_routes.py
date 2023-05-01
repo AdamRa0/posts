@@ -6,7 +6,7 @@ from .. .posts_.controllers.get_posts import get_reposts_by_user
 from .. .posts_.models.post_schema import PostSchema
 from ..controllers.account_management.delete_user import del_user
 from ..controllers.account_management.profile_customization import change_username, change_handle, change_email_address
-from ..models.user_signin import UserIn
+from ...auth.models.user_signup import UserSignUp
 from ..models.user_schema import UserSchema
 
 from flask import Blueprint, jsonify, request
@@ -18,22 +18,6 @@ user_schema = UserSchema()
 users_schemas = UserSchema(many=True)
 
 post_schemas = PostSchema(many=True)
-
-
-@user_routes.route('/create_user', methods=['POST'])
-@validate()
-def create_user(body: UserIn):
-    user = create_new_user(body)
-
-    if user is None:
-        return jsonify({
-            'message': 'Failed to create new user. Try again',
-            'status': 'fail'
-        }), 400
-    
-    newly_created_user = get_user_by_handle(user.handle)
-
-    return user_schema.dump(newly_created_user), 201
 
 
 @user_routes.route('/<user_handle>')

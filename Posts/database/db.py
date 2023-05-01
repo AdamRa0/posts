@@ -2,9 +2,11 @@ from flask import Flask
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
 db = SQLAlchemy()
 ma = Marshmallow()
+jwt = JWTManager()
 
 URI = f"postgresql://postgres:secret@localhost:5432/posts"
 
@@ -19,6 +21,7 @@ def init_app(app: Flask):
     db.init_app(app)
     Migrate(app, db)
     ma.init_app(app)
+    jwt.init_app(app)
 
 def create_tables():
     """

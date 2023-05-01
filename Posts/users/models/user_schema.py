@@ -18,4 +18,4 @@ class UserSchema(ma.Schema):
     reposts = fields.List(fields.Nested(lambda: PostSchema))
 
     class Meta:
-        exclude = ('posts', 'reposts',)
+        exclude = ('posts', 'reposts', 'network',)
