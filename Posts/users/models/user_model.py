@@ -1,5 +1,6 @@
 from ...database.db import get_db
 from .. .follow.models.follow_model import subscribers
+from .. .posts_.models.repost_junction_table import posts_reposts
 
 from uuid import uuid4
 
@@ -21,6 +22,11 @@ class UserModel(db.Model):
         secondaryjoin=(subscribers.c.subscriber_id == id),
         backref=db.backref('subscribers', lazy='dynamic'),
         lazy='dynamic'
+    )
+    reposts = db.relationship(
+        'PostModel',
+        secondary=posts_reposts,
+        backref='user_reposts'
     )
     handle = Column(String, unique=True, nullable=False)
     password = Column(String)

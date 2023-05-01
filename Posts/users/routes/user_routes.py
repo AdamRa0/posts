@@ -2,6 +2,8 @@ from ..controllers.account_creation_and_use.create_user import create_new_user
 from ..controllers.account_creation_and_use.get_user import get_user_by_handle, get_user_by_id, get_all_registered_users
 from .. .follow.controllers.sub_unsub import sub, unsub
 from .. .follow.controllers.get_sub_subees import get_subscribers, get_subscribees
+from .. .posts_.controllers.get_posts import get_reposts_by_user
+from .. .posts_.models.post_schema import PostSchema
 from ..controllers.account_management.delete_user import del_user
 from ..controllers.account_management.profile_customization import change_username, change_handle, change_email_address
 from ..models.user_signin import UserIn
@@ -14,6 +16,8 @@ from flask_pydantic import validate
 user_routes = Blueprint('user_routes', __name__, url_prefix='/api/v1/users')
 user_schema = UserSchema()
 users_schemas = UserSchema(many=True)
+
+post_schemas = PostSchema(many=True)
 
 
 @user_routes.route('/create_user', methods=['POST'])
@@ -126,3 +130,10 @@ def users_subscribed_by_user(user_id: str):
     subscribees = get_subscribees(user_id)
 
     return user_schema.dump(subscribees), 200
+
+
+@user_routes.route('/<user_id>/reposts')
+def get_user_reposts(user_id: str):
+    reposts = get_reposts_by_user(user_id)
+
+    return post_schemas.dump(reposts), 200

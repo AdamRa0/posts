@@ -3,13 +3,14 @@ from ..controllers.delete_post import delete_post
 from ..controllers.get_post import get_post, get_post_by_author_id
 from ..controllers.get_posts import get_posts, get_posts_by_user
 from ..controllers.like_dislike_post import like_post, dislike_post
+from ..controllers.repost_derepost import repost, del_repost
 from ..controllers.update_post import update_post
 
 from ..models.post_schema import PostSchema
 from ..models.post_creation_model import PostCreationModel
 from ..models.post_update_model import PostUpdateModel
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_pydantic import validate
 
 
@@ -80,3 +81,21 @@ def delete_user_post(post_id: str):
     delete_post(post_id)
 
     return jsonify({}), 204
+
+
+@post_routes.route('/<post_id>/repost', methods=['PATCH'])
+def repost_post(post_id: str):
+    user_id = request.json.get('user_id')
+
+    repost(post_id, user_id)
+
+    return jsonify({'status': 'success'}), 200
+
+
+@post_routes.route('/<post_id>/remove-repost', methods=['PATCH'])
+def remove_repost(post_id: str):
+    user_id = request.json.get('user_id')
+
+    del_repost(post_id, user_id)
+
+    return jsonify({'status': 'success'}), 200

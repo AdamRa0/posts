@@ -2,6 +2,8 @@ from .. .database.db import get_db
 from ..models.post_model import PostModel
 
 def get_post(post_id: str):
+    """
+    """
     db = get_db()
 
     post = db.session.execute(db.select(PostModel).filter_by(id=post_id)).scalar_one()

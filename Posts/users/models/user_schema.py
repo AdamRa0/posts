@@ -15,6 +15,7 @@ class UserSchema(ma.Schema):
     network = fields.List(fields.Nested(lambda: UserSchema(exclude=('network', 'posts'))))
     date_created = fields.DateTime()
     posts = fields.Nested(PostSchema, many=True, exclude=('author_id',), dump_only=True)
+    reposts = fields.List(fields.Nested(lambda: PostSchema))
 
     class Meta:
         exclude = ('posts',)
