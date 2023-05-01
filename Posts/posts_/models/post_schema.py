@@ -11,5 +11,7 @@ class PostSchema(ma.Schema):
     disapprovals = fields.Int()
     reposts = fields.Int()
     comments = fields.Int()
+    parent_id = fields.UUID()
+    children = fields.List(fields.Nested(lambda: PostSchema))
     time_created = fields.DateTime()
     time_edited = fields.DateTime()

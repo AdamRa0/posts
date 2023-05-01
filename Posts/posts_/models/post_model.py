@@ -18,5 +18,7 @@ class PostModel(db.Model):
     disapprovals = Column(Integer, default=0)
     reposts = Column(Integer, default=0)
     comments = Column(Integer, default=0)
+    parent_id = Column(UUID, ForeignKey('posts.id'))
+    children = db.relationship('PostModel', cascade='all,delete', backref=db.backref('parent', remote_side=[id]))
     time_created = Column(DateTime(timezone=True), default=func.now())
     time_edited = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
