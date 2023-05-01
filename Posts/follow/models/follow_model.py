@@ -10,6 +10,6 @@ db = get_db()
 
 subscribers = db.Table(
     'subscribers',
-    Column('subscriber_id', UUID, ForeignKey('users.id')),
-    Column('subscribee_id', UUID, ForeignKey('users.id'))
+    Column('subscriber_id', UUID, ForeignKey('users.id'), primary_key=True),
+    Column('subscribee_id', UUID, ForeignKey('users.id'), primary_key=True)
 )
