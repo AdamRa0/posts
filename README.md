@@ -13,3 +13,5 @@ Twitter Clone
 - Pydantic
 - PyTest
 - Psycopg2
+- Flask-JWT-Extended
+- Flask-Redis
