@@ -12,7 +12,7 @@ db = get_db()
 class UserModel(db.Model):
     __tablename__ = 'users'
     id = Column(UUID, primary_key=True, default=uuid4())
-    posts = db.relationship('PostModel', backref='author')
+    posts = db.relationship('PostModel', backref='author', cascade='delete')
     username = Column(String, nullable=False)
     email_address = Column(String, unique=True, nullable=False)
     network = db.relationship(
@@ -21,12 +21,14 @@ class UserModel(db.Model):
         primaryjoin=(subscribers.c.subscribee_id == id),
         secondaryjoin=(subscribers.c.subscriber_id == id),
         backref=db.backref('subscribers', lazy='dynamic'),
-        lazy='dynamic'
+        lazy='dynamic',
+        cascade='all, delete'
     )
     reposts = db.relationship(
         'PostModel',
         secondary=posts_reposts,
-        backref='user_reposts'
+        backref='user_reposts',
+        cascade='all, delete'
     )
     handle = Column(String, unique=True, nullable=False)
     password = Column(String)

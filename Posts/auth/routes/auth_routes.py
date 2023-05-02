@@ -76,10 +76,5 @@ def signin_user(body: UserSignIn):
     return jsonify({
         'access_token': access_token,
         'status': 'success'
-    }), 201
+    }), 200
 
-
-@auth_routes.route('/test/who-am-i')
-@jwt_required()
-def test_protected_route():
-    return user_schema.dump(current_user), 200
