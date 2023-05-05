@@ -1,5 +1,5 @@
-from .. .database.db import get_marshmallow_obj
-from .. .users.models.user_schema import UserSchema
+from ...database.db import get_marshmallow_obj
+from ...users.models.user_schema import UserSchema
 
 from marshmallow import fields
 
@@ -11,10 +11,11 @@ class UserSubscribersSchema(ma.Schema):
     subscribers = fields.Nested(UserSchema, many=True)
 
     class Meta:
-        fields = ('username', 'handle')
+        fields = ("username", "handle")
+
 
 class UserSubscribeesSchema(ma.Schema):
     subscribees = fields.Nested(UserSchema, many=True)
 
     class Meta:
-        fields = ('username', 'handle')
+        fields = ("username", "handle")

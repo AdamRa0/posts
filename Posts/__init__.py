@@ -9,7 +9,12 @@ from .auth.routes.auth_routes import auth_routes
 from .database.db import create_tables, init_app
 
 from flask import Flask
-from flask_jwt_extended import get_jwt, get_jwt_identity, create_access_token, set_access_cookies
+from flask_jwt_extended import (
+    get_jwt,
+    get_jwt_identity,
+    create_access_token,
+    set_access_cookies,
+)
 
 
 def create_app():
@@ -18,13 +23,13 @@ def create_app():
     """
 
     app: Flask = Flask(__name__, instance_relative_config=True)
-    
+
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
 
-    app.config.from_pyfile('config.py', silent=True)
+    app.config.from_pyfile("config.py", silent=True)
 
     init_app(app)
 
@@ -35,7 +40,7 @@ def create_app():
     app.register_blueprint(post_routes)
     app.register_blueprint(auth_routes)
 
-    @app.route('/')
+    @app.route("/")
     def get_all_posts():
         """
         First route a new visitor will see.
@@ -45,14 +50,14 @@ def create_app():
         posts = get_posts()
 
         return posts_schema.dump(posts), 200
-    
+
     @app.after_request
     def refresh_expiring_tokens(response):
         """
         Refreshes any token that is within 15 minutes of expiring
         """
         try:
-            expiring_timestamp = get_jwt()['exp']
+            expiring_timestamp = get_jwt()["exp"]
             now = datetime.now(timezone.utc)
             target_timestatmp = datetime.timestamp(now + timedelta(minutes=15))
 

@@ -1,4 +1,5 @@
-from .. ..database.db import get_db
+from ....database.db import get_db
+
 
 def del_user(user):
     """

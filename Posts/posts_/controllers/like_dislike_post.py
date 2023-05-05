@@ -1,7 +1,7 @@
 from ...database.db import get_db
 from .get_post import get_post
 
-    
+
 db = get_db()
 
 

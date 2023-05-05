@@ -1,17 +1,24 @@
-from .. .database.db import jwt
+from ...database.db import jwt
 from ..models.user_signup import UserSignUp
 from ..models.user_signin import UserSignIn
-from .. .users.models.user_schema import UserSchema
-from .. .users.controllers.account_creation_and_use.create_user import create_new_user
-from .. .users.controllers.account_creation_and_use.get_user import get_user_by_email, get_user_by_id
+from ...users.models.user_schema import UserSchema
+from ...users.controllers.account_creation_and_use.create_user import create_new_user
+from ...users.controllers.account_creation_and_use.get_user import (
+    get_user_by_email,
+    get_user_by_id,
+)
 
 from flask import Blueprint, jsonify, Response
 from flask_pydantic import validate
-from flask_jwt_extended import create_access_token, set_access_cookies, unset_access_cookies
+from flask_jwt_extended import (
+    create_access_token,
+    set_access_cookies,
+    unset_access_cookies,
+)
 from werkzeug.security import check_password_hash
 
 
-auth_routes = Blueprint('auth_routes', __name__, url_prefix='/api/v1/auth')
+auth_routes = Blueprint("auth_routes", __name__, url_prefix="/api/v1/auth")
 
 user_schema = UserSchema()
 
@@ -30,60 +37,60 @@ def user_lookup_callback(_jwt_header, jwt_data):
     """
     Loads user from db whenever a protected route is accessed
     """
-    user_id = jwt_data['sub']
+    user_id = jwt_data["sub"]
     return get_user_by_id(user_id)
 
 
-@auth_routes.route('/signup', methods=['POST'])
+@auth_routes.route("/signup", methods=["POST"])
 @validate()
 def signup_user(body: UserSignUp):
     newly_created_user = create_new_user(body)
 
     if newly_created_user is None:
-        return jsonify({
-            'message': 'Failed to create new user. Try again',
-            'status': 'fail'
-        }), 400
-    
+        return (
+            jsonify(
+                {"message": "Failed to create new user. Try again", "status": "fail"}
+            ),
+            400,
+        )
+
     access_token: str = create_access_token(identity=newly_created_user.id)
 
-    response: Response = jsonify({'status': 'success'})
+    response: Response = jsonify({"status": "success"})
 
     set_access_cookies(response, access_token)
 
     return response, 201
 
 
-@auth_routes.route('/signin', methods=['POST'])
+@auth_routes.route("/signin", methods=["POST"])
 @validate()
 def signin_user(body: UserSignIn):
     user = get_user_by_email(body.email_address)
 
     if user is None:
-        return jsonify({
-            'message': 'No such user exists',
-            'status': 'fail'
-        }), 404
-    
+        return jsonify({"message": "No such user exists", "status": "fail"}), 404
+
     if user and check_password_hash(user.password, body.password) != True:
-        return jsonify({
-            'message': 'Your email or password might be wrong.',
-            'status': 'fail'
-        }), 401
-    
+        return (
+            jsonify(
+                {"message": "Your email or password might be wrong.", "status": "fail"}
+            ),
+            401,
+        )
 
     access_token: str = create_access_token(identity=user.id)
 
-    response: Response = jsonify({'status': 'success'})
+    response: Response = jsonify({"status": "success"})
 
     set_access_cookies(response, access_token)
 
     return response, 200
 
 
-@auth_routes.route('/signout', methods=['POST'])
+@auth_routes.route("/signout", methods=["POST"])
 def signout_user():
-    response: Response = jsonify({'status': 'logged out successfully'})
+    response: Response = jsonify({"status": "logged out successfully"})
 
     unset_access_cookies(response)
 

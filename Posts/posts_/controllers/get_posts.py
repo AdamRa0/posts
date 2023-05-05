@@ -1,6 +1,6 @@
-from .. .database.db import get_db
+from ...database.db import get_db
 from ..models.post_model import PostModel
-from .. .users.controllers.account_creation_and_use.get_user import get_user_by_id
+from ...users.controllers.account_creation_and_use.get_user import get_user_by_id
 
 db = get_db()
 

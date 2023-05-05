@@ -1,6 +1,6 @@
 from ..controllers.get_post import get_post
-from .. .database.db import get_db
-from .. .users.controllers.account_creation_and_use.get_user import get_user_by_id
+from ...database.db import get_db
+from ...users.controllers.account_creation_and_use.get_user import get_user_by_id
 
 
 db = get_db()
@@ -41,4 +41,4 @@ def del_repost(post_id: str, user_id: str):
     post.reposts -= 1
     user.reposts.remove(post)
 
-    db.session.commit() 
+    db.session.commit()

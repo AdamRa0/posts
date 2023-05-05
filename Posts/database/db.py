@@ -18,12 +18,14 @@ def init_app(app: Flask):
     ma.init_app(app)
     jwt.init_app(app)
 
+
 def create_tables():
     """
     Create database tables
     """
     from ..users.models.user_model import UserModel
     from ..posts_.models.post_model import PostModel
+
     db.create_all()
 
 
@@ -32,6 +34,7 @@ def get_db():
     Returns db session for use in inserting to, querying and modifying data in database.
     """
     return db
+
 
 def get_marshmallow_obj():
     """

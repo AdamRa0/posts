@@ -1,4 +1,4 @@
-from .. ..database.db import get_db
+from ....database.db import get_db
 from ...models.user_model import UserModel
 
 db = get_db()
@@ -12,7 +12,9 @@ def get_user_by_handle(user_handle: str):
     ---------
     user_handle: user account handle
     """
-    user = db.session.execute(db.select(UserModel).filter_by(handle=user_handle)).scalar_one()
+    user = db.session.execute(
+        db.select(UserModel).filter_by(handle=user_handle)
+    ).scalar_one()
 
     return user
 
@@ -25,7 +27,9 @@ def get_user_by_email(user_email: str):
     ---------
     user_email: Account holder email
     """
-    user = db.session.execute(db.select(UserModel).filter_by(email_address=user_email)).scalar_one()
+    user = db.session.execute(
+        db.select(UserModel).filter_by(email_address=user_email)
+    ).scalar_one()
 
     return user
 
@@ -42,6 +46,7 @@ def get_user_by_id(user_id: str):
     user = db.session.execute(db.select(UserModel).filter_by(id=user_id)).scalar_one()
 
     return user
+
 
 def get_all_registered_users():
     """

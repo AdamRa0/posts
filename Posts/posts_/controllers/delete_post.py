@@ -1,5 +1,6 @@
-from .. .database.db import get_db
+from ...database.db import get_db
 from ..controllers.get_post import get_post
+
 
 def delete_post(post_id: str):
     db = get_db()

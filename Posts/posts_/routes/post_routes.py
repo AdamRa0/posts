@@ -16,39 +16,37 @@ from flask_pydantic import validate
 from flask_jwt_extended import jwt_required, current_user
 
 
-post_routes = Blueprint('post_routes', __name__, url_prefix='/api/v1/posts')
+post_routes = Blueprint("post_routes", __name__, url_prefix="/api/v1/posts")
 post_schema = PostSchema()
 posts_schema = PostSchema(many=True)
 
-@post_routes.route('/create_post', methods=['POST'])
+
+@post_routes.route("/create_post", methods=["POST"])
 @jwt_required()
 def create_new_post():
-    body = request.json.get('body')
-    create_post(PostCreationModel(
-        body=body,
-        author_id=current_user.id
-    ))
+    body = request.json.get("body")
+    create_post(PostCreationModel(body=body, author_id=current_user.id))
 
     author_posts = get_post_by_author_id(current_user.id)
 
     return posts_schema.dump(author_posts)[0], 201
 
 
-@post_routes.route('/<post_id>')
+@post_routes.route("/<post_id>")
 def get_single_post(post_id: str):
     post = get_post(post_id)
 
     return post_schema.dump(post), 200
 
 
-@post_routes.route('/user_posts/<user_id>')
+@post_routes.route("/user_posts/<user_id>")
 def get_user_posts(user_id: str):
     user_posts = get_posts_by_user(user_id)
-    
+
     return posts_schema.dump(user_posts), 200
 
 
-@post_routes.route('/update_post', methods=['PATCH'])
+@post_routes.route("/update_post", methods=["PATCH"])
 @jwt_required()
 @validate()
 def patch_post(body: PostUpdateModel):
@@ -57,27 +55,23 @@ def patch_post(body: PostUpdateModel):
     return post_schema.dump(updated_post), 200
 
 
-@post_routes.route('/<post_id>/approve', methods=['PATCH'])
+@post_routes.route("/<post_id>/approve", methods=["PATCH"])
 @jwt_required()
 def approve_post(post_id: str):
     like_post(post_id)
 
-    return jsonify({
-        'status': 'success'
-    }), 200
+    return jsonify({"status": "success"}), 200
 
 
-@post_routes.route('/<post_id>/disapprove', methods=['PATCH'])
+@post_routes.route("/<post_id>/disapprove", methods=["PATCH"])
 @jwt_required()
 def disapprove_post(post_id: str):
     dislike_post(post_id)
 
-    return jsonify({
-        'status': 'success'
-    }), 200
+    return jsonify({"status": "success"}), 200
 
 
-@post_routes.route('/<post_id>', methods=['DELETE'])
+@post_routes.route("/<post_id>", methods=["DELETE"])
 @jwt_required()
 def delete_user_post(post_id: str):
     delete_post(post_id)
@@ -85,31 +79,29 @@ def delete_user_post(post_id: str):
     return jsonify({}), 204
 
 
-@post_routes.route('/<post_id>/repost', methods=['PATCH'])
+@post_routes.route("/<post_id>/repost", methods=["PATCH"])
 @jwt_required()
 def repost_post(post_id: str):
     repost(post_id, current_user.id)
 
-    return jsonify({'status': 'success'}), 200
+    return jsonify({"status": "success"}), 200
 
 
-@post_routes.route('/<post_id>/remove-repost', methods=['PATCH'])
+@post_routes.route("/<post_id>/remove-repost", methods=["PATCH"])
 @jwt_required()
 def remove_repost(post_id: str):
     del_repost(post_id, current_user.id)
 
-    return jsonify({'status': 'success'}), 200
+    return jsonify({"status": "success"}), 200
 
 
-@post_routes.route('/<post_id>/create-comment', methods=['POST'])
+@post_routes.route("/<post_id>/create-comment", methods=["POST"])
 @jwt_required()
 def comment_on_post(post_id: str):
-
     comment = PostCreationModel(
-        body=request.json.get('body'),
-        author_id=current_user.id
+        body=request.json.get("body"), author_id=current_user.id
     )
-    
+
     post_comment(post_id, comment)
 
-    return jsonify({'status': 'success'}), 200
+    return jsonify({"status": "success"}), 200

@@ -1,4 +1,4 @@
-from .. .database.db import ma
+from ...database.db import ma
 
 from marshmallow import fields
 

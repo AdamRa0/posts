@@ -1,9 +1,10 @@
-from .. ..database.db import get_db
+from ....database.db import get_db
 from ...models.user_model import UserModel
 from ....auth.models.user_signup import UserSignUp
-from .. .controllers.account_creation_and_use.get_user import get_user_by_handle
+from ...controllers.account_creation_and_use.get_user import get_user_by_handle
 
 from werkzeug.security import generate_password_hash
+
 
 def create_new_user(req_body: UserSignUp):
     """
@@ -14,10 +15,7 @@ def create_new_user(req_body: UserSignUp):
     hashed_password = generate_password_hash(req_body.password)
 
     new_user: UserModel = UserModel(
-        req_body.username,
-        req_body.email_address,
-        req_body.handle,
-        hashed_password
+        req_body.username, req_body.email_address, req_body.handle, hashed_password
     )
 
     db.session.add(new_user)
