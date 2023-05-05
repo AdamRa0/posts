@@ -5,9 +5,9 @@ from .. .users.models.user_schema import UserSchema
 from .. .users.controllers.account_creation_and_use.create_user import create_new_user
 from .. .users.controllers.account_creation_and_use.get_user import get_user_by_email, get_user_by_id
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, Response
 from flask_pydantic import validate
-from flask_jwt_extended import create_access_token, jwt_required, current_user
+from flask_jwt_extended import create_access_token, set_access_cookies, unset_access_cookies
 from werkzeug.security import check_password_hash
 
 
@@ -45,12 +45,13 @@ def signup_user(body: UserSignUp):
             'status': 'fail'
         }), 400
     
-    access_token = create_access_token(identity=newly_created_user.id)
+    access_token: str = create_access_token(identity=newly_created_user.id)
 
-    return jsonify({
-        'access_token': access_token,
-        'status': 'success'
-    }), 201
+    response: Response = jsonify({'status': 'success'})
+
+    set_access_cookies(response, access_token)
+
+    return response, 201
 
 
 @auth_routes.route('/signin', methods=['POST'])
@@ -71,10 +72,19 @@ def signin_user(body: UserSignIn):
         }), 401
     
 
-    access_token = create_access_token(identity=user.id)
+    access_token: str = create_access_token(identity=user.id)
 
-    return jsonify({
-        'access_token': access_token,
-        'status': 'success'
-    }), 200
+    response: Response = jsonify({'status': 'success'})
 
+    set_access_cookies(response, access_token)
+
+    return response, 200
+
+
+@auth_routes.route('/signout', methods=['POST'])
+def signout_user():
+    response: Response = jsonify({'status': 'logged out successfully'})
+
+    unset_access_cookies(response)
+
+    return response, 200

@@ -8,16 +8,11 @@ db = SQLAlchemy()
 ma = Marshmallow()
 jwt = JWTManager()
 
-URI = f"postgresql://postgres:secret@localhost:5432/posts"
-
 
 def init_app(app: Flask):
     """
-    Set database URI 
-    Initializes Flask-SQLAlchemy for use by application
-    Initializes Flask-Marshmallow for use by application
+    Initalize all app dependecies
     """
-    app.config['SQLALCHEMY_DATABASE_URI'] = URI
     db.init_app(app)
     Migrate(app, db)
     ma.init_app(app)
