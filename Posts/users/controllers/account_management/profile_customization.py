@@ -40,3 +40,16 @@ def change_email_address(user, email_address: str):
     """
     user.email_address = email_address
     db.session.commit()
+
+
+def change_profile_image(user, filename: str):
+    """
+    Changes a user's profile image
+
+    Arguments
+    ---------
+    user: user database object
+    filename: file of new profile image
+    """
+    user.profile_image = filename
+    db.session.commit()

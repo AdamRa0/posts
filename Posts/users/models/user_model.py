@@ -37,6 +37,7 @@ class UserModel(db.Model):
     is_active = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
     date_created = Column(DateTime(timezone=True), default=func.now())
+    profile_image = Column(String, default="default_profile_image.jpg")
 
     def __init__(self, username=None, email_address=None, handle=None, password=None):
         self.username = username

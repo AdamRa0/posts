@@ -12,8 +12,11 @@ from ..controllers.account_management.profile_customization import (
     change_username,
     change_handle,
     change_email_address,
+    change_profile_image,
 )
 from ..models.user_schema import UserSchema
+from ...utils.upload_file import upload_file
+from ...utils.show_true_path import show_true_path
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, current_user
@@ -30,6 +33,8 @@ post_schemas = PostSchema(many=True)
 def get_user_profile_by_handle(user_handle: str):
     user = get_user_by_handle(user_handle)
 
+    user.profile_image = show_true_path(user.profile_image)
+
     if user is None:
         return jsonify({"message": "User not found", "status": "fail"}), 404
 
@@ -39,14 +44,21 @@ def get_user_profile_by_handle(user_handle: str):
 @user_routes.route("/profile")
 @jwt_required()
 def get_user_profile():
+    current_user.profile_image = show_true_path(current_user.profile_image)
+
     return user_schema.dump(current_user), 200
 
 
 @user_routes.route("/")
 def get_all_users():
     users = get_all_registered_users()
+    updated_users = []
 
-    return users_schemas.dump(users), 200
+    for user in users:
+        user.profile_image = show_true_path(user.profile_image)
+        updated_users.append(user)
+
+    return users_schemas.dump(updated_users), 200
 
 
 @user_routes.route("/user/delete", methods=["DELETE"])
@@ -59,10 +71,13 @@ def delete_user():
 
 @user_routes.route("/profile/update", methods=["PATCH"])
 @jwt_required()
-def update_user_details():
+async def update_user_details():
     username = request.json.get("username")
     email_address = request.json.get("email_address")
     handle = request.json.get("handle")
+
+    if request.files:
+        filename = await upload_file()
 
     if username is not None:
         change_username(current_user, username)
@@ -70,6 +85,8 @@ def update_user_details():
         change_email_address(current_user, email_address)
     if handle is not None:
         change_handle(current_user, handle)
+    if filename is not None:
+        change_profile_image(current_user, filename)
 
     updated_user = get_user_by_id(current_user.id)
 
