@@ -15,3 +15,4 @@ class PostSchema(ma.Schema):
     children = fields.List(fields.Nested(lambda: PostSchema))
     time_created = fields.DateTime()
     time_edited = fields.DateTime()
+    post_file = fields.String()

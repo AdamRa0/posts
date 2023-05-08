@@ -28,3 +28,4 @@ class PostModel(db.Model):
     time_edited = Column(
         DateTime(timezone=True), default=func.now(), onupdate=func.now()
     )
+    post_file = Column(String)
