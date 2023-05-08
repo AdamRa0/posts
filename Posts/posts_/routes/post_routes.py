@@ -41,7 +41,8 @@ def create_new_post():
     updated_posts = []
 
     for post in author_posts:
-        post.post_file = show_true_path(post.post_file)
+        if post.post_file is not None:
+            post.post_file = show_true_path(post.post_file)
 
         updated_posts.append(post)
 
