@@ -7,9 +7,7 @@ from ...users.controllers.account_creation_and_use.get_user import (
     get_user_by_email,
     get_user_by_id,
 )
-from ...users.controllers.account_management.deactivate_reactivate_user import (
-    reactivate_account,
-)
+from ...users.controllers.account_management.deactivate_reactivate_user import account_activation_manager
 
 from flask import Blueprint, jsonify, Response
 from flask_pydantic import validate
@@ -83,7 +81,7 @@ def signin_user(body: UserSignIn):
         )
 
     if user.is_active is False:
-        reactivate_account(user)
+        account_activation_manager(user)
 
     access_token: str = create_access_token(identity=user.id)
 

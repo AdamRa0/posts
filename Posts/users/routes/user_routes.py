@@ -16,7 +16,10 @@ from ..controllers.account_management.profile_customization import (
     change_banner_image,
 )
 from ..controllers.account_management.deactivate_reactivate_user import (
-    deactivate_account,
+    account_activation_manager,
+)
+from ..controllers.account_management.set_unset_account_private import (
+    set_profile_privacy,
 )
 from ..models.user_schema import UserSchema
 from ...utils.upload_file import upload_file
@@ -39,11 +42,23 @@ def get_user_profile_by_handle(user_handle: str):
 
     user.profile_image = show_true_path(user.profile_image)
 
+    user_subscribers = get_subscribers(user.id)
+
     if user is None:
         return jsonify({"message": "User not found", "status": "fail"}), 404
 
     if user.is_active is False:
         return jsonify({"message": "User no longer active"}), 403
+
+    if user.is_private and current_user not in user_subscribers:
+        return (
+            jsonify(
+                {
+                    "message": "Account and its content are available only to approved subscribers"
+                }
+            ),
+            403,
+        )
 
     return user_schema.dump(user), 200
 
@@ -80,7 +95,13 @@ def delete_user():
 @user_routes.route("/deactivate-account", methods=["PATCH"])
 @jwt_required()
 def deactivate_user():
-    deactivate_account(current_user)
+    account_activation_manager(current_user)
+
+
+@user_routes.route("/set-account-privacy", methods=["PATCH"])
+@jwt_required()
+def set_account_privacy():
+    set_profile_privacy(current_user)
 
 
 @user_routes.route("/profile/update", methods=["PATCH"])

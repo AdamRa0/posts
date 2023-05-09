@@ -14,6 +14,8 @@ from ..models.post_update_model import PostUpdateModel
 from ...utils.show_true_path import show_true_path
 from ...utils.upload_file import upload_file
 
+from ...follow.controllers.get_sub_subees import get_subscribers
+
 from flask import Blueprint, jsonify, request, current_app
 from flask_pydantic import validate
 from flask_jwt_extended import jwt_required, current_user
@@ -31,6 +33,8 @@ def create_new_post():
 
     if request.files:
         uploaded_file = upload_file()
+    else:
+        uploaded_file = None
 
     create_post(
         PostCreationModel(body=body, author_id=current_user.id, post_file=uploaded_file)
@@ -52,6 +56,12 @@ def create_new_post():
 @post_routes.route("/<post_id>")
 def get_single_post(post_id: str):
     post = get_post(post_id)
+
+    author_subscribers = get_subscribers(post.author_id)
+    author = post.author
+
+    if author.is_private and current_user not in author_subscribers:
+        return jsonify({'message': 'User limits who can view their posts.'}), 403
 
     post.post_file = show_true_path(post.post_file)
 

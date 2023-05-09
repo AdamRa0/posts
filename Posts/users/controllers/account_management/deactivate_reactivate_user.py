@@ -5,20 +5,16 @@ from ...models.user_model import UserModel
 db = get_db()
 
 
-def deactivate_account(user: UserModel):
+def account_activation_manager(user: UserModel):
     """
-    Deactivates a user's account
+    Deactivates or reactivates a user's account
+
+    Arguments:
+    
     """
-
-    user.is_active = False
-
-    db.session.commit()
-
-
-def reactivate_account(user: UserModel):
-    """
-    Reactivates a user account if the login again.
-    """
-    user.is_active = True
+    if user.is_active:
+        user.is_active = False
+    else:
+        user.is_active = True
 
     db.session.commit()
