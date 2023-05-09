@@ -12,3 +12,4 @@ class UserSchema(ma.Schema):
     bio = fields.String()
     date_created = fields.DateTime()
     profile_image = fields.String()
+    banner_image = fields.String()

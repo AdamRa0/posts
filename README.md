@@ -18,3 +18,8 @@ Twitter Clone
 - Flask-JWT-Extended
 - Flask-Redis
 - Black
+
+
+## Acknowledgments
+
+[Banner Image](https://unsplash.com/photos/_ZtPsxAomeI?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink)
