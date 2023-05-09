@@ -59,7 +59,9 @@ def change_profile_image(user: UserModel, filename: str):
     user: user database object
     filename: file that serves new profile image
     """
-    os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.profile_image))
+
+    if user.profile_image != 'default_profile_image.jpg':
+        os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.profile_image))
     
     user.profile_image = filename
     db.session.commit()
@@ -74,7 +76,8 @@ def change_banner_image(user: UserModel, filename: str):
     user: user database object
     filename: file that serves as new banner image
     """
-    os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.banner_image))
+    if user.banner_image != 'default_banner_image.jpg':
+        os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.banner_image))
 
     user.banner_image = filename
     db.session.commit()
