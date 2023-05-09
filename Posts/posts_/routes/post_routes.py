@@ -14,7 +14,7 @@ from ..models.post_update_model import PostUpdateModel
 from ...utils.show_true_path import show_true_path
 from ...utils.upload_file import upload_file
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from flask_pydantic import validate
 from flask_jwt_extended import jwt_required, current_user
 
@@ -100,7 +100,7 @@ def disapprove_post(post_id: str):
 @post_routes.route("/<post_id>", methods=["DELETE"])
 @jwt_required()
 def delete_user_post(post_id: str):
-    delete_post(post_id)
+    delete_post(current_app, post_id)
 
     return jsonify({}), 204
 

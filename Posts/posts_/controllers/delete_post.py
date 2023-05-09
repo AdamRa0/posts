@@ -4,13 +4,12 @@ from ...database.db import get_db
 from ..controllers.get_post import get_post
 from ..models.post_model import PostModel
 
-from flask import current_app
+from flask import Flask
 
 
-UPLOAD_FOLDER_PATH = current_app.config['UPLOAD_FOLDER']
+def delete_post(app: Flask, post_id: str):
+    UPLOAD_FOLDER_PATH = app.config["UPLOAD_FOLDER"]
 
-
-def delete_post(post_id: str):
     db = get_db()
 
     post_to_delete: PostModel = get_post(post_id)

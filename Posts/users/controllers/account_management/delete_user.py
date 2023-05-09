@@ -1,21 +1,22 @@
 import os
 
+from ...models.user_model import UserModel
 from ....database.db import get_db
 
-from flask import current_app
+from flask import Flask
 
 
-UPLOAD_FOLDER_PATH = current_app.config['UPLOAD_FOLDER']
-
-def del_user(user):
+def del_user(app: Flask, user: UserModel):
     """
     Deletes user from database.
     Deletes user's uploaded content from server.
 
     Arguments
     ---------
+    app: Our application
     user: user to be deleted
     """
+    UPLOAD_FOLDER_PATH = app.config["UPLOAD_FOLDER"]
 
     prefix = user.id
 

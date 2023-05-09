@@ -13,14 +13,16 @@ from ..controllers.account_management.profile_customization import (
     change_handle,
     change_email_address,
     change_profile_image,
-    change_banner_image
+    change_banner_image,
 )
-from ..controllers.account_management.deactivate_reactivate_user import deactivate_account
+from ..controllers.account_management.deactivate_reactivate_user import (
+    deactivate_account,
+)
 from ..models.user_schema import UserSchema
 from ...utils.upload_file import upload_file
 from ...utils.show_true_path import show_true_path
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 from flask_jwt_extended import jwt_required, current_user
 
 
@@ -39,9 +41,9 @@ def get_user_profile_by_handle(user_handle: str):
 
     if user is None:
         return jsonify({"message": "User not found", "status": "fail"}), 404
-    
+
     if user.is_active is False:
-        return jsonify({'message': 'User no longer active'}), 403
+        return jsonify({"message": "User no longer active"}), 403
 
     return user_schema.dump(user), 200
 
@@ -70,12 +72,12 @@ def get_all_users():
 @user_routes.route("/user/delete", methods=["DELETE"])
 @jwt_required()
 def delete_user():
-    del_user(current_user)
+    del_user(current_app, current_user)
 
     return jsonify({}), 204
 
 
-@user_routes.route("/deactivate-account", methods=['PATCH'])
+@user_routes.route("/deactivate-account", methods=["PATCH"])
 @jwt_required()
 def deactivate_user():
     deactivate_account(current_user)
@@ -100,23 +102,23 @@ def update_user_details():
     return user_schema.dump(updated_user), 200
 
 
-@user_routes.route('/profile/update-image', methods=['PATCH'])
+@user_routes.route("/profile/update-image", methods=["PATCH"])
 @jwt_required()
 def update_user_images():
     """
     Updates user profile or banner image
     """
-    profile_image = request.form.get('profile_image')
-    banner_image = request.form.get('banner_image')
+    profile_image = request.form.get("profile_image")
+    banner_image = request.form.get("banner_image")
 
     if request.files:
         filename = upload_file()
 
     if filename is not None and profile_image is True:
-        change_profile_image(current_user, filename)
+        change_profile_image(current_app, current_user, filename)
 
     if filename is not None and banner_image is True:
-        change_banner_image(current_user, filename)
+        change_banner_image(current_app, current_user, filename)
 
 
 @user_routes.route("/<user_id>/subscribe", methods=["PATCH"])

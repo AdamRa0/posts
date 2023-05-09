@@ -3,12 +3,10 @@ import os
 from Posts.users.models.user_model import UserModel
 from ....database.db import get_db
 
-from flask import current_app
+from flask import Flask
 
 
 db = get_db()
-
-UPLOAD_FOLDER_PATH = current_app.config['UPLOAD_FOLDER']
 
 
 def change_username(user: UserModel, username: str):
@@ -50,33 +48,39 @@ def change_email_address(user: UserModel, email_address: str):
     db.session.commit()
 
 
-def change_profile_image(user: UserModel, filename: str):
+def change_profile_image(app: Flask, user: UserModel, filename: str):
     """
     Changes a user's profile image and removes previously stored profile image.
 
     Arguments
     ---------
+    app: Our application
     user: user database object
     filename: file that serves new profile image
     """
+    UPLOAD_FOLDER_PATH = app.config["UPLOAD_FOLDER"]
 
-    if user.profile_image != 'default_profile_image.jpg':
+    if user.profile_image != "default_profile_image.jpg":
         os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.profile_image))
-    
+
     user.profile_image = filename
     db.session.commit()
 
 
-def change_banner_image(user: UserModel, filename: str):
+def change_banner_image(app: Flask, user: UserModel, filename: str):
     """
     Changes a user's banner image and removes previously stored banner image.
 
-    Arguments 
+    Arguments
     ----------
+    app: Our application
     user: user database object
     filename: file that serves as new banner image
     """
-    if user.banner_image != 'default_banner_image.jpg':
+
+    UPLOAD_FOLDER_PATH = app.config["UPLOAD_FOLDER"]
+
+    if user.banner_image != "default_banner_image.jpg":
         os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.banner_image))
 
     user.banner_image = filename

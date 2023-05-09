@@ -23,7 +23,7 @@ def upload_file() -> str | None:
 
     if "." not in file.filename or file.filename == "":
         return None
-    
+
     if allowed_file(file.filename):
         filename = secure_filename(file.filename)
         new_filename = f"{current_user.id}_{filename}"
