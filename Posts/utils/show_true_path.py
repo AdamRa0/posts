@@ -12,4 +12,5 @@ def show_true_path(filename: str) -> str:
     filename: path of file as stored in database
     """
 
-    return os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+    if filename is not None:
+        return os.path.join(current_app.config["UPLOAD_FOLDER"], filename)

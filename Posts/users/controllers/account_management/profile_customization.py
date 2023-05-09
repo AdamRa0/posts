@@ -1,7 +1,14 @@
+import os
+
 from Posts.users.models.user_model import UserModel
 from ....database.db import get_db
 
+from flask import current_app
+
+
 db = get_db()
+
+UPLOAD_FOLDER_PATH = current_app.config['UPLOAD_FOLDER']
 
 
 def change_username(user: UserModel, username: str):
@@ -45,25 +52,29 @@ def change_email_address(user: UserModel, email_address: str):
 
 def change_profile_image(user: UserModel, filename: str):
     """
-    Changes a user's profile image
+    Changes a user's profile image and removes previously stored profile image.
 
     Arguments
     ---------
     user: user database object
     filename: file that serves new profile image
     """
+    os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.profile_image))
+    
     user.profile_image = filename
     db.session.commit()
 
 
 def change_banner_image(user: UserModel, filename: str):
     """
-    Changes a user's banner image
+    Changes a user's banner image and removes previously stored banner image.
 
     Arguments 
     ----------
     user: user database object
     filename: file that serves as new banner image
     """
+    os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.banner_image))
+
     user.banner_image = filename
     db.session.commit()

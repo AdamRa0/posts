@@ -61,6 +61,7 @@ def get_all_users():
 
     for user in users:
         user.profile_image = show_true_path(user.profile_image)
+        user.bannner_image = show_true_path(user.banner_image)
         updated_users.append(user)
 
     return users_schemas.dump(updated_users), 200
