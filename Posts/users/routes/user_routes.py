@@ -3,7 +3,12 @@ from ..controllers.account_creation_and_use.get_user import (
     get_user_by_id,
     get_all_registered_users,
 )
-from ...follow.controllers.sub_unsub import sub, unsub
+from ...follow.controllers.sub_unsub import (
+    sub,
+    unsub,
+    add_to_waitlist,
+    judge_waiting_user,
+)
 from ...follow.controllers.get_sub_subees import get_subscribers, get_subscribees
 from ...posts_.controllers.get_posts import get_reposts_by_user
 from ...posts_.models.post_schema import PostSchema
@@ -78,7 +83,7 @@ def get_all_users():
 
     for user in users:
         user.profile_image = show_true_path(user.profile_image)
-        user.bannner_image = show_true_path(user.banner_image)
+        user.banner_image = show_true_path(user.banner_image)
         updated_users.append(user)
 
     return users_schemas.dump(updated_users), 200
@@ -156,6 +161,25 @@ def unsubscribe_to_user(user_id: str):
     unsub(user_id, current_user.id)
 
     return jsonify({"status": "success"}), 200
+
+
+@user_routes.route("/<user_id>/add-to-waitlist", methods=["POST"])
+@jwt_required()
+def add_to_user_waitlist(user_id: str):
+    add_to_waitlist(user_id, current_user.id)
+
+    return jsonify({"message": "Please wait approval from user"}), 200
+
+
+@user_routes.route("/approve-user", methods=["PATCH"])
+@jwt_required()
+def vet_user():
+    pending_subscriber = request.json.get("pending_sub")
+    approve = request.json.get("approve")
+
+    judge_waiting_user(current_user.id, pending_subscriber, approve)
+
+    return jsonify({"message": "success"}), 200
 
 
 @user_routes.route("/<user_id>/subscribers")

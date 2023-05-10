@@ -61,7 +61,7 @@ def get_single_post(post_id: str):
     author = post.author
 
     if author.is_private and current_user not in author_subscribers:
-        return jsonify({'message': 'User limits who can view their posts.'}), 403
+        return jsonify({"message": "User limits who can view their posts."}), 403
 
     post.post_file = show_true_path(post.post_file)
 

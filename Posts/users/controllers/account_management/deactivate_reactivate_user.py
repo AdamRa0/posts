@@ -10,7 +10,7 @@ def account_activation_manager(user: UserModel):
     Deactivates or reactivates a user's account
 
     Arguments:
-    
+
     """
     if user.is_active:
         user.is_active = False

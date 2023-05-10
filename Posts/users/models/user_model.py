@@ -5,9 +5,17 @@ from ...posts_.models.repost_junction_table import posts_reposts
 from uuid import uuid4
 
 from sqlalchemy.sql import func
-from sqlalchemy import Column, UUID, String, Boolean, DateTime
+from sqlalchemy import Column, UUID, String, Boolean, DateTime, ForeignKey
 
 db = get_db()
+
+
+# Junction table for users waiting to be approved as subcribers by a private user
+users_subscribers_waitlist = db.Table(
+    "users_subscribers_waitlist",
+    Column("judge", UUID, ForeignKey("users.id"), primary_key=True),
+    Column("judged", UUID, ForeignKey("users.id"), primary_key=True),
+)
 
 
 class UserModel(db.Model):
@@ -29,6 +37,14 @@ class UserModel(db.Model):
         "PostModel",
         secondary=posts_reposts,
         backref="user_reposts",
+        cascade="all, delete",
+    )
+    waitlist = db.relationship(
+        "UserModel",
+        secondary=users_subscribers_waitlist,
+        primaryjoin=(users_subscribers_waitlist.c.judge == id),
+        secondaryjoin=(users_subscribers_waitlist.c.judged == id),
+        backref="waiting_user",
         cascade="all, delete",
     )
     handle = Column(String, unique=True, nullable=False)
