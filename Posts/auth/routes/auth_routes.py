@@ -94,7 +94,7 @@ def signin_user(body: UserSignIn):
     return response, 200
 
 
-@auth_routes.route("/signout", methods=["POST"])
+@auth_routes.route("/signout")
 def signout_user():
     response: Response = jsonify({"status": "logged out successfully"})
 
