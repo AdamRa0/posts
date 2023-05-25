@@ -1,11 +1,8 @@
 import os
 import pytest
-from flask_jwt_extended import create_access_token
 from Posts import create_app
 from Posts.users.models.user_model import UserModel
-from Posts.users.controllers.account_creation_and_use.get_user import get_user_by_handle
 from Posts.database.db import get_db
-from Posts.users.controllers.account_creation_and_use.create_user import create_new_user
 from Posts.users.controllers.account_creation_and_use.get_user import get_user_by_handle
 
 
@@ -14,21 +11,13 @@ db = get_db()
 
 @pytest.fixture(scope="module")
 def test_client():
-    os.environ["CONFIG_TYPE"] = "config.TestingConfig"
     my_app = create_app()
+    my_app.config["TESTING"] = True
+    my_app.config["DEBUG"] = True
 
     with my_app.test_client() as testing_client:
         with my_app.app_context():
             yield testing_client
-
-
-@pytest.fixture(scope="module")
-def init_db(test_client):
-    db.create_all()
-
-    yield
-
-    db.drop_all()
 
 
 @pytest.fixture(scope="module")
@@ -49,11 +38,18 @@ def create_new_user_2(test_client):
     return new_user
 
 
+@pytest.fixture(scope="module")
+def remove_user_if_exists(create_new_user_1, test_client):
+    existing_user = get_user_by_handle(create_new_user_1.handle)
+    db.session.delete(existing_user)
+    db.session.commit()
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture(scope="module")
 def cli_test_client():
-    os.environ['CONFIG_TYPE'] = 'config.TestingConfig'
     my_app = create_app()
+    my_app.config["TESTING"] = True
+    my_app.config["DEBUG"] = True
 
     runner = my_app.test_cli_runner()
 

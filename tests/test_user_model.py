@@ -13,7 +13,6 @@ def test_new_user():
     WHEN a new user is about to be created
     CHECK username, email_address, password and handle are equal to given values
     """
-    
 
     new_test_user = UserModel(USERNAME, EMAIL_ADDRESS, HANDLE, PASSWORD)
 
