@@ -1,6 +1,7 @@
-import os
 import pytest
+from json import loads, dumps
 from Posts import create_app
+from Posts.users.controllers.account_creation_and_use.create_user import create_new_user
 from Posts.users.models.user_model import UserModel
 from Posts.database.db import get_db
 from Posts.users.controllers.account_creation_and_use.get_user import get_user_by_handle
@@ -41,16 +42,21 @@ def create_new_user_2(test_client):
 @pytest.fixture(scope="module")
 def remove_user_if_exists(create_new_user_1, test_client):
     existing_user = get_user_by_handle(create_new_user_1.handle)
-    db.session.delete(existing_user)
-    db.session.commit()
+    if existing_user is not None:
+        db.session.delete(existing_user)
+        db.session.commit()
 
 
-@pytest.fixture(scope="module")
-def cli_test_client():
-    my_app = create_app()
-    my_app.config["TESTING"] = True
-    my_app.config["DEBUG"] = True
+@pytest.fixture(scope='module')
+def store_user_fixture(remove_user_if_exists, create_new_user_1, test_client):
+    json_data = dict(
+        username=create_new_user_1.username,
+        email_address=create_new_user_1.email_address,
+        handle=create_new_user_1.handle,
+        password=create_new_user_1.password,
+    )
 
-    runner = my_app.test_cli_runner()
+    response = test_client.post("/api/v1/auth/signup", json=loads(dumps(json_data)))
 
-    yield runner
+    return response.headers.getlist('Set-Cookie')
+
