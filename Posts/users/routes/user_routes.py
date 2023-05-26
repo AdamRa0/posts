@@ -102,11 +102,15 @@ def delete_user():
 def deactivate_user():
     account_activation_manager(current_user)
 
+    return jsonify({"message": "Account deactivated"}), 200
+
 
 @user_routes.route("/set-account-privacy", methods=["PATCH"])
 @jwt_required()
 def set_account_privacy():
     set_profile_privacy(current_user)
+
+    return jsonify({"message": "Account privacy setting changed"}), 200
 
 
 @user_routes.route("/profile/update", methods=["PATCH"])
@@ -145,6 +149,8 @@ def update_user_images():
 
     if filename is not None and banner_image is True:
         change_banner_image(current_app, current_user, filename)
+
+    return jsonify({"message": "Image updated"}), 200
 
 
 @user_routes.route("/<user_id>/subscribe", methods=["PATCH"])

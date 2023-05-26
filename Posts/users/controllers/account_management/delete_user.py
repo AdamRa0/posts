@@ -23,8 +23,13 @@ def del_user(app: Flask, user: UserModel):
     db = get_db()
 
     for filename in os.listdir(UPLOAD_FOLDER_PATH):
-        if filename.startswith(prefix):
-            os.remove(filename)
+        if filename.startswith(str(prefix)):
+            filename = os.path.join(UPLOAD_FOLDER_PATH, filename)
+
+            try:
+                os.remove(filename)
+            except Exception as e:
+                print("Error: %s, %s", e.filename, e.strerror)
 
     db.session.delete(user)
     db.session.commit()

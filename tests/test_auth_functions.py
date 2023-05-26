@@ -12,7 +12,7 @@ def test_signin_functionality(store_user_fixture, create_new_user_1, test_client
     assert response.status_code == 200
 
 
-def test_signout_functionality(test_client):
+def test_signout_functionality(test_client, remove_user_if_exists):
     response = test_client.get("api/v1/auth/signout")
 
     assert response.status_code == 200
