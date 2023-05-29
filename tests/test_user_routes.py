@@ -144,6 +144,91 @@ def test_upload_image(create_new_user_1, test_client):
     assert response.json["message"] == "Image updated"
 
 
+def test_get_user_subscribers(create_new_user_1, test_client):
+    """
+    GIVEN a registered user
+    WHEN a registered user seeks to view their or another registered user's subscribers
+    THEN a list of subscribers is presented to them
+    """
+    json_data = dict(
+        email_address=create_new_user_1.email_address,
+        password=create_new_user_1.password,
+    )
+
+    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+
+    authorizer = test_client.get_cookie("csrf_access_token")
+
+    header = {
+        "X-CSRF-TOKEN": f"{authorizer.value}",
+    }
+
+    response = test_client.get("/api/v1/users/profile", headers=header)
+
+    user_id = response.json['id']
+
+    sub_response = test_client.get(f"/api/v1/users/{user_id}/subscribers")
+
+    assert sub_response.status_code == 200
+
+
+def test_get_user_subscribees(create_new_user_1, test_client):
+    """
+    GIVEN a registered user
+    WHEN a registered user seeks to view accounts they are subscribed to or
+    accounts another registered user is subscribed to
+    THEN a list of accounts user or other user subscribes to is presented to them
+    """
+    json_data = dict(
+        email_address=create_new_user_1.email_address,
+        password=create_new_user_1.password,
+    )
+
+    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+
+    authorizer = test_client.get_cookie("csrf_access_token")
+
+    header = {
+        "X-CSRF-TOKEN": f"{authorizer.value}",
+    }
+
+    response = test_client.get("/api/v1/users/profile", headers=header)
+
+    user_id = response.json['id']
+
+    subees_response = test_client.get(f"/api/v1/users/{user_id}/subscribees")
+
+    assert subees_response.status_code == 200
+
+
+def test_get_user_reposts(create_new_user_1, test_client):
+    """
+    GIVEN a registered user
+    WHEN a registered user seeks to view their reposts or another user's reposts
+    THEN a list of reposts is presented to them
+    """
+    json_data = dict(
+        email_address=create_new_user_1.email_address,
+        password=create_new_user_1.password,
+    )
+
+    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+
+    authorizer = test_client.get_cookie("csrf_access_token")
+
+    header = {
+        "X-CSRF-TOKEN": f"{authorizer.value}",
+    }
+
+    response = test_client.get("/api/v1/users/profile", headers=header)
+
+    user_id = response.json['id']
+
+    repost_response = test_client.get(f"/api/v1/users/{user_id}/reposts")
+
+    assert repost_response.status_code == 200    
+
+
 def test_update_user_details(create_new_user_1, test_client):
     """
     GIVEN a registered user

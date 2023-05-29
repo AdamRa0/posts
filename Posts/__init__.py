@@ -33,8 +33,7 @@ def create_app():
 
     init_app(app)
 
-    # Create table if not exists before first request to app
-    app.before_first_request(create_tables)
+    create_tables(app)
 
     app.register_blueprint(user_routes)
     app.register_blueprint(post_routes)

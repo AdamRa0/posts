@@ -7,6 +7,7 @@ ma = get_marshmallow_obj()
 
 
 class UserSchema(ma.Schema):
+    id = fields.String()
     username = fields.String()
     handle = fields.String()
     bio = fields.String()

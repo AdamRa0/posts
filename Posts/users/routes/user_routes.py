@@ -156,6 +156,8 @@ def update_user_images():
 @user_routes.route("/<user_id>/subscribe", methods=["PATCH"])
 @jwt_required()
 def subscribe_to_user(user_id: str):
+    #TODO: Write unit test for this route at a later date
+    #TODO: Add rerouting function to wait list route if user to subscribe to sets account to private
     sub(user_id, current_user.id)
 
     return jsonify({"status": "success"}), 200
@@ -164,6 +166,7 @@ def subscribe_to_user(user_id: str):
 @user_routes.route("/<user_id>/unsubscribe", methods=["PATCH"])
 @jwt_required()
 def unsubscribe_to_user(user_id: str):
+    #TODO: Write unit test for this route at a later date
     unsub(user_id, current_user.id)
 
     return jsonify({"status": "success"}), 200
@@ -172,6 +175,7 @@ def unsubscribe_to_user(user_id: str):
 @user_routes.route("/<user_id>/add-to-waitlist", methods=["POST"])
 @jwt_required()
 def add_to_user_waitlist(user_id: str):
+    #TODO: Write unit test for this route at a later date
     add_to_waitlist(user_id, current_user.id)
 
     return jsonify({"message": "Please wait approval from user"}), 200
@@ -180,6 +184,7 @@ def add_to_user_waitlist(user_id: str):
 @user_routes.route("/approve-user", methods=["PATCH"])
 @jwt_required()
 def vet_user():
+    #TODO: Write unit test for this route at a later date
     pending_subscriber = request.json.get("pending_sub")
     approve = request.json.get("approve")
 

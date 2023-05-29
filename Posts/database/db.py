@@ -11,7 +11,7 @@ jwt = JWTManager()
 
 def init_app(app: Flask):
     """
-    Initalize all app dependecies
+    Initalize all app dependecies and creates tables if not exits
     """
     db.init_app(app)
     Migrate(app, db)
@@ -19,14 +19,15 @@ def init_app(app: Flask):
     jwt.init_app(app)
 
 
-def create_tables():
+def create_tables(app: Flask):
     """
     Create database tables
     """
     from ..users.models.user_model import UserModel
     from ..posts_.models.post_model import PostModel
 
-    db.create_all()
+    with app.app_context():
+        db.create_all()
 
 
 def get_db():
