@@ -1,4 +1,4 @@
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Adam Rao](https://circleci.com/gh/AdamRa0/posts.svg?style=svg)](https://circleci.com/docs/pipelines/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # Posts
 

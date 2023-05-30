@@ -15,7 +15,8 @@ jobs:
       - run:
           name: Run tests
           command: pytest
+
 workflows:
-  sample:
+  build-and-test:
     jobs:
       - build-and-test
