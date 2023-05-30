@@ -5,7 +5,16 @@ orbs:
 jobs:
   build-and-test:
     docker:
+      - image: cimg/postgres:14.0
+        environment:
+          POSTGRES_USER: postgres
+          
       - image: cimg/python:3.11.0
+        environment:
+          SQLALCHEMY_DATABASE_URI: $TEST_DATABASE_URI
+          JWT_SECRET_KEY: $JWT_SECRET_KEY
+          JWT_COOKIE_SECURE: $JWT_COOKIE_SECURE
+
     steps:
       - checkout
       - python/install-packages:

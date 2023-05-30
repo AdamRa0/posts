@@ -22,14 +22,7 @@ def create_app():
     Creates and returns an instance of our application
     """
 
-    app: Flask = Flask(__name__, instance_relative_config=True)
-
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
-    app.config.from_pyfile("config.py", silent=True)
+    app: Flask = Flask(__name__)
 
     init_app(app)
 
