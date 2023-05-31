@@ -136,6 +136,8 @@ def remove_repost(post_id: str):
 def comment_on_post(post_id: str):
     if request.files:
         file = upload_file()
+    else:
+        file = None
 
     comment = PostCreationModel(
         body=request.form.get("body"), author_id=current_user.id, post_file=file

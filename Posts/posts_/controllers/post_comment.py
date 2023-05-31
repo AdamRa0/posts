@@ -17,7 +17,9 @@ def post_comment(post_id: str, comment: PostCreationModel):
     """
     parent_post = get_post(post_id)
 
-    new_comment = PostModel(body=comment.body, author_id=comment.author_id)
+    new_comment = PostModel(
+        body=comment.body, author_id=comment.author_id, post_file=comment.post_file
+    )
 
     parent_post.children.append(new_comment)
     parent_post.comments += 1

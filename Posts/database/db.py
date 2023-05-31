@@ -18,13 +18,13 @@ def init_app(app: Flask):
     Sets all config variables
     """
 
-    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
-    app.config['JWT_TOKEN_LOCATION'] = ["cookies"]
-    app.config['JWT_COOKIE_SECURE'] = os.environ.get('JWT_COOKIE_SECURE')
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=2)
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-    app.config['UPLOAD_FOLDER'] = 'uploads'
+    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
+    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+    app.config["JWT_COOKIE_SECURE"] = os.environ.get("JWT_COOKIE_SECURE")
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=2)
+    app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+    app.config["UPLOAD_FOLDER"] = "uploads"
 
     db.init_app(app)
     Migrate(app, db)

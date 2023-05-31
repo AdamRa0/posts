@@ -2,7 +2,7 @@ from json import loads, dumps
 from werkzeug.datastructures import FileStorage
 
 
-def test_get_user_profile_by_handle(store_user_fixture, create_new_user_1, test_client):
+def test_get_user_profile_by_handle(create_new_user_1, test_client):
     """
     GIVEN a registered user
     WHEN visiting said user's profile via their handle
@@ -23,6 +23,13 @@ def test_get_user_profile_by_authorized_user(create_new_user_1, test_client):
     WHEN account owner wants to visit their profile
     THEN account owner has access to their profile
     """
+
+    json_data = dict(
+        email_address=create_new_user_1.email_address,
+        password=create_new_user_1.password,
+    )
+
+    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -165,7 +172,7 @@ def test_get_user_subscribers(create_new_user_1, test_client):
 
     response = test_client.get("/api/v1/users/profile", headers=header)
 
-    user_id = response.json['id']
+    user_id = response.json["id"]
 
     sub_response = test_client.get(f"/api/v1/users/{user_id}/subscribers")
 
@@ -194,7 +201,7 @@ def test_get_user_subscribees(create_new_user_1, test_client):
 
     response = test_client.get("/api/v1/users/profile", headers=header)
 
-    user_id = response.json['id']
+    user_id = response.json["id"]
 
     subees_response = test_client.get(f"/api/v1/users/{user_id}/subscribees")
 
@@ -222,11 +229,11 @@ def test_get_user_reposts(create_new_user_1, test_client):
 
     response = test_client.get("/api/v1/users/profile", headers=header)
 
-    user_id = response.json['id']
+    user_id = response.json["id"]
 
     repost_response = test_client.get(f"/api/v1/users/{user_id}/reposts")
 
-    assert repost_response.status_code == 200    
+    assert repost_response.status_code == 200
 
 
 def test_update_user_details(create_new_user_1, test_client):
