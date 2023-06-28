@@ -1,0 +1,13 @@
+$textColorPrimary: #000000;
+$textColorSecondary: rgba(0, 0, 0, 0.21);
+$textColorActive: #368ef4;
+$borderColor: rgba(0, 0, 0, 0.11);
+$padding1: 10px;
+
+:export {
+  textColorPrimary: $textColorPrimary;
+  textColorSecondary: $textColorSecondary;
+  textColorActive: $textColorActive;
+  borderColor: $borderColor;
+  padding1: $padding1;
+}

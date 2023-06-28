@@ -1,0 +1,28 @@
+@import "../../app/variables.module.scss";
+@import "./sidenavs_mixin.scss";
+
+.parentContainer {
+  grid-column: 3;
+  align-items: flex-start;
+  padding: $padding1;
+  @include sidenav-styling;
+
+  .signupText,
+  .alreadyHaveAccountText {
+    font-weight: 400;
+    font-size: 15px;
+  }
+
+  .alreadyHaveAccountText {
+    align-self: center;
+  }
+
+  .tosText {
+    font-weight: 400;
+    font-size: 12px;
+  }
+
+  span {
+    color: $textColorActive;
+  }
+}

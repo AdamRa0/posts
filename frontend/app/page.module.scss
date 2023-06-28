@@ -1,0 +1,24 @@
+@import "./variables.module.scss";
+
+.homeDisplay {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  height: 100vh;
+
+  .homeMiddle {
+    height: calc(100vh - 12vh);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .homeMiddle {
+    border-right: 1px solid $borderColor;
+  }
+}
+
+
+
+.homeMiddle {
+  grid-column: 2;
+}
