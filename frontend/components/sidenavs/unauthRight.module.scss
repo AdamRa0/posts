@@ -4,7 +4,7 @@
 .parentContainer {
   grid-column: 3;
   align-items: flex-start;
-  padding: $padding1;
+  padding: $padding1 0 $padding1 $padding1;
   @include sidenav-styling;
 
   .signupText,
