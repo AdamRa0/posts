@@ -1,84 +1,139 @@
 @import "./variables.module.scss";
 
-.homeDisplay {
-  display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+.mainBody {
   height: 100vh;
+}
 
-  .homeMiddle {
-    height: calc(100vh - 12vh);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+.siteHeader {
+  display: flex;
+  align-items: center;
+  gap: 10%;
+
+  padding: 0 2em 0 2em;
+  border-bottom: 1px $borderColor solid;
+
+  h1 {
+    font-weight: 800;
+    font-size: 28px;
+    color: $textColorPrimary;
   }
 
-  .homeMiddle {
-    border-right: 1px solid $borderColor;
+  input {
+    &::placeholder {
+      font-weight: 800;
+      font-size: 16px;
+      color: $textColorSecondary;
+    }
+
+    border-color: $borderColor;
+    width: 100%;
+    padding: 10px 10px 10px 50px;
+    border-radius: 36px;
+  }
+
+  .inputGroup {
+    position: relative;
+    width: 60%;
+
+    span {
+      position: absolute;
+      top: 25%;
+      left: 2.5%;
+    }
+  }
+
+  button.authButton {
+    padding: 10px;
+    width: 10%;
   }
 }
 
-.homeMiddle {
-  grid-column: 2;
-  padding: $padding1;
+.authButton {
+  background-color: black;
+  color: white;
+  border-radius: 16px;
+  font-weight: 600;
+  border: 0.5px solid $textColorPrimary;
+  box-shadow: 2px 5px rgba(0, 0, 0, 0.1);
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  &:active {
+    transform: translateY(4px);
+    transition: transform, 0.1s ease-in;
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.1);
   }
+
+  &:focus,
+  &:hover {
+    color: black;
+    background-color: white;
+  }
+}
+
+.siteBody {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
 
   li {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border-bottom: 1px solid $borderColor;
-    margin-top: 20px;
+    list-style: none;
   }
 
-  .postHeader {
+  .left {
+    grid-column: 1;
     display: flex;
-    gap: 5%;
+    flex-direction: column;
+    border-right: 1px $borderColor solid;
+    padding: $padding1 * 2;
+  }
 
-    .profileAvatarContainer {
-      img {
-        border-radius: 50%;
+  .leftUpper {
+    border-bottom: 1px $borderColor solid;
+
+    .sectionTitle {
+      text-transform: uppercase;
+      color: $textColorSecondary;
+      font-weight: 600;
+    }
+
+    .listItem {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      width: 80%;
+      padding-left: $padding1;
+      border-radius: 12px;
+
+      &:focus,
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.15);
+      }
+
+      p {
+        font-size: 18px;
+        font-weight: 800;
       }
     }
+  }
 
-    h3 {
-      color: $textColorSecondary;
+  .leftLower {
+    button.authButton {
+      padding: 10px;
+      width: 80%;
     }
-    
-    .usernameHandleContainer {
+
+    .leftLowerUpper {
       display: flex;
       flex-direction: column;
-      gap: 20%;
-      margin-left: 20px;
-      
-      h2, h3 {
-        margin: 0;
-      }
+      align-items: center;
     }
 
-    .timeStamp {
-      margin-top: 0
+    span {
+      color: $textColorActive;
     }
   }
 
-  .postContainer {
-    p {
-      font-size: 16px;
-    }
-
-    img {
-      border-radius: 12px;
-      border: 0.5px solid $textColorSecondary;
-      width: 100%;
-    }
-  }
-
-  .actionButtons {
-    display: flex;
-    justify-content: space-around;
-    margin: 10px 0 20px 0;
+  .right {
+    grid-column: 2;
+    padding: $padding1;
+    overflow-y: scroll;
   }
 }

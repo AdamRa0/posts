@@ -1,108 +1,87 @@
-"use client";
-
-import Navbar from "@/components/navbar";
-import styles from "./page.module.scss";
-import AuthRight from "@/components/sidenavs/authRight";
-import SideNav from "@/components/sidenavs/sidenav";
-import UnauthRight from "@/components/sidenavs/unauthRight";
-import { useState } from "react";
-import arrOfPosts from "@/dev-data";
 import Image from "next/image";
+import styles from "./page.module.scss";
 
-function PostsList() {
-  const postItems = arrOfPosts.map((post) => (
-    <li key={post.postId}>
-      <div className={styles.postHeader}>
-        <div className={styles.profileAvatarContainer}>
-          <Image
-            src={post.profileAvatar}
-            alt="User profile image"
-            width={70}
-            height={70}
-          />
-        </div>
-        <div className={styles.usernameHandleContainer}>
-          <h2>{post.username}</h2>
-          <h3>{post.handle}</h3>
-        </div>
-        <div>
-          <h3 className={styles.timeStamp}>1hr</h3>
-        </div>
-      </div>
-      <div className={styles.postContainer}>
-        <p>{post.post}</p>
-        {post.image ? (
-          <Image
-            src={post.image}
-            alt="Accompanying post image"
-            width={600}
-            height={600}
-          />
-        ) : (
-          <div></div>
-        )}
-      </div>
-      <div className={styles.actionButtons}>
-        <Image
-          src="/approve.svg"
-          alt="Approve post icon"
-          width={48}
-          height={48}
-        />
-        <p>{post.approvals}</p>
-        <Image
-          src="/disapprove.svg"
-          alt="Disapprove post icon"
-          width={48}
-          height={48}
-        />
-        <p>{post.disapprovals}</p>
-        <Image
-          src="/repost.svg"
-          alt="Repost post icon"
-          width={48}
-          height={48}
-        />
-        <p>{post.reposts}</p>
-        <Image
-          src="/comment.svg"
-          alt="Comment post icon"
-          width={48}
-          height={48}
-        />
-        <p>{post.comments}</p>
-      </div>
-    </li>
-  ));
-
-  return <ul>{postItems}</ul>;
-}
+const SvgComponent = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={24}
+    viewBox="0 -960 960 960"
+  >
+    <path
+      fill="#00000040"
+      d="M796-121 533-384q-30 26-69.959 40.5T378-329q-108.162 0-183.081-75Q120-479 120-585t75-181q75-75 181.5-75t181 75Q632-691 632-584.85 632-542 618-502q-14 40-42 75l264 262-44 44ZM377-389q81.25 0 138.125-57.5T572-585q0-81-56.875-138.5T377-781q-82.083 0-139.542 57.5Q180-666 180-585t57.458 138.5Q294.917-389 377-389Z"
+    />
+  </svg>
+);
 
 export default function Home() {
-  const testUser = {
-    username: "WittyUsername",
-    handle: "@wittyusername",
-  };
-
-  const [authenticated, setAuthentiated] = useState(true);
-
   return (
-    <div className={styles.homeDisplay}>
-      <Navbar>
-        <h2>Public Square</h2>
-      </Navbar>
-      <SideNav />
-      <section className={styles.homeMiddle}>
-        <PostsList />
-      </section>
-      {authenticated ? (
-        <AuthRight
-          user={testUser}
-          onButtonClick={() => setAuthentiated(false)}
-        />
-      ) : (
-        <UnauthRight onButtonClick={() => setAuthentiated(true)} />
-      )}
-    </div>
+    <section className={styles.mainBody}>
+      <header className={styles.siteHeader}>
+        <h1>Posts</h1>
+        <div className={styles.inputGroup}>
+          <span aria-hidden="true">
+            <SvgComponent />
+          </span>
+          <input type="search" placeholder="Search Posts" />
+        </div>
+        <button className={styles.authButton}>Login</button>
+      </header>
+      <main className={styles.siteBody}>
+        <section className={styles.left}>
+          <section className={styles.leftUpper}>
+            <div>
+              <p className={styles.sectionTitle}>Feed</p>
+              <li>
+                <ul>
+                  <div className={styles.listItem} tabIndex={0}>
+                    <Image
+                      src="/public.svg"
+                      width={36}
+                      height={36}
+                      alt="Public square icon"
+                    />
+                    <p>Public Square</p>
+                  </div>
+                </ul>
+                <ul>
+                  <div className={styles.listItem} tabIndex={0}>
+                    <Image
+                      src="/community.svg"
+                      width={36}
+                      height={36}
+                      alt="Public square icon"
+                    />
+                    <p>Private Square</p>
+                  </div>
+                </ul>
+              </li>
+            </div>
+            <div>
+              <p className={styles.sectionTitle}>Profile</p>
+              {/* Show message if unauthenticated, else, show pfp, username, handle, notifications and settings */}
+              <p>Sign up now for a personalized square</p>
+            </div>
+          </section>
+          <section className={styles.leftLower}>
+            <div>
+              <div className={styles.leftLowerUpper}>
+                <h2>New to posts?</h2>
+                <button className={styles.authButton}>Join Posts</button>
+              </div>
+              <p>
+                By signing up, you agree to our <span>terms of service</span>
+                and <span>privacy policy</span> including{" "}
+                <span>cookie use</span>
+              </p>
+            </div>
+          </section>
+        </section>
+        <section className={styles.right}>
+          <p>Main content and other pages go here</p>
+        </section>
+      </main>
+    </section>
   );
 }
