@@ -1,15 +1,17 @@
 @import "./variables.module.scss";
 
-.mainBody {
-  height: 100vh;
-}
-
 .siteHeader {
   display: flex;
   align-items: center;
   gap: 10%;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  background-color: white;
 
-  padding: 0 2em 0 2em;
+  padding: 0 32px 0 32px;
   border-bottom: 1px $borderColor solid;
 
   h1 {
@@ -20,15 +22,19 @@
 
   input {
     &::placeholder {
-      font-weight: 800;
       font-size: 16px;
       color: $textColorSecondary;
+    }
+
+    &:focus {
+      border-color: black;
     }
 
     border-color: $borderColor;
     width: 100%;
     padding: 10px 10px 10px 50px;
-    border-radius: 36px;
+    border-radius: $borderRadius;
+    outline: none;
   }
 
   .inputGroup {
@@ -42,47 +48,29 @@
     }
   }
 
-  button.authButton {
+  button {
     padding: 10px;
     width: 10%;
   }
 }
 
-.authButton {
-  background-color: black;
-  color: white;
-  border-radius: 16px;
-  font-weight: 600;
-  border: 0.5px solid $textColorPrimary;
-  box-shadow: 2px 5px rgba(0, 0, 0, 0.1);
-
-  &:active {
-    transform: translateY(4px);
-    transition: transform, 0.1s ease-in;
-    box-shadow: 2px 2px rgba(0, 0, 0, 0.1);
-  }
-
-  &:focus,
-  &:hover {
-    color: black;
-    background-color: white;
-  }
-}
-
 .siteBody {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
+  position: relative;
+  top: 80px;
 
   li {
     list-style: none;
   }
 
   .left {
-    grid-column: 1;
     display: flex;
     flex-direction: column;
     border-right: 1px $borderColor solid;
     padding: $padding1 * 2;
+    width: 280px;
+    height: 100vh;
+    left: 0;
+    position: fixed;
   }
 
   .leftUpper {
@@ -93,29 +81,10 @@
       color: $textColorSecondary;
       font-weight: 600;
     }
-
-    .listItem {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      width: 80%;
-      padding-left: $padding1;
-      border-radius: 12px;
-
-      &:focus,
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.15);
-      }
-
-      p {
-        font-size: 18px;
-        font-weight: 800;
-      }
-    }
   }
 
   .leftLower {
-    button.authButton {
+    button {
       padding: 10px;
       width: 80%;
     }
@@ -123,7 +92,7 @@
     .leftLowerUpper {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
     }
 
     span {
@@ -132,8 +101,7 @@
   }
 
   .right {
-    grid-column: 2;
     padding: $padding1;
-    overflow-y: scroll;
+    margin-left: 330px;
   }
 }

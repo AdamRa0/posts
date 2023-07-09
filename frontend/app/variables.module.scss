@@ -1,8 +1,11 @@
 $textColorPrimary: #000000;
 $textColorSecondary: rgba(0, 0, 0, 0.3);
 $textColorActive: #368ef4;
-$borderColor: rgba(0, 0, 0, 0.25);
+$borderColor: rgba(139, 139, 139, 0.25);
 $padding1: 10px;
+$buttonColor: #4caf50;
+$buttonColorHover: rgba(76, 175, 80, 0.9);
+$borderRadius: 6px;
 
 :export {
   textColorPrimary: $textColorPrimary;
@@ -10,4 +13,7 @@ $padding1: 10px;
   textColorActive: $textColorActive;
   borderColor: $borderColor;
   padding1: $padding1;
+  buttonColor: $buttonColor;
+  buttonColorHover: $buttonColor;
+  borderRadius: $borderRadius;
 }

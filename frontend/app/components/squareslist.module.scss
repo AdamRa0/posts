@@ -1,0 +1,23 @@
+@import "../variables.module.scss";
+
+.list {
+  padding: 0;
+
+  li.active {
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+}
+
+.listItem {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: $padding1;
+  margin-bottom: $padding1;
+  border-radius: $borderRadius;
+
+  p {
+    font-size: 14px;
+  }
+}
