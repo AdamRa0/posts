@@ -3,7 +3,7 @@
 .siteHeader {
   display: flex;
   align-items: center;
-  gap: 10%;
+  gap: 50px;
   height: 80px;
   position: fixed;
   top: 0;
@@ -20,21 +20,14 @@
     color: $textColorPrimary;
   }
 
+  .logoAndSiteName {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
   input {
-    &::placeholder {
-      font-size: 16px;
-      color: $textColorSecondary;
-    }
-
-    &:focus {
-      border-color: black;
-    }
-
-    border-color: $borderColor;
-    width: 100%;
     padding: 10px 10px 10px 50px;
-    border-radius: $borderRadius;
-    outline: none;
   }
 
   .inputGroup {

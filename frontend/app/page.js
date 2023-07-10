@@ -1,48 +1,27 @@
 "use client";
 
+import Image from "next/image";
 import styles from "./page.module.scss";
-import useGetPosts from "./useGetPosts";
-import { useCallback, useRef, useState } from "react";
 
 import AuthButton from "./components/AuthButton";
-import SquaresList from "./components/SquaresList";
+import PostsList from "./components/lists/PostsList";
+import SquaresList from "./components/lists/SquaresList";
 import SvgComponent from "./components/SearchIconComponent";
+import InputComponent from "./components/InputComponent";
 
 export default function Home() {
-  const [pageNumber, setPageNumber] = useState(1);
-
-  const { posts, hasMore, loading, error } = useGetPosts({
-    pageNumber: pageNumber,
-  });
-
-  const observer = useRef();
-
-  const lastPostElementRef = useCallback(
-    (node) => {
-      if (loading) return;
-
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPageNumber((previousPageNo) => previousPageNo + 1);
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [loading, hasMore]
-  );
-
   return (
     <section className={styles.mainBody}>
       <header className={styles.siteHeader}>
-        <h1>Posts</h1>
+        <div className={styles.logoAndSiteName}>
+          <Image src="/post.svg" width={36} height={36} alt="Site icon logo" />
+          <h1>Posts</h1>
+        </div>
         <div className={styles.inputGroup}>
           <span aria-hidden="true">
             <SvgComponent />
           </span>
-          <input type="search" placeholder="Search Posts" />
+          <InputComponent type={"search"} placeholder={"Search Posts"} />
         </div>
         <AuthButton text={"Login"} />
       </header>
@@ -74,19 +53,7 @@ export default function Home() {
           </section>
         </section>
         <section className={styles.right}>
-          {/* <p>Main content and other pages go here</p> */}
-          {posts.map((post, index) => {
-            if (posts.length === index + 1) {
-              return (
-                <div ref={lastPostElementRef} key={post}>
-                  {post}
-                </div>
-              );
-            }
-            return <div key={post}>{post}</div>;
-          })}
-          <div>{loading && "Loading..."}</div>
-          <div>{error && "Error"}</div>
+          <PostsList />
         </section>
       </main>
     </section>
