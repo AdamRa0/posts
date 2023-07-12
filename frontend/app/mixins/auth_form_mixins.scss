@@ -1,0 +1,21 @@
+@import "../variables.module.scss";
+
+@mixin auth-form-container {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 30px;
+  border-radius: $borderRadius;
+  box-shadow: 5px 5px 5px $hoverColor;
+}
+
+@mixin auth-pages-bg-color {
+  background-color: $authFormsBgColor;
+  height: 100vh;
+}
+
+@mixin auth-form-and-items {
+  display: flex;
+  flex-direction: column;
+}

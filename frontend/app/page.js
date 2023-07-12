@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.scss";
 
 import AuthButton from "./components/AuthButton";
@@ -8,22 +8,25 @@ import PostsList from "./components/lists/PostsList";
 import SquaresList from "./components/lists/SquaresList";
 import SvgComponent from "./components/SearchIconComponent";
 import InputComponent from "./components/InputComponent";
+import LogoPlusBrand from "./components/logo-and-brand/LogoPlusBrand";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <section className={styles.mainBody}>
       <header className={styles.siteHeader}>
-        <div className={styles.logoAndSiteName}>
-          <Image src="/post.svg" width={36} height={36} alt="Site icon logo" />
-          <h1>Posts</h1>
-        </div>
+        <LogoPlusBrand logoDimens={36} />
         <div className={styles.inputGroup}>
           <span aria-hidden="true">
             <SvgComponent />
           </span>
           <InputComponent type={"search"} placeholder={"Search Posts"} />
         </div>
-        <AuthButton text={"Login"} />
+        <AuthButton
+          text={"Login"}
+          handleOnClick={() => router.push("/auth/login")}
+        />
       </header>
       <main className={styles.siteBody}>
         <section className={styles.left}>
@@ -42,7 +45,10 @@ export default function Home() {
             <div>
               <div className={styles.leftLowerUpper}>
                 <h2>New to posts?</h2>
-                <AuthButton text={"Join Posts"} />
+                <AuthButton
+                  text={"Join Posts"}
+                  handleOnClick={() => router.push("/auth/signup")}
+                />
               </div>
               <p>
                 By signing up, you agree to our <span>terms of service</span>{" "}

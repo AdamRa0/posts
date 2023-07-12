@@ -14,20 +14,15 @@
   padding: 0 32px 0 32px;
   border-bottom: 1px $borderColor solid;
 
-  h1 {
+  .formTitle {
     font-weight: 800;
     font-size: 28px;
     color: $textColorPrimary;
   }
 
-  .logoAndSiteName {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
   input {
     padding: 10px 10px 10px 50px;
+    width: 100%;
   }
 
   .inputGroup {
