@@ -1,5 +1,13 @@
+@import "../../mixins/media_query_mixins.scss";
+
 .logoAndSiteName {
   display: flex;
   align-items: center;
   gap: 20px;
+
+  @include mobile-media-query {
+    h1 {
+      display: none;
+    }
+  }
 }

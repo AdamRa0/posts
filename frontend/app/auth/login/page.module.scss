@@ -1,4 +1,5 @@
 @import "../../mixins/auth_form_mixins.scss";
+@import "../../mixins/media_query_mixins.scss";
 
 .loginForm {
   @include auth-pages-bg-color;
@@ -13,6 +14,14 @@
   width: 540px;
   height: 500px;
 
+  @include mobile-media-query {
+    position: relative;
+    top: 100px;
+    left: 5%;
+    height: 100%;
+    width: 80%;
+  }
+
   h1 {
     font-size: 20px;
   }
@@ -22,9 +31,18 @@
     margin-top: 20px;
     gap: 30px;
 
+    @include mobile-media-query {
+      margin-top: 0;
+      gap: 20px;
+    }
+
     .formItem {
       @include auth-form-and-items;
       gap: 20px;
+
+      @include mobile-media-query {
+        gap: 10px;
+      }
 
       label {
         font-weight: 600;
@@ -32,6 +50,10 @@
 
       input {
         padding: 10px;
+
+        @include mobile-media-query {
+          width: 90%;
+        }
       }
     }
 
@@ -39,6 +61,11 @@
       padding: 15px;
       width: 520px;
       text-align: center;
+
+      @include mobile-media-query {
+        width: 70%;
+        align-self: center;
+      }
     }
   }
 

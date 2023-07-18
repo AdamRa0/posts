@@ -9,9 +9,10 @@ export default function PostCardAction({
 }) {
   return (
     <div tabIndex={0} className={styles.postCardActionItem}>
-      <Image src={actionIconPath} width={20} height={20} alt={altText} />
+      <Image src={actionIconPath} width={16} height={16} alt={altText} />
       <p>
-        {numOfActions} {actionName}
+        {numOfActions}{" "}
+        <div className={styles.postCardActionName}>{actionName}</div>
       </p>
     </div>
   );

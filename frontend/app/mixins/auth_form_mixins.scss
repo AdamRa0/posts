@@ -1,4 +1,5 @@
 @import "../variables.module.scss";
+@import "./media_query_mixins.scss";
 
 @mixin auth-form-container {
   background-color: white;
@@ -8,11 +9,20 @@
   padding: 30px;
   border-radius: $borderRadius;
   box-shadow: 5px 5px 5px $hoverColor;
+
+  @include mobile-media-query {
+    box-shadow: none;
+    border-radius: none;
+    padding: $padding1 * 2;
+  }
 }
 
 @mixin auth-pages-bg-color {
-  background-color: $authFormsBgColor;
   height: 100vh;
+
+  @include mobile-media-query {
+    height: 100%;
+  }
 }
 
 @mixin auth-form-and-items {

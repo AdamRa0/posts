@@ -9,6 +9,7 @@ import SquaresList from "./components/lists/SquaresList";
 import SvgComponent from "./components/SearchIconComponent";
 import InputComponent from "./components/InputComponent";
 import LogoPlusBrand from "./components/logo-and-brand/LogoPlusBrand";
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -16,6 +17,9 @@ export default function Home() {
   return (
     <section className={styles.mainBody}>
       <header className={styles.siteHeader}>
+        <div className={styles.menuLogo} tabIndex={0}>
+          <Image src="/menu.svg" height={36} width={36} alt="Menu Icon" />
+        </div>
         <LogoPlusBrand logoDimens={36} />
         <div className={styles.inputGroup}>
           <span aria-hidden="true">
