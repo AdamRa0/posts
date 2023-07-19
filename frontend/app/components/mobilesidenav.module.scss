@@ -15,7 +15,7 @@
     padding: $padding1 + 5px;
     transform: translateX(-120%);
     transition: transform 0.5s ease-out;
-
+    top: 60px;
     &.active {
       transform: translateX(0);
       transition: transform 0.5s ease-in;
