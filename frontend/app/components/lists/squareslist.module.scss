@@ -1,0 +1,24 @@
+@import "../../variables.module.scss";
+
+.list {
+  padding: 0;
+
+  li.active {
+    outline: none;
+    background-color: $hoverColor;
+  }
+}
+
+.listItem {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: $padding1;
+  margin-bottom: $padding1;
+  border-radius: $borderRadius;
+
+  p {
+    font-size: 14px;
+  }
+}

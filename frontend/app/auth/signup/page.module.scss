@@ -1,0 +1,105 @@
+@import "../../mixins/auth_form_mixins.scss";
+@import "../../mixins/media_query_mixins.scss";
+
+.signInPage {
+  @include auth-pages-bg-color;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  @include mobile-media-query {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .signInLeft {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+
+    @include mobile-media-query {
+      display: none;
+    }
+
+    h1 {
+      font-size: 20px;
+    }
+
+    ul {
+      padding: 0;
+    }
+  }
+
+  .signInRight {
+    @include auth-form-container;
+    grid-column: 2;
+    height: 500px;
+    width: 500px;
+    margin-top: 20px;
+    margin-left: 10%;
+
+    @include mobile-media-query {
+      height: 100%;
+      width: 70%;
+      margin-top: 50px;
+    }
+
+    form {
+      @include auth-form-and-items;
+      gap: 30px;
+
+      @include mobile-media-query {
+        gap: 20px;
+      }
+
+      .formItem {
+        @include auth-form-and-items;
+        gap: 20px;
+
+        @include mobile-media-query {
+          gap: 15px;
+        }
+      }
+
+      label {
+        font-weight: 600;
+      }
+
+      input {
+        padding: 10px;
+
+        @include mobile-media-query {
+          width: 90%;
+        }
+      }
+    }
+
+    button {
+      padding: 15px;
+      width: 480px;
+      text-align: center;
+
+      @include mobile-media-query {
+        width: 70%;
+        align-self: center;
+      }
+    }
+
+    p {
+      &:not(.formTitle) {
+        margin-top: 30px;
+      }
+
+      &.formTitle {
+        font-weight: 600;
+        margin-bottom: 30px;
+      }
+
+      font-weight: 500;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+}

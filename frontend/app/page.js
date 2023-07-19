@@ -1,95 +1,98 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+
+import { useState } from "react";
+
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+
+import styles from "./page.module.scss";
+
+import AuthButton from "./components/AuthButton";
+import PostsList from "./components/lists/PostsList";
+import SquaresList from "./components/lists/SquaresList";
+import SvgComponent from "./components/SearchIconComponent";
+import InputComponent from "./components/InputComponent";
+import LogoPlusBrand from "./components/logo-and-brand/LogoPlusBrand";
+import MobileSideNav from "./components/MobileSideNav";
 
 export default function Home() {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleOnInteractMenu() {
+    setIsOpen(!isOpen);
+  }
+
+  function handleOnMenuPressEnter(event) {
+    if (event.key === "Enter") {
+      handleOnInteractMenu();
+    }
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <section className={styles.mainBody}>
+      <header className={styles.siteHeader}>
+        <div
+          className={styles.menuLogo}
+          tabIndex={0}
+          onClick={() => handleOnInteractMenu()}
+          onKeyDown={(event) => handleOnMenuPressEnter(event)}
+        >
+          <Image
+            src={isOpen ? "/close.svg" : "/menu.svg"}
+            height={36}
+            width={36}
+            alt="Menu Icon"
+          />
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+        <LogoPlusBrand logoDimens={36} />
+        <div className={styles.inputGroup}>
+          <span aria-hidden="true">
+            <SvgComponent />
+          </span>
+          <InputComponent type={"search"} placeholder={"Search Posts"} />
+        </div>
+        <AuthButton
+          text={"Login"}
+          handleOnClick={() => router.push("/auth/login")}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      </header>
+      <main className={styles.siteBody}>
+        <MobileSideNav isOpen={isOpen} />
+        <section className={styles.left}>
+          <section className={styles.leftUpper}>
+            <div>
+              <p className={styles.sectionTitle}>Feed</p>
+              <SquaresList />
+            </div>
+            <div>
+              <p className={styles.sectionTitle}>Profile</p>
+              {/* Show message if unauthenticated, else, show pfp, username, handle, notifications and settings */}
+              <p>Sign up now for a personalized square</p>
+            </div>
+          </section>
+          <section className={styles.leftLower}>
+            <div>
+              <div className={styles.leftLowerUpper}>
+                <h2>New to posts?</h2>
+                <AuthButton
+                  text={"Join Posts"}
+                  handleOnClick={() => router.push("/auth/signup")}
+                />
+              </div>
+              <p>
+                By signing up, you agree to our <span>terms of service</span>{" "}
+                and <span>privacy policy</span> including{" "}
+                <span>cookie use</span>
+              </p>
+            </div>
+          </section>
+        </section>
+        <section className={styles.right}>
+          <div className={isOpen ? styles.rightInactive : ""}></div>
+          <PostsList />
+        </section>
+      </main>
+    </section>
+  );
 }

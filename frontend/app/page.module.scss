@@ -1,0 +1,140 @@
+@import "./variables.module.scss";
+@import "./mixins/media_query_mixins.scss";
+
+.siteHeader {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  background-color: white;
+
+  padding: 0 32px 0 32px;
+  border-bottom: 1px $borderColor solid;
+
+  .menuLogo {
+    display: none;
+  }
+
+  @include mobile-media-query {
+    height: 60px;
+    gap: 20px;
+
+    .menuLogo {
+      display: block;
+    }
+  }
+
+  input {
+    padding: 10px 10px 10px 50px;
+    width: 100%;
+  }
+
+  .inputGroup {
+    position: relative;
+    width: 60%;
+
+    span {
+      position: absolute;
+      top: 25%;
+      left: 2.5%;
+    }
+
+    @include mobile-media-query {
+      display: none;
+    }
+  }
+
+  button {
+    padding: 10px;
+    width: 10%;
+
+    @include mobile-media-query {
+      width: 20%;
+      margin-left: auto;
+      margin-right: 50px;
+    }
+  }
+}
+
+.siteBody {
+  position: relative;
+  top: 80px;
+
+  @include mobile-media-query {
+    top: 60px;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  .left {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px $borderColor solid;
+    padding: $padding1 * 2;
+    width: 280px;
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    background-color: white;
+
+    @include mobile-media-query {
+      display: none;
+    }
+  }
+
+  .leftUpper {
+    border-bottom: 1px $borderColor solid;
+
+    .sectionTitle {
+      text-transform: uppercase;
+      color: $textColorSecondary;
+      font-weight: 600;
+    }
+  }
+
+  .leftLower {
+    button {
+      padding: 10px;
+      width: 80%;
+    }
+
+    .leftLowerUpper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    span {
+      color: $textColorActive;
+    }
+  }
+
+  .right {
+    padding: $padding1;
+    margin-left: 330px;
+
+    .rightInactive {
+      display: none;
+
+      @include mobile-media-query {
+        display: block;
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        z-index: 8000;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    @include mobile-media-query {
+      margin-left: 0;
+    }
+  }
+}

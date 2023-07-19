@@ -1,0 +1,48 @@
+import styles from "./postslist.module.scss";
+import useGetPosts from "@/app/useGetPosts";
+import PostCard from "../PostCard";
+import { useCallback, useRef, useState } from "react";
+
+export default function PostsList() {
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const { posts, hasMore, loading, error } = useGetPosts({
+    pageNumber: pageNumber,
+  });
+
+  const observer = useRef();
+
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+
+      if (observer.current !== undefined) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPageNumber((previousPageNo) => previousPageNo + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
+
+  const postItems = posts.map((post, index) => (
+    <li
+      key={post}
+      ref={posts.length === index + 1 ? lastPostElementRef : undefined}
+    >
+      <PostCard post={post} postIndex={index} />
+    </li>
+  ));
+
+  return (
+    <ul className={styles.contentList}>
+      {postItems}
+      <div className={styles.loader}>{loading && ""}</div>
+      <div>{error && "Error"}</div>
+    </ul>
+  );
+}
