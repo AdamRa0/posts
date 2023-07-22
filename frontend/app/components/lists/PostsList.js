@@ -1,6 +1,6 @@
 import styles from "./postslist.module.scss";
 import useGetPosts from "@/app/useGetPosts";
-import PostCard from "../PostCard";
+import PostCard from "../cards/PostCard";
 import { useCallback, useRef, useState } from "react";
 import { faker } from "@faker-js/faker";
 

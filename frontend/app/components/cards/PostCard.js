@@ -1,7 +1,7 @@
 import styles from "./postcard.module.scss";
 import Image from "next/image";
 import { faker } from "@faker-js/faker";
-import PostCardActions from "./actions/PostCardActions";
+import PostCardActions from "../actions/PostCardActions";
 
 export default function PostCard({ post, postIndex }) {
   return (
