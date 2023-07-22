@@ -1,0 +1,15 @@
+@import "../mixins/media_query_mixins.scss";
+@import "../variables.module.scss";
+
+.profilePageBody {
+  position: relative;
+  top: 80px;
+
+  ul {
+    list-style: none;
+  }
+
+  @include mobile-media-query {
+    top: 60px;
+  }
+}

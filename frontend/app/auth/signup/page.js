@@ -1,6 +1,6 @@
 import LogoPlusBrand from "@/app/components/logo-and-brand/LogoPlusBrand";
 import styles from "./page.module.scss";
-import AuthButton from "@/app/components/AuthButton";
+import Button from "@/app/components/Button";
 import Link from "next/link";
 import InputComponent from "@/app/components/InputComponent";
 
@@ -58,7 +58,7 @@ export default function Page() {
             <label htmlFor="password">Password</label>
             <InputComponent id={"password"} type={"password"} />
           </div>
-          <AuthButton type={"submit"} text={"Create account"} />
+          <Button type={"submit"} text={"Create account"} />
         </form>
         <p>
           Already have an account? <Link href={"/auth/login"}>Login</Link>

@@ -4,8 +4,8 @@ import Image from "next/image";
 import LogoPlusBrand from "../logo-and-brand/LogoPlusBrand";
 import SvgComponent from "../SearchIconComponent";
 import InputComponent from "../InputComponent";
-import AuthButton from "../AuthButton";
-import MobileSideNav from "../MobileSideNav";
+import Button from "../Button";
+import MobileSideNav from "../sidenavs/MobileSideNav";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +42,7 @@ export const Header = () => {
           </span>
           <InputComponent type={"search"} placeholder={"Search Posts"} />
         </div>
-        <AuthButton
+        <Button
           text={"Login"}
           handleOnClick={() => router.push("/auth/login")}
         />
