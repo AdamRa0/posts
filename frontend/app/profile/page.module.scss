@@ -18,19 +18,45 @@
     grid-template-columns: 1.7fr 1fr;
     padding: $padding1;
     margin-left: 325px;
-    align-items: start;
+
+    @include mobile-media-query {
+      margin-left: 0;
+      grid-template-columns: 1fr;
+      grid-template-rows: 450px 1fr;
+      padding: 0;
+
+      .profilePosts {
+        grid-row: 2;
+      }
+    }
 
     .profileDetails {
       align-self: start;
       background-color: white;
       border-radius: $borderRadius;
-      height: 500px;
+      border: 1px solid $borderColor;
+      height: 450px;
       position: sticky;
+      width: 356px;
       top: 90px;
+
+      @include mobile-media-query {
+        grid-row: 1;
+        top: 0;
+        position: relative;
+        width: 100%;
+      }
 
       .bannerImage {
         position: absolute;
         z-index: -1;
+        top: 0;
+        border-radius: $borderRadius $borderRadius 0 0;
+        width: 100%;
+
+        @include mobile-media-query {
+          z-index: 0;
+        }
       }
 
       .profileAvatar {
@@ -41,19 +67,27 @@
         height: 70px;
         width: 70px;
         border-radius: 50%;
+        z-index: 1;
+
+        @include mobile-media-query {
+          top: 230px;
+        }
 
         img {
           border-radius: 50%;
-          width: 100%;
         }
       }
 
       button {
         right: 20px;
-        top: 260px;
+        top: 280px;
         padding: 10px;
         width: 100px;
         position: absolute;
+
+        @include mobile-media-query {
+          top: 300px;
+        }
       }
 
       .userDetails {
@@ -102,23 +136,11 @@
           display: flex;
           align-items: center;
           gap: 5px;
-        }
-      }
 
-      nav {
-        left: 7px;
-        bottom: 2px;
-        position: absolute;
-
-        ul {
-          list-style: none;
-          display: flex;
-          gap: 10px;
-          padding: 0;
-
-          p {
-            font-size: 12px;
-            text-transform: uppercase;
+          &:hover,
+          &:focus {
+            color: $textColorActive;
+            outline: none;
           }
         }
       }

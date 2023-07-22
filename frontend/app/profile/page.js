@@ -12,47 +12,37 @@ import PostsList from "../components/lists/PostsList";
 import Button from "../components/Button";
 
 export default function Profile() {
-  const fakeBannerImage = faker.image.url();
-  const profileAvatar = faker.internet.avatar();
-  const userName = faker.internet.displayName();
-  const userHandle = `@${faker.internet.displayName()}`;
+  const userName = "Test Username";
+  const userHandle = "testusername";
   const userBio = "Hello there, new to posts.";
-
-  const profileNavItems = [
-    "overview",
-    "posts",
-    "reposts",
-    "subsribers",
-    "subscribees",
-  ];
-
-  const navItems = profileNavItems.map((item) => (
-    <li key={faker.finance.routingNumber()}>
-      <p>{item}</p>
-    </li>
-  ));
 
   return (
     <>
       <Header />
       <main className={styles.profilePageBody}>
         <DesktopSideNav />
-        <section className={styles.profilePageContent}>
-          <PostsList />
+        <section className={styles.profilePageContent} suppressHydrationWarning>
+          <section className={styles.profilePosts}>
+            <PostsList />
+          </section>
           <section className={styles.profileDetails}>
             <div className={styles.bannerImage}>
               <Image
-                src={fakeBannerImage}
-                width={356}
-                height={250}
+                src={faker.image.url()}
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{ width: "100%", height: "auto" }}
                 alt="User banner image"
               />
             </div>
             <div className={styles.profileAvatar}>
               <Image
-                src={profileAvatar}
-                width={70}
-                height={70}
+                src={faker.internet.avatar()}
+                width={0}
+                height={0}
+                sizes="100vw"
+                style={{ width: "100%", height: "auto" }}
                 alt="User profile image"
               />
             </div>
@@ -63,18 +53,15 @@ export default function Profile() {
               <p>{userBio}</p>
             </div>
             <div className={styles.userNetwork}>
-              <div>
+              <div tabIndex={0}>
                 <h3>200</h3>
                 <p>Subscribers</p>
               </div>
-              <div>
+              <div tabIndex={0}>
                 <h3>500</h3>
                 <p>Subscribees</p>
               </div>
             </div>
-            <nav>
-              <ul>{navItems}</ul>
-            </nav>
           </section>
         </section>
       </main>

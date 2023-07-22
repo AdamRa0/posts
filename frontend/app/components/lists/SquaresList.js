@@ -48,6 +48,7 @@ export default function SquaresList() {
       onKeyDown={(event) => handleKeyPress(event, index)}
       onMouseLeave={() => handleMouseLeave(index)}
       onBlur={() => handleMouseLeave(index)}
+      key={Math.floor(Math.random() * 100000) ** 2}
     >
       <div className={styles.listItem} tabIndex={0}>
         <Image src={icon.src} width={24} height={24} alt={icon.alt} />

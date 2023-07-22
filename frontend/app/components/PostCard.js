@@ -27,8 +27,10 @@ export default function PostCard({ post, postIndex }) {
         {postIndex % 2 === 0 && (
           <Image
             src={faker.image.url()}
-            height={500}
-            width={500}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "100%", height: "auto" }}
             alt="Image accompanying post"
           />
         )}

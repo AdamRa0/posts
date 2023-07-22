@@ -2,6 +2,7 @@ import styles from "./postslist.module.scss";
 import useGetPosts from "@/app/useGetPosts";
 import PostCard from "../PostCard";
 import { useCallback, useRef, useState } from "react";
+import { faker } from "@faker-js/faker";
 
 export default function PostsList() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -31,7 +32,7 @@ export default function PostsList() {
 
   const postItems = posts.map((post, index) => (
     <li
-      key={post}
+      key={faker.finance.routingNumber()}
       ref={posts.length === index + 1 ? lastPostElementRef : undefined}
     >
       <PostCard post={post} postIndex={index} />
