@@ -12,7 +12,7 @@ export default function PostCardAction({
       <Image src={actionIconPath} width={16} height={16} alt={altText} />
       <p>
         {numOfActions}{" "}
-        <div className={styles.postCardActionName}>{actionName}</div>
+        <span className={styles.postCardActionName}>{actionName}</span>
       </p>
     </div>
   );

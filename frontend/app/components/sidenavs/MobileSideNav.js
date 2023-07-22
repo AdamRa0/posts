@@ -1,6 +1,6 @@
 import styles from "./mobilesidenav.module.scss";
-import AuthButton from "./AuthButton";
-import SquaresList from "./lists/SquaresList";
+import Button from "../Button";
+import SquaresList from "../lists/SquaresList";
 
 export default function MobileSideNav({ isOpen }) {
   return (
@@ -26,7 +26,7 @@ export default function MobileSideNav({ isOpen }) {
         <div>
           <div className={styles.mobileSideNavLowerUpper}>
             <h2>New to posts?</h2>
-            <AuthButton
+            <Button
               text={"Join Posts"}
               handleOnClick={() => router.push("/auth/signup")}
             />
