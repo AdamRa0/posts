@@ -1,6 +1,10 @@
 import styles from "./header.module.scss";
+
 import { useState } from "react";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 import LogoPlusBrand from "../logo-and-brand/LogoPlusBrand";
 import SvgComponent from "../SearchIconComponent";
 import InputComponent from "../InputComponent";
@@ -9,6 +13,8 @@ import MobileSideNav from "../sidenavs/MobileSideNav";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
   function handleOnInteractMenu() {
     setIsOpen(!isOpen);
   }
