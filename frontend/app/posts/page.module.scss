@@ -1,0 +1,89 @@
+@import "../variables.module.scss";
+
+.postsPageBody {
+  margin-top: 80px;
+  height: 100vh;
+
+  .postAndCommentSection {
+    margin-left: 320px;
+    background-color: white;
+    width: 700px;
+    display: grid;
+    grid-template-rows: auto auto;
+    padding: $padding1 * 2;
+
+    .postSection {
+      border-bottom: 1px solid $borderColor;
+      margin-bottom: 5px;
+
+      .postCreatorDetails {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+
+        h4 {
+          color: $textColorSecondary;
+          font-weight: 500;
+        }
+
+        .postCreatorAvatar {
+          height: 70px;
+          width: 70px;
+
+          img {
+            border-radius: 50%;
+          }
+        }
+
+        .postCreatorNames {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          align-self: center;
+
+          h4 {
+            &:hover,
+            &:focus {
+              color: $textColorActive;
+            }
+          }
+
+          h3 {
+            font-weight: 600;
+            margin-bottom: 0;
+            &:hover,
+            &:focus {
+              color: $textColorActive;
+            }
+          }
+
+          h4 {
+            margin-top: 0;
+            &:hover,
+            &:focus {
+              color: $textColorActive;
+            }
+          }
+        }
+      }
+      .postContent {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .accompanyingImage {
+          margin-bottom: 10px;
+          img {
+            border-radius: $borderRadius;
+          }
+        }
+      }
+    }
+    .commentSection {
+      button {
+        padding: 10px;
+        margin-top: 10px;
+      }
+    }
+  }
+}
