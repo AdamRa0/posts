@@ -3,6 +3,7 @@ import useGetPosts from "@/app/useGetPosts";
 import PostCard from "../cards/PostCard";
 import { useCallback, useRef, useState } from "react";
 import { faker } from "@faker-js/faker";
+import Loader from "../loader/Loader";
 
 export default function PostsList() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -42,7 +43,7 @@ export default function PostsList() {
   return (
     <ul className={styles.contentList}>
       {postItems}
-      <div className={styles.loader}>{loading && ""}</div>
+      <div className={styles.loader}>{loading && <Loader />}</div>
       <div>{error && "Error"}</div>
     </ul>
   );

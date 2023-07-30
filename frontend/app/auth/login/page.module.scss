@@ -1,9 +1,22 @@
+@import "../../variables.module.scss";
 @import "../../mixins/auth_form_mixins.scss";
 @import "../../mixins/media_query_mixins.scss";
 
 .loginForm {
   @include auth-pages-bg-color;
   position: relative;
+}
+
+.loadingPageOverlay {
+  position: relative;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $hoverColor;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .formContainer {

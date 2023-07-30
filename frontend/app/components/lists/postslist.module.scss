@@ -1,4 +1,3 @@
-@import "../../variables.module.scss";
 @import "../../mixins/media_query_mixins.scss";
 
 .contentList {
@@ -11,23 +10,8 @@
   top: 20px;
   left: 50%;
   right: 50%;
-  border: 8px solid $loaderBorderColor;
-  border-top: 8px solid $loaderSpinnerColor;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 2s linear infinite;
 
   @include mobile-media-query {
     left: 40%;
-  }
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
   }
 }

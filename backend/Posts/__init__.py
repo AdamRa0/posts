@@ -22,7 +22,12 @@ def create_app():
     Creates and returns an instance of our application
     """
 
-    app: Flask = Flask(__name__)
+    app: Flask = Flask(
+        __name__,
+        instance_relative_config=True
+        if os.environ.get("ENVIRONMENT") == "development"
+        else False,
+    )
 
     init_app(app)
 

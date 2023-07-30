@@ -1,3 +1,4 @@
+@import "../../variables.module.scss";
 @import "../../mixins/auth_form_mixins.scss";
 @import "../../mixins/media_query_mixins.scss";
 
@@ -9,6 +10,18 @@
   @include mobile-media-query {
     display: flex;
     flex-direction: column;
+  }
+
+  .loadingPageOverlay {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 120vh;
+    background-color: $hoverColor;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .signInLeft {
@@ -33,10 +46,11 @@
   .signInRight {
     @include auth-form-container;
     grid-column: 2;
-    height: 500px;
+    height: 85%;
     width: 500px;
     margin-top: 20px;
     margin-left: 10%;
+    margin-bottom: 20px;
 
     @include mobile-media-query {
       height: 100%;

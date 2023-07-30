@@ -1,7 +1,6 @@
 from ...database.db import jwt
 from ..models.user_signup import UserSignUp
 from ..models.user_signin import UserSignIn
-from ...users.models.user_schema import UserSchema
 from ...users.controllers.account_creation_and_use.create_user import create_new_user
 from ...users.controllers.account_creation_and_use.get_user import (
     get_user_by_email,
@@ -10,6 +9,7 @@ from ...users.controllers.account_creation_and_use.get_user import (
 from ...users.controllers.account_management.deactivate_reactivate_user import (
     account_activation_manager,
 )
+
 
 from flask import Blueprint, jsonify, Response
 from flask_pydantic import validate
@@ -22,8 +22,6 @@ from werkzeug.security import check_password_hash
 
 
 auth_routes = Blueprint("auth_routes", __name__, url_prefix="/api/v1/auth")
-
-user_schema = UserSchema()
 
 
 @jwt.user_identity_loader
@@ -46,8 +44,8 @@ def user_lookup_callback(_jwt_header, jwt_data):
 
 @auth_routes.route("/signup", methods=["POST"])
 @validate()
-def signup_user(body: UserSignUp):
-    newly_created_user = create_new_user(body)
+def signup_user(form: UserSignUp):
+    newly_created_user = create_new_user(form)
 
     if newly_created_user is None:
         return (
@@ -68,13 +66,13 @@ def signup_user(body: UserSignUp):
 
 @auth_routes.route("/signin", methods=["POST"])
 @validate()
-def signin_user(body: UserSignIn):
-    user = get_user_by_email(body.email_address)
+def signin_user(form: UserSignIn):
+    user = get_user_by_email(form.email_address)
 
     if user is None:
         return jsonify({"message": "No such user exists", "status": "fail"}), 404
 
-    if user and check_password_hash(user.password, body.password) != True:
+    if user and check_password_hash(user.password, form.password) != True:
         return (
             jsonify(
                 {"message": "Your email or password might be wrong.", "status": "fail"}
