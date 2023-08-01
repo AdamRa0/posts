@@ -28,9 +28,14 @@ from ..controllers.account_management.set_unset_account_private import (
 )
 from ..models.user_schema import UserSchema
 from ...utils.upload_file import upload_file
-from ...utils.show_true_path import show_true_path
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    request,
+    send_from_directory,
+)
 from flask_jwt_extended import jwt_required, current_user
 
 
@@ -44,8 +49,6 @@ post_schemas = PostSchema(many=True)
 @user_routes.route("/<user_handle>")
 def get_user_profile_by_handle(user_handle: str):
     user = get_user_by_handle(user_handle)
-
-    user.profile_image = show_true_path(user.profile_image)
 
     user_subscribers = get_subscribers(user.id)
 
@@ -71,22 +74,19 @@ def get_user_profile_by_handle(user_handle: str):
 @user_routes.route("/profile")
 @jwt_required()
 def get_user_profile():
-    current_user.profile_image = show_true_path(current_user.profile_image)
-
     return user_schema.dump(current_user), 200
+
+
+@user_routes.route("/media/<path:filename>")
+def get_media(filename):
+    return send_from_directory("../uploads", filename)
 
 
 @user_routes.route("/")
 def get_all_users():
     users = get_all_registered_users()
-    updated_users = []
 
-    for user in users:
-        user.profile_image = show_true_path(user.profile_image)
-        user.banner_image = show_true_path(user.banner_image)
-        updated_users.append(user)
-
-    return users_schemas.dump(updated_users), 200
+    return users_schemas.dump(users), 200
 
 
 @user_routes.route("/user/delete", methods=["DELETE"])

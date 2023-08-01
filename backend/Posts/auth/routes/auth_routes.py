@@ -23,6 +23,8 @@ from werkzeug.security import check_password_hash
 
 auth_routes = Blueprint("auth_routes", __name__, url_prefix="/api/v1/auth")
 
+COOKIE_MAX_AGE: int = 172800
+
 
 @jwt.user_identity_loader
 def user_identity_lookup(user_id: str):
@@ -59,7 +61,7 @@ def signup_user(form: UserSignUp):
 
     response: Response = jsonify({"status": "success"})
 
-    set_access_cookies(response, access_token)
+    set_access_cookies(response, access_token, max_age=COOKIE_MAX_AGE)
 
     return response, 201
 
@@ -87,7 +89,7 @@ def signin_user(form: UserSignIn):
 
     response: Response = jsonify({"status": "success"})
 
-    set_access_cookies(response, access_token)
+    set_access_cookies(response, access_token, max_age=COOKIE_MAX_AGE)
 
     return response, 200
 

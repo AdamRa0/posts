@@ -1,17 +1,19 @@
 import styles from "./header.module.scss";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import axios from "axios";
+
 import LogoPlusBrand from "../logo-and-brand/LogoPlusBrand";
-import SvgComponent from "../SearchIconComponent";
-import InputComponent from "../InputComponent";
-import Button from "../Button";
+import SvgComponent from "../icons/SearchIconComponent";
+import InputComponent from "../inputs/InputComponent";
+import Button from "../buttons/Button";
 import MobileSideNav from "../sidenavs/MobileSideNav";
 
-export const Header = () => {
+export const Header = ({ authenticatedUser }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -24,6 +26,22 @@ export const Header = () => {
       handleOnInteractMenu();
     }
   }
+
+  const signOutUser = () => {
+    axios
+      .get("/api/v1/auth/signout")
+      .then(function (response) {
+        if (response.status === 200) {
+          console.log(response);
+          if (router.pathname !== "/") {
+            router.push("/");
+          }
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -48,12 +66,16 @@ export const Header = () => {
           </span>
           <InputComponent type={"search"} placeholder={"Search Posts"} />
         </div>
-        <Button
-          text={"Login"}
-          handleOnClick={() => router.push("/auth/login")}
-        />
+        {authenticatedUser === null ? (
+          <Button
+            text={"Login"}
+            handleOnClick={() => router.push("/auth/login")}
+          />
+        ) : (
+          <Button text={"Signout"} handleOnClick={signOutUser} />
+        )}
       </header>
-      <MobileSideNav isOpen={isOpen} />
+      <MobileSideNav isOpen={isOpen} authenticatedUser={authenticatedUser} />
       <div className={isOpen ? styles.rightInactive : ""}></div>
     </>
   );

@@ -49,11 +49,11 @@ def remove_user_if_exists(create_new_user_1, test_client):
 
 @pytest.fixture(scope="module")
 def store_user_fixture(create_new_user_1, test_client):
-    json_data = dict(
+    data = dict(
         username=create_new_user_1.username,
         email_address=create_new_user_1.email_address,
         handle=create_new_user_1.handle,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signup", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signup", data=data)

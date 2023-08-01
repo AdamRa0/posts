@@ -1,4 +1,3 @@
-from json import loads, dumps
 from werkzeug.datastructures import FileStorage
 
 
@@ -24,12 +23,12 @@ def test_get_user_profile_by_authorized_user(create_new_user_1, test_client):
     THEN account owner has access to their profile
     """
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -74,12 +73,12 @@ def test_deactivate_user(create_new_user_1, test_client):
     WHEN a user deactivates their account
     THEN the account is deactivated successfully
     """
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -98,12 +97,12 @@ def test_set_account_privacy(create_new_user_1, test_client):
     THEN the account privacy setting is changed according to a user's preference
     """
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -122,12 +121,12 @@ def test_upload_image(create_new_user_1, test_client):
     THEN the account's profile or banner image changes
     """
 
-    json_data = dict(
+    user_data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=user_data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -157,12 +156,12 @@ def test_get_user_subscribers(create_new_user_1, test_client):
     WHEN a registered user seeks to view their or another registered user's subscribers
     THEN a list of subscribers is presented to them
     """
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -186,12 +185,12 @@ def test_get_user_subscribees(create_new_user_1, test_client):
     accounts another registered user is subscribed to
     THEN a list of accounts user or other user subscribes to is presented to them
     """
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -214,12 +213,12 @@ def test_get_user_reposts(create_new_user_1, test_client):
     WHEN a registered user seeks to view their reposts or another user's reposts
     THEN a list of reposts is presented to them
     """
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -247,12 +246,12 @@ def test_update_user_details(create_new_user_1, test_client):
     new_email_address = "testuser@example.com"
     new_handle = "@testuser"
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -277,12 +276,12 @@ def test_delete_user(create_new_user_1, test_client):
     WHEN a user deletes their account
     THEN the account is deleted successfully
     """
-    json_data = dict(
+    data = dict(
         email_address="testuser@example.com",
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 

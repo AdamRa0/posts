@@ -1,8 +1,8 @@
 "use client";
 
 import styles from "./page.module.scss";
-import InputComponent from "@/app/components/InputComponent";
-import Button from "@/app/components/Button";
+import InputComponent from "@/app/components/inputs/InputComponent";
+import Button from "@/app/components/buttons/Button";
 
 import Link from "next/link";
 import LogoPlusBrand from "@/app/components/logo-and-brand/LogoPlusBrand";
@@ -46,7 +46,7 @@ export default function Page() {
     try {
       const response = await axios.postForm("/api/v1/auth/signin", form);
 
-      if (response) {
+      if (response.status === 200) {
         setIsAuthenticating(false);
         router.push("/");
       }

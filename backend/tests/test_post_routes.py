@@ -7,12 +7,12 @@ def test_create_new_post(create_new_user_1, test_client):
     WHEN a signed in user creates a new post,
     THEN the post and its information is returned.
     """
-    json_data = dict(
+    user_data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=user_data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -61,12 +61,12 @@ def test_get_user_posts(create_new_user_1, test_client):
     WHEN a user wants to see another user's posts,
     THEN the user is presented with a list of other user's posts.
     """
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -92,12 +92,12 @@ def test_update_post(create_new_user_1, test_client):
 
     updated_post = {"id": post_to_update_id, "body": "Updated test post"}
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -120,12 +120,12 @@ def test_post_approval(create_new_user_1, test_client):
     posts = test_client.get("/")
     post_to_approve_id = posts.json[0]["id"]
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -148,12 +148,12 @@ def test_post_disapproval(create_new_user_1, test_client):
     posts = test_client.get("/")
     post_to_approve_id = posts.json[0]["id"]
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -176,12 +176,12 @@ def test_post_repost(create_new_user_1, test_client):
     posts = test_client.get("/")
     post_to_repost_id = posts.json[0]["id"]
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -204,12 +204,12 @@ def test_remove_post_repost(create_new_user_1, test_client):
     posts = test_client.get("/")
     post_to_remove_repost_id = posts.json[0]["id"]
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -232,12 +232,12 @@ def test_comment_on_post(create_new_user_1, test_client):
     posts = test_client.get("/")
     post_to_comment_on_id = posts.json[0]["id"]
 
-    json_data = dict(
+    user_data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=user_data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 
@@ -267,12 +267,12 @@ def test_delete_post(create_new_user_1, test_client):
     posts = test_client.get("/")
     post_to_delete_id = posts.json[0]["id"]
 
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    test_client.post("/api/v1/auth/signin", data=data)
 
     authorizer = test_client.get_cookie("csrf_access_token")
 

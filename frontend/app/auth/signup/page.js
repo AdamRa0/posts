@@ -2,10 +2,10 @@
 
 import LogoPlusBrand from "@/app/components/logo-and-brand/LogoPlusBrand";
 import styles from "./page.module.scss";
-import Button from "@/app/components/Button";
+import Button from "@/app/components/buttons/Button";
 import Loader from "@/app/components/loader/Loader";
 import Link from "next/link";
-import InputComponent from "@/app/components/InputComponent";
+import InputComponent from "@/app/components/inputs/InputComponent";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ export default function Page() {
     try {
       const response = await axios.postForm("/api/v1/auth/signup", form);
 
-      if (response) {
+      if (response.status === 200) {
         setIsAuthenticating(false);
         router.push("/");
       }

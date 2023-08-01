@@ -9,7 +9,7 @@ import Image from "next/image";
 import { Header } from "../components/header/header";
 import DesktopSideNav from "../components/sidenavs/DesktopSideNav";
 import PostCardActions from "../components/actions/PostCardActions";
-import Button from "../components/Button";
+import Button from "../components/buttons/Button";
 
 export default function PostPage() {
   const testPost = "Wasyuname";
