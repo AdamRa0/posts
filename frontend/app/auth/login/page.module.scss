@@ -1,6 +1,7 @@
 @import "../../variables.module.scss";
 @import "../../mixins/auth_form_mixins.scss";
 @import "../../mixins/media_query_mixins.scss";
+@import "../../mixins/loading_page_overlay_mixin.scss";
 
 .loginForm {
   @include auth-pages-bg-color;
@@ -8,15 +9,7 @@
 }
 
 .loadingPageOverlay {
-  position: relative;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: $hoverColor;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include loading-page-overlay;
 }
 
 .formContainer {

@@ -173,7 +173,7 @@ def test_get_user_subscribers(create_new_user_1, test_client):
 
     user_id = response.json["id"]
 
-    sub_response = test_client.get(f"/api/v1/users/{user_id}/subscribers")
+    sub_response = test_client.get(f"/api/v1/users/subscribers?user-id={user_id}")
 
     assert sub_response.status_code == 200
 
@@ -202,7 +202,7 @@ def test_get_user_subscribees(create_new_user_1, test_client):
 
     user_id = response.json["id"]
 
-    subees_response = test_client.get(f"/api/v1/users/{user_id}/subscribees")
+    subees_response = test_client.get(f"/api/v1/users/subscribees?user-id={user_id}")
 
     assert subees_response.status_code == 200
 

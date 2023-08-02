@@ -1,6 +1,7 @@
 @import "../../variables.module.scss";
 @import "../../mixins/auth_form_mixins.scss";
 @import "../../mixins/media_query_mixins.scss";
+@import "../../mixins/loading_page_overlay_mixin.scss";
 
 .signInPage {
   @include auth-pages-bg-color;
@@ -13,15 +14,7 @@
   }
 
   .loadingPageOverlay {
-    position: absolute;
-    top: 0;
-    width: 100vw;
-    height: 120vh;
-    background-color: $hoverColor;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include loading-page-overlay;
   }
 
   .signInLeft {

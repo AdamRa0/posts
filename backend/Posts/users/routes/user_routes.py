@@ -193,20 +193,28 @@ def vet_user():
     return jsonify({"message": "success"}), 200
 
 
-@user_routes.route("/<user_id>/subscribers")
+@user_routes.route("/subscribers")
 @jwt_required()
-def subscribers_to_user(user_id: str):
+def subscribers_to_user():
+    query_params = request.args
+
+    user_id = query_params.get("user-id") if query_params else current_user.id
+
     subscribers = get_subscribers(user_id)
 
     return users_schemas.dump(subscribers), 200
 
 
-@user_routes.route("/<user_id>/subscribees")
+@user_routes.route("/subscribees")
 @jwt_required()
-def users_subscribed_by_user(user_id: str):
+def users_subscribed_by_user():
+    query_params = request.args
+
+    user_id = query_params.get("user-id") if query_params else current_user.id
+
     subscribees = get_subscribees(user_id)
 
-    return user_schema.dump(subscribees), 200
+    return users_schemas.dump(subscribees), 200
 
 
 @user_routes.route("/<user_id>/reposts")

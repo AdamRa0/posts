@@ -58,7 +58,7 @@ export default function Page() {
 
       if (response.status === 200) {
         setIsAuthenticating(false);
-        router.push("/");
+        router.back();
       }
     } catch (error) {
       setIsAuthenticating(false);
@@ -66,11 +66,18 @@ export default function Page() {
     }
   }
 
+  if (isAuthenticating) {
+    return (
+      <>
+        <div className={styles.loadingPageOverlay}>
+          <Loader />
+        </div>
+      </>
+    );
+  }
+
   return (
     <section className={styles.signInPage}>
-      <div className={isAuthenticating ? styles.loadingPageOverlay : undefined}>
-        {isAuthenticating && <Loader />}
-      </div>
       <div className={styles.signInLeft}>
         <LogoPlusBrand logoDimens={24} />
         <ul>

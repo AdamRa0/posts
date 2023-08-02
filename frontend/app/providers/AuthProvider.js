@@ -9,8 +9,7 @@ export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
   const AUTH_TOKEN = useGetCSRFAccessToken();
-
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
 
   useEffect(() => {
     if (AUTH_TOKEN === undefined) {
