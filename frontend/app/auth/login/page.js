@@ -8,9 +8,10 @@ import Link from "next/link";
 import LogoPlusBrand from "@/app/components/logo-and-brand/LogoPlusBrand";
 
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader/Loader";
+import { AuthContext } from "@/app/providers/AuthProvider";
 
 export default function Page() {
   const [emailAddress, setEmailAddress] = useState("");
@@ -18,6 +19,8 @@ export default function Page() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState();
   const router = useRouter();
+
+  const authenticatedUser = useContext(AuthContext);
 
   function handleOnChange(event, value) {
     switch (value) {
@@ -48,7 +51,6 @@ export default function Page() {
 
       if (response.status === 200) {
         setIsAuthenticating(false);
-        router.back();
       }
     } catch (error) {
       setError(error.message);
@@ -64,6 +66,10 @@ export default function Page() {
         </div>
       </>
     );
+  }
+
+  if (authenticatedUser !== null) {
+    return <>{router.back()}</>;
   }
 
   return (

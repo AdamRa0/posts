@@ -18,6 +18,10 @@
     display: none;
   }
   overflow-y: scroll;
+
+  &.authenticated {
+    overflow-y: hidden;
+  }
 }
 
 .leftUpper {

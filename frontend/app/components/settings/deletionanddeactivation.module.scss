@@ -1,0 +1,40 @@
+@import "../../variables.module.scss";
+@import "../../mixins/media_query_mixins.scss";
+
+.ddItem {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  width: 400px;
+  margin-bottom: 20px;
+
+  @include mobile-media-query {
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .buttonDelete {
+    background-color: rgb(199, 37, 37);
+    color: white;
+    font-weight: 600;
+    border-radius: $borderRadius;
+    outline: none;
+    border: 0.5px solid rgb(199, 37, 37);
+    box-shadow: 2px 5px rgba(0, 0, 0, 0.1);
+
+    &:active {
+      transform: translateY(4px);
+      transition: transform, 0.1s ease-in;
+      box-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    &:hover,
+    &:focus {
+      background-color: rgba(199, 37, 37, 0.8);
+    }
+  }
+}

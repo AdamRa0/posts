@@ -1,7 +1,7 @@
 from ..controllers.create_post import create_post
 from ..controllers.delete_post import delete_post
 from ..controllers.get_post import get_post, get_post_by_author_id
-from ..controllers.get_posts import get_posts_by_user
+from ..controllers.get_posts import get_posts, get_posts_by_user
 from ..controllers.like_dislike_post import like_post, dislike_post
 
 from ..controllers.repost_derepost import repost, del_repost
@@ -24,6 +24,18 @@ from flask_jwt_extended import jwt_required, current_user
 post_routes = Blueprint("post_routes", __name__, url_prefix="/api/v1/posts")
 post_schema = PostSchema()
 posts_schema = PostSchema(many=True)
+
+
+@post_routes.route("/")
+def get_all_posts():
+    """
+    First route a new visitor will see.
+    Will contain all posts sorted by popularity (ratio of approvals to disapprovals)
+    """
+    posts_schema = PostSchema(many=True)
+    posts = get_posts()
+
+    return posts_schema.dump(posts), 200
 
 
 @post_routes.route("/create_post", methods=["POST"])

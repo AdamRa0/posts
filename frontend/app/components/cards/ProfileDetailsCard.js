@@ -9,7 +9,7 @@ import Button from "../buttons/Button";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/app/providers/AuthProvider";
-import useGetCSRFAccessToken from "@/app/hooks/useGetCSRFAccessToken";
+import useGetCSRFAccessToken from "@/app/utils/useGetCSRFAccessToken";
 
 export default function ProfileDetailsCard({ user }) {
   const authenticatedUser = useContext(AuthContext);
@@ -57,7 +57,7 @@ export default function ProfileDetailsCard({ user }) {
       <section className={styles.profileDetails}>
         <div className={styles.bannerImage}>
           <Image
-            src={`/api/v1/users/media/${user.banner_image}`}
+            src={`/api/v1/media/${user.banner_image}`}
             width={0}
             height={270}
             sizes="100vw"
@@ -67,7 +67,7 @@ export default function ProfileDetailsCard({ user }) {
         </div>
         <div className={styles.profileAvatar}>
           <Image
-            src={`/api/v1/users/media/${user.profile_image}`}
+            src={`/api/v1/media/${user.profile_image}`}
             width={0}
             height={0}
             sizes="100vw"

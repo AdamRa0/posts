@@ -34,7 +34,6 @@ from flask import (
     current_app,
     jsonify,
     request,
-    send_from_directory,
 )
 from flask_jwt_extended import jwt_required, current_user
 
@@ -77,11 +76,6 @@ def get_user_profile():
     return user_schema.dump(current_user), 200
 
 
-@user_routes.route("/media/<path:filename>")
-def get_media(filename):
-    return send_from_directory("../uploads", filename)
-
-
 @user_routes.route("/")
 def get_all_users():
     users = get_all_registered_users()
@@ -120,11 +114,11 @@ def update_user_details():
     email_address = request.form.get("email_address")
     handle = request.form.get("handle")
 
-    if username is not None:
+    if username is not None and username != current_user.username:
         change_username(current_user, username)
-    if email_address is not None:
+    if email_address is not None and username != current_user.email_address:
         change_email_address(current_user, email_address)
-    if handle is not None:
+    if handle is not None != current_user.handle:
         change_handle(current_user, handle)
 
     updated_user = get_user_by_id(current_user.id)

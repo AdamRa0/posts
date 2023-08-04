@@ -6,7 +6,9 @@ import Button from "@/app/components/buttons/Button";
 import Loader from "@/app/components/loader/Loader";
 import Link from "next/link";
 import InputComponent from "@/app/components/inputs/InputComponent";
-import { useState } from "react";
+import { AuthContext } from "@/app/providers/AuthProvider";
+
+import { useContext, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -18,6 +20,8 @@ export default function Page() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState();
   const router = useRouter();
+
+  const authenticatedUser = useContext(AuthContext);
 
   function handleOnChange(event, value) {
     switch (value) {
@@ -58,7 +62,6 @@ export default function Page() {
 
       if (response.status === 200) {
         setIsAuthenticating(false);
-        router.back();
       }
     } catch (error) {
       setIsAuthenticating(false);
@@ -74,6 +77,10 @@ export default function Page() {
         </div>
       </>
     );
+  }
+
+  if (authenticatedUser !== null) {
+    return <>{router.back()}</>;
   }
 
   return (

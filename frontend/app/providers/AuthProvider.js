@@ -1,6 +1,6 @@
 "use client";
 
-import useGetCSRFAccessToken from "../hooks/useGetCSRFAccessToken";
+import useGetCSRFAccessToken from "../utils/useGetCSRFAccessToken";
 
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";

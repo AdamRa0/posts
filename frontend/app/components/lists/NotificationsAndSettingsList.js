@@ -1,10 +1,12 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./notificationsandsettingslist.module.scss";
+import createUUID from "@/app/utils/clientUUIDGenerator";
 
 export default function NotificationsAndSettingsList() {
-  const [selectedItem, setSelectedItem] = useState(0);
-  const [focusedItem, setFocusedItem] = useState(selectedItem);
+  const [focusedItem, setFocusedItem] = useState();
+  const router = useRouter();
 
   const sideNavIconsListItems = [
     {
@@ -24,7 +26,13 @@ export default function NotificationsAndSettingsList() {
   }
 
   function handleClick(index) {
-    setSelectedItem(index);
+    const { title } = sideNavIconsListItems[index];
+
+    if (title === "Settings") {
+      if (router.pathname !== "/settings") {
+        router.push("/settings");
+      }
+    }
   }
 
   function handleKeyPress(event, index) {
@@ -33,26 +41,24 @@ export default function NotificationsAndSettingsList() {
     }
   }
 
-  function handleMouseLeave(index) {
-    if (index !== selectedItem) {
-      setFocusedItem(selectedItem);
-    }
+  function handleMouseLeave() {
+    setFocusedItem();
   }
 
-  const sideNavItems = sideNavIconsListItems.map((icon, index) => (
+  const sideNavItems = sideNavIconsListItems.map((item, index) => (
     <li
       className={focusedItem === index ? styles.active : ""}
       onFocus={() => handleFocusedItem(index)}
       onMouseEnter={() => handleFocusedItem(index)}
       onClick={() => handleClick(index)}
       onKeyDown={(event) => handleKeyPress(event, index)}
-      onMouseLeave={() => handleMouseLeave(index)}
-      onBlur={() => handleMouseLeave(index)}
-      key={Math.floor(Math.random() * 100000) ** 2}
+      onMouseLeave={handleMouseLeave}
+      onBlur={handleMouseLeave}
+      key={createUUID()}
     >
       <div className={styles.listItem} tabIndex={0}>
-        <Image src={icon.src} width={24} height={24} alt={icon.alt} />
-        <p>{icon.title}</p>
+        <Image src={item.src} width={24} height={24} alt={item.alt} />
+        <p>{item.title}</p>
       </div>
     </li>
   ));

@@ -28,7 +28,7 @@ export default function MobileSideNav({ isOpen, authenticatedUser }) {
             <div className={styles.detailsAndSettingsContainer}>
               <div className={styles.userDetails}>
                 <Image
-                  src={`/api/v1/users/media/${authenticatedUser.profile_image}`}
+                  src={`/api/v1/media/${authenticatedUser.profile_image}`}
                   width={60}
                   height={60}
                   alt="User profile image"

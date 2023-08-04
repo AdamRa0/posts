@@ -1,0 +1,72 @@
+@import "../variables.module.scss";
+@import "../mixins/media_query_mixins.scss";
+@import "../mixins/loading_page_overlay_mixin.scss";
+
+.loadingPageOverlay {
+  @include loading-page-overlay;
+}
+
+.settingsBody {
+  display: grid;
+  grid-template-columns: 0.65fr;
+  align-items: center;
+  margin-left: 330px;
+  margin-top: 10px;
+
+  @include mobile-media-query {
+    margin: 0;
+  }
+
+  .settingsContent {
+    border-radius: $borderRadius;
+    border: 1px solid $borderColor;
+    background-color: white;
+    align-self: center;
+    height: 500px;
+
+    @include mobile-media-query {
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .titleAndTabs {
+      padding: $padding1;
+      background-color: $buttonColor;
+
+      h1 {
+        color: white;
+        font-size: 24px;
+      }
+
+      ul {
+        list-style: none;
+        display: flex;
+        gap: 30px;
+        color: white;
+        padding: 0;
+        margin-bottom: 0;
+        font-weight: 600;
+
+        .activeTabItem {
+          position: relative;
+          padding-bottom: 5px;
+
+          &::after {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            content: "";
+            height: 5px;
+            width: 100%;
+            background-color: white;
+            border-radius: $borderRadius;
+          }
+        }
+      }
+    }
+
+    .tabContent {
+      padding: $padding1;
+    }
+  }
+}
