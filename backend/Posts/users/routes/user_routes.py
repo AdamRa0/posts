@@ -35,7 +35,7 @@ from flask import (
     jsonify,
     request,
 )
-from flask_jwt_extended import jwt_required, current_user
+from flask_jwt_extended import jwt_required, current_user, get_jwt_identity
 
 
 user_routes = Blueprint("user_routes", __name__, url_prefix="/api/v1/users")
@@ -45,8 +45,9 @@ users_schemas = UserSchema(many=True)
 post_schemas = PostSchema(many=True)
 
 
-@user_routes.route("/<user_handle>")
-def get_user_profile_by_handle(user_handle: str):
+@user_routes.route("/user-handle")
+def get_user_profile_by_handle():
+    user_handle = request.args.get("handle")
     user = get_user_by_handle(user_handle)
 
     user_subscribers = get_subscribers(user.id)
@@ -71,9 +72,17 @@ def get_user_profile_by_handle(user_handle: str):
 
 
 @user_routes.route("/profile")
-@jwt_required()
+@jwt_required(optional=True)
 def get_user_profile():
-    return user_schema.dump(current_user), 200
+    logged_in_user = get_jwt_identity()
+    queried_user = request.args.get("user-id")
+
+    if logged_in_user and queried_user is None:
+        return user_schema.dump(current_user), 200
+
+    user = get_user_by_id(queried_user)
+
+    return user_schema.dump(user), 200
 
 
 @user_routes.route("/")

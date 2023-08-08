@@ -5,7 +5,7 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 30px;
   height: 80px;
   position: fixed;
   top: 0;
@@ -13,7 +13,7 @@
   z-index: 9999;
   background-color: white;
 
-  padding: 0 32px 0 32px;
+  padding: 0 40px 0 32px;
   border-bottom: 1px $borderColor solid;
   .menuLogo {
     display: none;
@@ -25,6 +25,11 @@
 
     .menuLogo {
       display: block;
+    }
+
+    .unauthContainer {
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 
@@ -50,12 +55,22 @@
 
   button {
     padding: 10px;
-    width: 10%;
+    width: 120px;
 
     @include mobile-media-query {
-      width: 25%;
-      margin-left: auto;
-      margin-right: 50px;
+      width: 100px;
+      padding: 7px;
+      font-size: 12px;
+    }
+  }
+
+  .authContainer {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    @include mobile-media-query {
+      gap: 20px;
     }
   }
 }

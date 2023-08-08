@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import AuthProvider from "./providers/AuthProvider";
+import PostUIProvider from "./providers/PostUIProvider";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -16,7 +17,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <PostUIProvider>{children}</PostUIProvider>
+        </AuthProvider>
       </body>
     </html>
   );

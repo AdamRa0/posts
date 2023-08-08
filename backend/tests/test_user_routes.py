@@ -9,7 +9,9 @@ def test_get_user_profile_by_handle(create_new_user_1, test_client):
     """
     user_handle = create_new_user_1.handle
 
-    response = test_client.get("/api/v1/users/{}".format(user_handle))
+    response = test_client.get(
+        "/api/v1/users/user-handle?handle={}".format(user_handle)
+    )
 
     assert response.status_code == 200
     assert response.json["username"] == create_new_user_1.username
@@ -41,19 +43,27 @@ def test_get_user_profile_by_authorized_user(create_new_user_1, test_client):
     assert response.json["handle"] == create_new_user_1.handle
 
 
-def test_get_user_profile_by_unauthorized_user(test_client):
+def test_get_user_profile_by_unauthorized_user(create_new_user_1, test_client):
     """
     GIVEN a registered user
     WHEN user who isn't registered tries to visit profile
     THEN return unauthorized response
     """
+    user_handle = create_new_user_1.handle
+
+    response = test_client.get(
+        "/api/v1/users/user-handle?handle={}".format(user_handle)
+    )
+
     test_client.delete_cookie("access_token_cookie")
     test_client.delete_cookie("csrf_access_token")
     test_client.environ_base.clear()
 
-    response = test_client.get("/api/v1/users/profile")
+    user_id = response.json["id"]
 
-    assert response.status_code == 401
+    response = test_client.get("/api/v1/users/profile?user-id={}".format(user_id))
+
+    assert response.status_code == 200
 
 
 def test_get_all_users(test_client):

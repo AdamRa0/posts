@@ -1,6 +1,6 @@
 import styles from "./header.module.scss";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ import InputComponent from "../inputs/InputComponent";
 import Button from "../buttons/Button";
 import MobileSideNav from "../sidenavs/MobileSideNav";
 
-export const Header = ({ authenticatedUser }) => {
+export const Header = ({ authenticatedUser, inflatePostUI }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -67,12 +67,17 @@ export const Header = ({ authenticatedUser }) => {
           <InputComponent type={"search"} placeholder={"Search Posts"} />
         </div>
         {authenticatedUser === null ? (
-          <Button
-            text={"Login"}
-            handleOnClick={() => router.push("/auth/login")}
-          />
+          <div className={styles.unauthContainer}>
+            <Button
+              text={"Login"}
+              handleOnClick={() => router.push("/auth/login")}
+            />
+          </div>
         ) : (
-          <Button text={"Signout"} handleOnClick={signOutUser} />
+          <div className={styles.authContainer}>
+            <Button text={"Create Post"} handleOnClick={inflatePostUI} />
+            <Button text={"Signout"} handleOnClick={signOutUser} />
+          </div>
         )}
       </header>
       <MobileSideNav isOpen={isOpen} authenticatedUser={authenticatedUser} />

@@ -32,8 +32,10 @@ def get_all_posts():
     First route a new visitor will see.
     Will contain all posts sorted by popularity (ratio of approvals to disapprovals)
     """
+    page_number = int(request.args.get("page"))
+
     posts_schema = PostSchema(many=True)
-    posts = get_posts()
+    posts = get_posts(page=page_number)
 
     return posts_schema.dump(posts), 200
 
@@ -54,15 +56,7 @@ def create_new_post():
 
     author_posts = get_post_by_author_id(current_user.id)
 
-    updated_posts = []
-
-    for post in author_posts:
-        if post.post_file is not None:
-            post.post_file = show_true_path(post.post_file)
-
-        updated_posts.append(post)
-
-    return posts_schema.dump(updated_posts)[0], 201
+    return posts_schema.dump(author_posts)[0], 201
 
 
 @post_routes.route("/<post_id>")
@@ -75,23 +69,17 @@ def get_single_post(post_id: str):
     if author.is_private and current_user not in author_subscribers:
         return jsonify({"message": "User limits who can view their posts."}), 403
 
-    post.post_file = show_true_path(post.post_file)
-
     return post_schema.dump(post), 200
 
 
-@post_routes.route("/user_posts/<user_id>")
-def get_user_posts(user_id: str):
-    user_posts = get_posts_by_user(user_id)
+@post_routes.route("/user_posts")
+def get_user_posts():
+    user_id = request.args.get("user-id")
+    page = int(request.args.get("page"))
 
-    updated_user_posts = []
+    user_posts = get_posts_by_user(user_id, page)
 
-    for post in user_posts:
-        post.post_file = show_true_path(post.post_file)
-
-        updated_user_posts.append(post)
-
-    return posts_schema.dump(updated_user_posts), 200
+    return posts_schema.dump(user_posts), 200
 
 
 @post_routes.route("/update_post", methods=["PATCH"])

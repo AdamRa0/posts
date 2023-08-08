@@ -35,7 +35,7 @@ def test_get_all_posts(test_client):
     WHEN a user visits the first page of the site,
     THEN a list of posts is presented to the user.
     """
-    response = test_client.get("/api/v1/posts/")
+    response = test_client.get("/api/v1/posts/?page=1")
 
     assert response.status_code == 200
 
@@ -46,7 +46,7 @@ def test_get_single_post(test_client):
     WHEN a user wants to see a single post,
     THEN the post is presented to user.
     """
-    posts_response = test_client.get("/api/v1/posts/")
+    posts_response = test_client.get("/api/v1/posts/?page=1")
 
     post_id = posts_response.json[0]["id"]
 
@@ -76,7 +76,11 @@ def test_get_user_posts(create_new_user_1, test_client):
 
     user_id = response.json["id"]
 
-    user_posts_response = test_client.get(f"/api/v1/posts/user_posts/{user_id}")
+    user_posts_response = test_client.get(
+        f"/api/v1/posts/user_posts?user-id={user_id}&page=1"
+    )
+
+    print(user_posts_response.json)
 
     assert user_posts_response.status_code == 200
 
@@ -87,7 +91,7 @@ def test_update_post(create_new_user_1, test_client):
     WHEN the post's owner seeks to edit their post,
     THEN their post is edited.
     """
-    posts = test_client.get("/api/v1/posts/")
+    posts = test_client.get("/api/v1/posts/?page=1")
     post_to_update_id = posts.json[0]["id"]
 
     updated_post = {"id": post_to_update_id, "body": "Updated test post"}
@@ -117,7 +121,7 @@ def test_post_approval(create_new_user_1, test_client):
     WHEN a user seeks to approve the post,
     THEN the post is approved.
     """
-    posts = test_client.get("/api/v1/posts/")
+    posts = test_client.get("/api/v1/posts/?page=1")
     post_to_approve_id = posts.json[0]["id"]
 
     data = dict(
@@ -145,7 +149,7 @@ def test_post_disapproval(create_new_user_1, test_client):
     WHEN a user seeks to disapprove the post,
     THEN the post is disapproved.
     """
-    posts = test_client.get("/api/v1/posts/")
+    posts = test_client.get("/api/v1/posts/?page=1")
     post_to_approve_id = posts.json[0]["id"]
 
     data = dict(
@@ -173,7 +177,7 @@ def test_post_repost(create_new_user_1, test_client):
     WHEN a user seeks to repost the post,
     THEN the post is reposted.
     """
-    posts = test_client.get("/api/v1/posts/")
+    posts = test_client.get("/api/v1/posts/?page=1")
     post_to_repost_id = posts.json[0]["id"]
 
     data = dict(
@@ -201,7 +205,7 @@ def test_remove_post_repost(create_new_user_1, test_client):
     WHEN a user seeks to remove their repost to the post,
     THEN the repost is removed.
     """
-    posts = test_client.get("/api/v1/posts/")
+    posts = test_client.get("/api/v1/posts/?page=1")
     post_to_remove_repost_id = posts.json[0]["id"]
 
     data = dict(
@@ -229,7 +233,7 @@ def test_comment_on_post(create_new_user_1, test_client):
     WHEN a user seeks to comment on it,
     THEN the post has the user's comment on it.
     """
-    posts = test_client.get("/api/v1/posts/")
+    posts = test_client.get("/api/v1/posts/?page=1")
     post_to_comment_on_id = posts.json[0]["id"]
 
     user_data = dict(
@@ -264,7 +268,7 @@ def test_delete_post(create_new_user_1, test_client):
     WHEN the posts owner deletes the post,
     THEN the post is deleted.
     """
-    posts = test_client.get("/api/v1/posts/")
+    posts = test_client.get("/api/v1/posts/?page=1")
     post_to_delete_id = posts.json[0]["id"]
 
     data = dict(

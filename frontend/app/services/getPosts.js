@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function useGetPosts({ pageNumber }) {
+export default function getPosts({ pageNumber }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
 
-  const postsURL = "https://jsonplaceholder.typicode.com/posts";
+  const postsURL = "/api/v1/posts";
 
   useEffect(() => {
     setLoading(true);
@@ -18,17 +18,12 @@ export default function useGetPosts({ pageNumber }) {
     axios({
       method: "GET",
       url: postsURL,
-      params: { _page: pageNumber },
+      params: { page: pageNumber },
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
       .then((response) => {
         setPosts((previousPosts) => {
-          return [
-            ...new Set([
-              ...previousPosts,
-              ...response.data.map((post) => post.body),
-            ]),
-          ];
+          return [...new Set([...previousPosts, ...response.data])];
         });
 
         setHasMore(response.data.length > 0);
