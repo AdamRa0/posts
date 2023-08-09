@@ -13,8 +13,9 @@ export default function getPostAuthorDetails({ authorID }) {
         cancelToken: new axios.CancelToken((c) => (cancel = c)),
       })
       .then(function (response) {
-        const { username, handle, profile_image } = response.data;
+        const { id, username, handle, profile_image } = response.data;
         setPostAuthor({
+          id,
           username,
           handle,
           profile_image,
@@ -25,7 +26,7 @@ export default function getPostAuthorDetails({ authorID }) {
       });
 
     return () => cancel();
-  });
+  }, []);
 
   return { postAuthor };
 }

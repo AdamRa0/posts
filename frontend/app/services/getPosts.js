@@ -22,16 +22,16 @@ export default function getPosts({ pageNumber }) {
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
       .then((response) => {
+        response.data.length === 20 ? setHasMore(true) : setHasMore(false);
+        setLoading(false);
         setPosts((previousPosts) => {
           return [...new Set([...previousPosts, ...response.data])];
         });
-
-        setHasMore(response.data.length > 0);
-        setLoading(false);
       })
       .catch((error) => {
-        if (axios.isCancel(error)) return;
         setError(true);
+        setLoading(false);
+        if (axios.isCancel(error)) return;
       });
 
     return () => cancel();

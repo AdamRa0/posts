@@ -162,3 +162,6 @@ cython_debug/
 
 # VSCode
 .vscode
+
+# file uploads
+uploads/[0-9a-zA-Z]*-[0-9a-zA-Z]*-[0-9a-zA-Z]*-[0-9a-zA-Z]*-[0-9a-zA-Z]*.*

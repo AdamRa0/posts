@@ -39,20 +39,14 @@ export default function PostsList() {
     </li>
   ));
 
-  console.log(posts);
-
   return (
     <>
       <ul className={styles.contentList}>
-        {error ? (
-          "Error"
-        ) : postItems.length > 0 ? (
-          postItems
-        ) : (
-          <div>{"No posts available"}</div>
-        )}
-        <div className={styles.loader}>{loading && <Loader />}</div>
+        {error && "Error"}
+        {postItems.length > 0 && postItems}
+        {postItems.length === 0 && "No posts available"}
       </ul>
+      <div className={styles.loader}>{loading && <Loader />}</div>
     </>
   );
 }

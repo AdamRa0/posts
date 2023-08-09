@@ -8,23 +8,12 @@ import { Header } from "../header/header";
 import DesktopSideNav from "../sidenavs/DesktopSideNav";
 import { PostUIContext } from "@/app/providers/PostUIProvider";
 
-import { useContext, useState } from "react";
-import Image from "next/image";
-import Button from "../buttons/Button";
+import { useContext } from "react";
+import CreatePostForm from "../forms/CreatePostForm";
 
 export default function SiteLayout({ children }) {
   const authenticatedUser = useContext(AuthContext);
   const { inflateUI, inflatePostUI } = useContext(PostUIContext);
-  const [post, setPost] = useState();
-  const [file, setFile] = useState();
-
-  function handleOnChange(event) {
-    setPost(event.target.value);
-  }
-
-  function handleOnFileChange(event) {
-    setFile(event.target.value);
-  }
 
   if (authenticatedUser === undefined) {
     return (
@@ -38,37 +27,7 @@ export default function SiteLayout({ children }) {
 
   return (
     <>
-      {inflateUI && (
-        <div className={styles.createPostUI}>
-          <form className={styles.postContainer}>
-            <textarea
-              placeholder="What's on your mind?"
-              onChange={(event) => handleOnChange(event)}
-            />
-            <div className={styles.lower}>
-              <div className={styles.fileChooser}>
-                <Image
-                  src="/media.svg"
-                  height={30}
-                  width={30}
-                  alt="Choose media icon"
-                />
-                <input
-                  type="file"
-                  accept="images/png, images/gif, images/jpg, images/jpeg"
-                  onChange={(event) => handleOnFileChange(event)}
-                />
-              </div>
-
-              <Button
-                text={"Post"}
-                type={"submit"}
-                handleOnClick={inflatePostUI}
-              />
-            </div>
-          </form>
-        </div>
-      )}
+      {inflateUI && <CreatePostForm formURL={"/api/v1/posts/create_post"} />}
       <Header
         authenticatedUser={authenticatedUser}
         inflatePostUI={inflatePostUI}

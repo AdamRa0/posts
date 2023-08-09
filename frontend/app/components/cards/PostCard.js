@@ -11,7 +11,7 @@ export default function PostCard({ post }) {
     <div className={styles.postCard}>
       <div className={styles.postCardHeader}>
         <Image
-          src={postAuthor.profile_image}
+          src={`/api/v1/media/${postAuthor.profile_image}`}
           height={70}
           width={70}
           alt="User profive avatar"
@@ -26,10 +26,10 @@ export default function PostCard({ post }) {
         })}h`}</h4>
       </div>
       <div className={styles.postCardContent}>
-        <p>{post}</p>
+        <p>{post.body}</p>
         {post.post_file && (
           <Image
-            src={post.post_file}
+            src={`/api/v1/media/${postAuthor.id}_${post.post_file}`}
             width={0}
             height={0}
             sizes="100vw"
@@ -38,7 +38,12 @@ export default function PostCard({ post }) {
           />
         )}
       </div>
-      <PostCardActions />
+      <PostCardActions
+        approvals={post.approvals}
+        disapprovals={post.disapprovals}
+        reposts={post.reposts}
+        comments={post.comments}
+      />
     </div>
   );
 }
