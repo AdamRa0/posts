@@ -1,0 +1,14 @@
+@import "../variables.module.scss";
+
+@mixin loading-page-overlay {
+  position: relative;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $hoverColor;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: 8px;
+}

@@ -6,6 +6,7 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -18,14 +19,22 @@ def init_app(app: Flask):
     Sets all config variables
     """
 
-    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
-    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
-    app.config["JWT_COOKIE_SECURE"] = os.environ.get("JWT_COOKIE_SECURE")
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=2)
-    app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
-    app.config["UPLOAD_FOLDER"] = "uploads"
+    ENVIRONMENT = os.environ.get("ENVIRONMENT")
 
+    if ENVIRONMENT is not None and ENVIRONMENT == "development":
+        app.config.from_pyfile("config.py", silent=True)
+    else:
+        app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+            "SQLALCHEMY_DATABASE_URI"
+        )
+        app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+        app.config["JWT_COOKIE_SECURE"] = os.environ.get("JWT_COOKIE_SECURE")
+        app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=2)
+        app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+        app.config["UPLOAD_FOLDER"] = "uploads"
+
+    CORS(app)
     db.init_app(app)
     Migrate(app, db)
     ma.init_app(app)

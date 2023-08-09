@@ -7,23 +7,78 @@
   border-right: 1px $borderColor solid;
   padding: $padding1 * 2;
   width: 280px;
-  height: 100vh;
+  // height: 100vh;
   left: 0;
+  bottom: 0;
+  top: 80px;
   position: fixed;
   background-color: white;
 
   @include mobile-media-query {
     display: none;
   }
+  overflow-y: scroll;
+
+  &.authenticated {
+    overflow-y: hidden;
+  }
 }
 
 .leftUpper {
   border-bottom: 1px $borderColor solid;
 
+  &.leftUpperAuthenticated {
+    border-bottom: 0;
+  }
+
   .sectionTitle {
     text-transform: uppercase;
     color: $textColorSecondary;
     font-weight: 600;
+  }
+
+  .detailsAndSettingsContainer {
+    .userDetails {
+      display: flex;
+      gap: 30px;
+
+      img {
+        border-radius: 50%;
+      }
+
+      .userInternetNames {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        a {
+          text-decoration: none;
+          color: black;
+
+          &:visited {
+            color: black;
+          }
+
+          &:hover,
+          &:focus {
+            color: $textColorActive;
+            outline: none;
+          }
+        }
+
+        p {
+          margin: 0;
+
+          &.username {
+            font-weight: 600;
+          }
+
+          &.userHandle {
+            font-weight: 500;
+          }
+        }
+      }
+    }
   }
 }
 

@@ -2,6 +2,8 @@ import Image from "next/image";
 import { useState } from "react";
 import styles from "./squareslist.module.scss";
 
+import createUUID from "@/app/utils/clientUUIDGenerator";
+
 export default function SquaresList() {
   const [selectedItem, setSelectedItem] = useState(0);
   const [focusedItem, setFocusedItem] = useState(selectedItem);
@@ -48,7 +50,7 @@ export default function SquaresList() {
       onKeyDown={(event) => handleKeyPress(event, index)}
       onMouseLeave={() => handleMouseLeave(index)}
       onBlur={() => handleMouseLeave(index)}
-      key={Math.floor(Math.random() * 100000) ** 2}
+      key={createUUID()}
     >
       <div className={styles.listItem} tabIndex={0}>
         <Image src={icon.src} width={24} height={24} alt={icon.alt} />

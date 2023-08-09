@@ -1,10 +1,88 @@
+"use client";
+
 import LogoPlusBrand from "@/app/components/logo-and-brand/LogoPlusBrand";
 import styles from "./page.module.scss";
-import Button from "@/app/components/Button";
+import Button from "@/app/components/buttons/Button";
+import Loader from "@/app/components/loader/Loader";
 import Link from "next/link";
-import InputComponent from "@/app/components/InputComponent";
+import InputComponent from "@/app/components/inputs/InputComponent";
+import { AuthContext } from "@/app/providers/AuthProvider";
+
+import { useContext, useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const [username, setUsername] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [handle, setHandle] = useState("");
+  const [password, setPassword] = useState("");
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [error, setError] = useState();
+  const router = useRouter();
+
+  const authenticatedUser = useContext(AuthContext);
+
+  function handleOnChange(event, value) {
+    switch (value) {
+      case "username":
+        setUsername(event.target.value);
+        break;
+
+      case "email":
+        setEmailAddress(event.target.value);
+        break;
+
+      case "handle":
+        setHandle(event.target.value);
+        break;
+
+      case "password":
+        setPassword(event.target.value);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const form = new FormData();
+
+    form.append("username", username);
+    form.append("email_address", emailAddress);
+    form.append("handle", handle);
+    form.append("password", password);
+
+    setIsAuthenticating(true);
+
+    try {
+      const response = await axios.postForm("/api/v1/auth/signup", form);
+
+      if (response.status === 200) {
+        setIsAuthenticating(false);
+      }
+    } catch (error) {
+      setIsAuthenticating(false);
+      setError(error.message);
+    }
+  }
+
+  if (isAuthenticating) {
+    return (
+      <>
+        <div className={styles.loadingPageOverlay}>
+          <Loader />
+        </div>
+      </>
+    );
+  }
+
+  if (authenticatedUser !== null) {
+    return <>{router.back()}</>;
+  }
+
   return (
     <section className={styles.signInPage}>
       <div className={styles.signInLeft}>
@@ -41,22 +119,45 @@ export default function Page() {
       </div>
       <div className={styles.signInRight}>
         <p className={styles.formTitle}>Create your Posts account</p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className={styles.formItem}>
             <label htmlFor="email">Email</label>
             <InputComponent
               id={"email"}
               type={"email"}
               placeholder={"email@example.com"}
+              name={"email"}
+              handleOnChange={handleOnChange}
+              required={true}
             />
           </div>
           <div className={styles.formItem}>
             <label htmlFor="username">Username</label>
-            <InputComponent id={"username"} />
+            <InputComponent
+              id={"username"}
+              name={"username"}
+              handleOnChange={handleOnChange}
+              required={true}
+            />
+          </div>
+          <div className={styles.formItem}>
+            <label htmlFor="username">Handle</label>
+            <InputComponent
+              id={"handle"}
+              name={"handle"}
+              handleOnChange={handleOnChange}
+              required={true}
+            />
           </div>
           <div className={styles.formItem}>
             <label htmlFor="password">Password</label>
-            <InputComponent id={"password"} type={"password"} />
+            <InputComponent
+              id={"password"}
+              type={"password"}
+              name={"password"}
+              handleOnChange={handleOnChange}
+              required={true}
+            />
           </div>
           <Button type={"submit"} text={"Create account"} />
         </form>

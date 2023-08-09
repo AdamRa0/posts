@@ -28,10 +28,14 @@ from ..controllers.account_management.set_unset_account_private import (
 )
 from ..models.user_schema import UserSchema
 from ...utils.upload_file import upload_file
-from ...utils.show_true_path import show_true_path
 
-from flask import Blueprint, current_app, jsonify, request
-from flask_jwt_extended import jwt_required, current_user
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    request,
+)
+from flask_jwt_extended import jwt_required, current_user, get_jwt_identity
 
 
 user_routes = Blueprint("user_routes", __name__, url_prefix="/api/v1/users")
@@ -41,11 +45,10 @@ users_schemas = UserSchema(many=True)
 post_schemas = PostSchema(many=True)
 
 
-@user_routes.route("/<user_handle>")
-def get_user_profile_by_handle(user_handle: str):
+@user_routes.route("/user-handle")
+def get_user_profile_by_handle():
+    user_handle = request.args.get("handle")
     user = get_user_by_handle(user_handle)
-
-    user.profile_image = show_true_path(user.profile_image)
 
     user_subscribers = get_subscribers(user.id)
 
@@ -69,24 +72,24 @@ def get_user_profile_by_handle(user_handle: str):
 
 
 @user_routes.route("/profile")
-@jwt_required()
+@jwt_required(optional=True)
 def get_user_profile():
-    current_user.profile_image = show_true_path(current_user.profile_image)
+    logged_in_user = get_jwt_identity()
+    queried_user = request.args.get("user-id")
 
-    return user_schema.dump(current_user), 200
+    if logged_in_user and queried_user is None:
+        return user_schema.dump(current_user), 200
+
+    user = get_user_by_id(queried_user)
+
+    return user_schema.dump(user), 200
 
 
 @user_routes.route("/")
 def get_all_users():
     users = get_all_registered_users()
-    updated_users = []
 
-    for user in users:
-        user.profile_image = show_true_path(user.profile_image)
-        user.banner_image = show_true_path(user.banner_image)
-        updated_users.append(user)
-
-    return users_schemas.dump(updated_users), 200
+    return users_schemas.dump(users), 200
 
 
 @user_routes.route("/user/delete", methods=["DELETE"])
@@ -120,11 +123,11 @@ def update_user_details():
     email_address = request.form.get("email_address")
     handle = request.form.get("handle")
 
-    if username is not None:
+    if username is not None and username != current_user.username:
         change_username(current_user, username)
-    if email_address is not None:
+    if email_address is not None and username != current_user.email_address:
         change_email_address(current_user, email_address)
-    if handle is not None:
+    if handle is not None != current_user.handle:
         change_handle(current_user, handle)
 
     updated_user = get_user_by_id(current_user.id)
@@ -193,20 +196,28 @@ def vet_user():
     return jsonify({"message": "success"}), 200
 
 
-@user_routes.route("/<user_id>/subscribers")
+@user_routes.route("/subscribers")
 @jwt_required()
-def subscribers_to_user(user_id: str):
+def subscribers_to_user():
+    query_params = request.args
+
+    user_id = query_params.get("user-id") if query_params else current_user.id
+
     subscribers = get_subscribers(user_id)
 
     return users_schemas.dump(subscribers), 200
 
 
-@user_routes.route("/<user_id>/subscribees")
+@user_routes.route("/subscribees")
 @jwt_required()
-def users_subscribed_by_user(user_id: str):
+def users_subscribed_by_user():
+    query_params = request.args
+
+    user_id = query_params.get("user-id") if query_params else current_user.id
+
     subscribees = get_subscribees(user_id)
 
-    return user_schema.dump(subscribees), 200
+    return users_schemas.dump(subscribees), 200
 
 
 @user_routes.route("/<user_id>/reposts")

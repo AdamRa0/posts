@@ -1,13 +1,12 @@
-from json import dumps, loads
-
-
 def test_signin_functionality(store_user_fixture, create_new_user_1, test_client):
-    json_data = dict(
+    data = dict(
         email_address=create_new_user_1.email_address,
         password=create_new_user_1.password,
     )
 
-    response = test_client.post("/api/v1/auth/signin", json=loads(dumps(json_data)))
+    response = test_client.post("/api/v1/auth/signin", data=data)
+
+    print(response)
 
     assert response.status_code == 200
 

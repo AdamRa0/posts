@@ -1,13 +1,13 @@
 import styles from "./postslist.module.scss";
-import useGetPosts from "@/app/useGetPosts";
+import getPosts from "@/app/services/getPosts";
 import PostCard from "../cards/PostCard";
 import { useCallback, useRef, useState } from "react";
-import { faker } from "@faker-js/faker";
+import Loader from "../loader/Loader";
 
 export default function PostsList() {
   const [pageNumber, setPageNumber] = useState(1);
 
-  const { posts, hasMore, loading, error } = useGetPosts({
+  const { posts, hasMore, loading, error } = getPosts({
     pageNumber: pageNumber,
   });
 
@@ -32,18 +32,21 @@ export default function PostsList() {
 
   const postItems = posts.map((post, index) => (
     <li
-      key={faker.finance.routingNumber()}
+      key={post.id}
       ref={posts.length === index + 1 ? lastPostElementRef : undefined}
     >
-      <PostCard post={post} postIndex={index} />
+      <PostCard post={post} />
     </li>
   ));
 
   return (
-    <ul className={styles.contentList}>
-      {postItems}
-      <div className={styles.loader}>{loading && ""}</div>
-      <div>{error && "Error"}</div>
-    </ul>
+    <>
+      <ul className={styles.contentList}>
+        {error && "Error"}
+        {postItems.length > 0 && postItems}
+        {postItems.length === 0 && "No posts available"}
+      </ul>
+      <div className={styles.loader}>{loading && <Loader />}</div>
+    </>
   );
 }

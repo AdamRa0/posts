@@ -2,20 +2,23 @@ import styles from "./postcard.module.scss";
 import Image from "next/image";
 import { faker } from "@faker-js/faker";
 import PostCardActions from "../actions/PostCardActions";
+import getPostAuthorDetails from "@/app/services/getPostAuthorDetails";
 
-export default function PostCard({ post, postIndex }) {
+export default function PostCard({ post }) {
+  const { postAuthor } = getPostAuthorDetails({ authorID: post.author_id });
+
   return (
     <div className={styles.postCard}>
       <div className={styles.postCardHeader}>
         <Image
-          src={faker.internet.avatar()}
+          src={`/api/v1/media/${postAuthor.profile_image}`}
           height={70}
           width={70}
           alt="User profive avatar"
         />
         <div>
-          <h3 tabIndex={0}>{faker.internet.displayName()}</h3>
-          <h4 tabIndex={0}>{`@${faker.internet.displayName()}`}</h4>
+          <h3 tabIndex={0}>{postAuthor.username}</h3>
+          <h4 tabIndex={0}>{postAuthor.handle}</h4>
         </div>
         <h4 className={styles.timeStamp}>{`${faker.number.int({
           min: 1,
@@ -23,10 +26,10 @@ export default function PostCard({ post, postIndex }) {
         })}h`}</h4>
       </div>
       <div className={styles.postCardContent}>
-        <p>{post}</p>
-        {postIndex % 2 === 0 && (
+        <p>{post.body}</p>
+        {post.post_file && (
           <Image
-            src={faker.image.url()}
+            src={`/api/v1/media/${postAuthor.id}_${post.post_file}`}
             width={0}
             height={0}
             sizes="100vw"
@@ -35,7 +38,12 @@ export default function PostCard({ post, postIndex }) {
           />
         )}
       </div>
-      <PostCardActions />
+      <PostCardActions
+        approvals={post.approvals}
+        disapprovals={post.disapprovals}
+        reposts={post.reposts}
+        comments={post.comments}
+      />
     </div>
   );
 }

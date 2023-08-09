@@ -24,10 +24,58 @@
     .mobileSideNavUpper {
       border-bottom: 1px $borderColor solid;
 
+      &.mobileSideNavUpperAuthenticated {
+        border-bottom: 0;
+      }
+
       .sectionTitle {
         text-transform: uppercase;
         color: $textColorSecondary;
         font-weight: 600;
+      }
+
+      .detailsAndSettingsContainer {
+        .userDetails {
+          display: flex;
+          gap: 30px;
+
+          img {
+            border-radius: 50%;
+          }
+
+          .userInternetNames {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            a {
+              text-decoration: none;
+              color: black;
+
+              &:visited {
+                color: black;
+              }
+
+              &:hover,
+              &:focus {
+                color: $textColorActive;
+                outline: none;
+              }
+            }
+
+            p {
+              margin: 0;
+
+              &.username {
+                font-weight: 600;
+              }
+
+              &.userHandle {
+                font-weight: 500;
+              }
+            }
+          }
+        }
       }
     }
 

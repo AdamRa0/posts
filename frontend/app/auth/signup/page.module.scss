@@ -1,5 +1,7 @@
+@import "../../variables.module.scss";
 @import "../../mixins/auth_form_mixins.scss";
 @import "../../mixins/media_query_mixins.scss";
+@import "../../mixins/loading_page_overlay_mixin.scss";
 
 .signInPage {
   @include auth-pages-bg-color;
@@ -9,6 +11,10 @@
   @include mobile-media-query {
     display: flex;
     flex-direction: column;
+  }
+
+  .loadingPageOverlay {
+    @include loading-page-overlay;
   }
 
   .signInLeft {
@@ -33,10 +39,11 @@
   .signInRight {
     @include auth-form-container;
     grid-column: 2;
-    height: 500px;
+    height: 85%;
     width: 500px;
     margin-top: 20px;
     margin-left: 10%;
+    margin-bottom: 20px;
 
     @include mobile-media-query {
       height: 100%;
