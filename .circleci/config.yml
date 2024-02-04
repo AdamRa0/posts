@@ -9,7 +9,7 @@ jobs:
         environment:
           POSTGRES_USER: postgres
 
-    working_directory: ~/posts/backend  
+    working_directory: ~/posts/server  
     
     steps:
       - checkout:

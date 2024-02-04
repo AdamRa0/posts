@@ -1,9 +1,0 @@
-@import "../../mixins/media_query_mixins.scss";
-
-.postCardActions {
-  display: flex;
-
-  @include mobile-media-query {
-    justify-content: space-evenly;
-  }
-}
