@@ -1,7 +1,12 @@
-export default {
-  plugins: {
-    "postcss-preset-env": {},
-    "cssnano": {},
-    "postcss-nested": {}
-  },
-};
+// export default {
+//   plugins: {
+//     "postcss-preset-env": {
+//       stage: 4,
+//       features: {
+//         "nesting-rules": true,
+//       },
+//     },
+//     cssnano: {},
+//     "postcss-nested": {},
+//   },
+// };
