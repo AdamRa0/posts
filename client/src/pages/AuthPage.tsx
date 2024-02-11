@@ -22,7 +22,7 @@ export default function AuthPage({ closeModal }: authPageProps) {
       <PageOverlayComponent>
         <ModalComponent closeModal={closeModal}>
           <div>
-            <h1>{toggle === false ? "Log In" : "Sign In"}</h1>
+            <h1>{toggle === false ? "Log In" : "Sign Up"}</h1>
             <p>
               By continuing you agree to our User Agreement and consent to out
               Privacy Policy
@@ -47,14 +47,18 @@ export default function AuthPage({ closeModal }: authPageProps) {
                   placeholder={"Password"}
                 />
               </div>
-              <p>Forgot your username or password?</p>
+              <p>
+                {toggle === false ? "Forgot your username or password?" : null}
+              </p>
               <p>
                 {toggle === false ? "New to Posts?" : "Already a poster?"}{" "}
                 <ButtonComponent variant="linkButton" onClick={handleToggle}>
                   {toggle === false ? "Sign Up" : "Log In"}
                 </ButtonComponent>
               </p>
-              <ButtonComponent variant={"btnSignInAlt"}>Log In</ButtonComponent>
+              <ButtonComponent variant={"btnSignInAlt"}>
+                {toggle === false ? "Log In" : "Sign Up"}
+              </ButtonComponent>
             </form>
           </div>
         </ModalComponent>
