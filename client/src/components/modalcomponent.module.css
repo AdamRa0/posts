@@ -1,0 +1,14 @@
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 12px;
+    padding: 60px;
+    width: 350px;
+
+    .buttonContainer {
+        margin-left: auto;
+    }
+}

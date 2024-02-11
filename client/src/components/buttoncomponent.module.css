@@ -1,0 +1,39 @@
+.modalButton {
+    border-radius: 50%;
+    border: none;
+    width: 25px;
+    height: 25px;
+}
+
+.primaryButton {
+    border-radius: 12px;
+    background-color: #4681f4;
+    font-size: 14px;
+    border: none;
+    color: white;
+    font-weight: 700;
+
+    &:hover {
+        background-color: #5783db;
+    }
+
+    &.btnSignIn {
+        height: 40px;
+        width: 100px;
+    }
+
+    &.btnSignInAlt {
+        height: 40px;
+        width: 350px;
+    }
+}
+
+.moreOptions {
+    background-color: transparent;
+    border: none;
+
+    .optionsMenuIcon {
+        height: 30px;
+        width: 30px;
+    }
+}
