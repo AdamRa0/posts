@@ -6,23 +6,23 @@ import styles from "./headercomponent.module.css";
 
 import InputComponent from "./InputComponent";
 import ButtonComponent from "./ButtonComponent";
-import LoginPage from "../pages/LoginPage";
+import AuthPage from "../pages/AuthPage";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   function handleClick() {
     setIsOptionsMenuOpen(!isOptionsMenuOpen);
   }
 
-  function handleCloseLoginModal() {
-    setIsLoginModalOpen(false);
+  function handleCloseModal() {
+    setIsModalOpen(false);
   }
 
-  function handleOpenLoginModal() {
+  function handleOpenModal() {
     setIsOptionsMenuOpen(false);
-    setIsLoginModalOpen(true);
+    setIsModalOpen(true);
   }
 
   return (
@@ -45,8 +45,8 @@ export default function HeaderComponent() {
           </span>
         </div>
         <div className={styles.headerOptions}>
-          <ButtonComponent type={"btnSignIn"}>Sign In</ButtonComponent>
-          <ButtonComponent type={"moreOptions"} onButtonClick={handleClick}>
+          <ButtonComponent variant={"btnSignIn"}>Sign In</ButtonComponent>
+          <ButtonComponent variant={"moreOptions"} onClick={handleClick}>
             <FiMoreHorizontal className="optionsMenuIcon" />
           </ButtonComponent>
         </div>
@@ -54,16 +54,14 @@ export default function HeaderComponent() {
           <div
             className={styles.headerOptionsMenu}
             tabIndex={0}
-            onClick={handleOpenLoginModal}
+            onClick={handleOpenModal}
           >
             <FiLogIn />
             <p>Log In / Sign Up</p>
           </div>
         ) : null}
       </header>
-      {isLoginModalOpen ? (
-        <LoginPage closeModal={handleCloseLoginModal} />
-      ) : null}
+      {isModalOpen ? <AuthPage closeModal={handleCloseModal} /> : null}
     </>
   );
 }

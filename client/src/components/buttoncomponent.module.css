@@ -37,3 +37,13 @@
         width: 30px;
     }
 }
+
+.linkButton {
+    border: none;
+    background-color: transparent;
+    color: #4681f4;
+
+    &:hover {
+        background-color: transparent;
+    }
+}

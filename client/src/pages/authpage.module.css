@@ -1,4 +1,4 @@
-.loginForm {
+.authForm {
     .inputFields {
         display: flex;
         flex-direction: column;

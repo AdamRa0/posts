@@ -14,7 +14,7 @@ export default function ModalComponent({
   return (
     <div className={styles.modal}>
       <div className={styles.buttonContainer}>
-        <ButtonComponent type={"modalButton"} onButtonClick={closeModal}>
+        <ButtonComponent variant={"modalButton"} onClick={closeModal}>
           &times;
         </ButtonComponent>
       </div>

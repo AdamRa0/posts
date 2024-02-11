@@ -1,25 +1,26 @@
 import { ReactNode } from "react";
 import styles from "./buttoncomponent.module.css";
 
-type buttonComponentProps = {
-  type: string;
-  onButtonClick?: (event: React.MouseEvent<HTMLElement>) => void;
+type buttonComponentProps = React.ComponentProps<"button"> & {
+  variant: string;
   children: ReactNode;
 };
 
 export default function ButtonComponent({
-  onButtonClick,
-  type,
+  onClick,
+  type = "button",
+  variant,
   children,
 }: buttonComponentProps) {
   return (
     <button
+      type={type}
       className={`${
-        type === "modalButton" || type === "moreOptions"
+        variant === "modalButton" || variant === "moreOptions"
           ? null
           : styles.primaryButton
-      } ${styles[type]}`}
-      onClick={onButtonClick}
+      } ${styles[variant]}`}
+      onClick={onClick}
     >
       {children}
     </button>
