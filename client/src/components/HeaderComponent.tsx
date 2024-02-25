@@ -37,16 +37,22 @@ export default function HeaderComponent() {
         <div className={styles.searchContainer}>
           <InputComponent
             className={"search"}
-            type={"text"}
-            placeholder={"Search Posts"}
+            type="text"
+            placeholder="Search Posts"
           />
           <span className={styles.searchLogoContainer}>
             <MdSearch className={styles.searchLogo} />
           </span>
         </div>
         <div className={styles.headerOptions}>
-          <ButtonComponent variant={"btnSignIn"}>Sign In</ButtonComponent>
-          <ButtonComponent variant={"moreOptions"} onClick={handleClick}>
+          <ButtonComponent type="button" variant={"btnSignIn"}>
+            Sign In
+          </ButtonComponent>
+          <ButtonComponent
+            type="button"
+            variant={"moreOptions"}
+            onClick={handleClick}
+          >
             <FiMoreHorizontal className="optionsMenuIcon" />
           </ButtonComponent>
         </div>

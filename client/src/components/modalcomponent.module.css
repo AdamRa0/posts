@@ -9,6 +9,13 @@
     width: 350px;
 
     .buttonContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .buttonContainerAlt {
         margin-left: auto;
     }
 }

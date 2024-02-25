@@ -1,21 +1,10 @@
+import React from "react";
 import styles from "./inputcomponent.module.css";
 
-type inputProps = {
+type inputProps = React.ComponentProps<"input"> & {
   className: string;
-  type: string;
-  placeholder: string;
 };
 
-export default function InputComponent({
-  className,
-  type,
-  placeholder,
-}: inputProps) {
-  return (
-    <input
-      className={styles[className]}
-      type={type}
-      placeholder={placeholder}
-    />
-  );
+export default function InputComponent({ className, ...others }: inputProps) {
+  return <input className={styles[className]} {...others} />;
 }

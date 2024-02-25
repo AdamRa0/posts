@@ -7,20 +7,18 @@ type buttonComponentProps = React.ComponentProps<"button"> & {
 };
 
 export default function ButtonComponent({
-  onClick,
-  type = "button",
   variant,
   children,
+  ...others
 }: buttonComponentProps) {
   return (
     <button
-      type={type}
       className={`${
         variant === "modalButton" || variant === "moreOptions"
           ? null
           : styles.primaryButton
       } ${styles[variant]}`}
-      onClick={onClick}
+      {...others}
     >
       {children}
     </button>
