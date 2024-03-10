@@ -1,0 +1,37 @@
+.postList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    grid-column: 2;
+    border-left: 1px rgb(214, 214, 214) solid;
+    border-right: 1px rgb(214, 214, 214) solid;
+    padding: 10px;
+}
+
+.header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    background-color: white;
+}
+
+.contentContainer {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr 1fr;
+    margin-top: 68px;
+    height: 100vh;
+}
+
+.postHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .authorAvatar {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+    }
+}

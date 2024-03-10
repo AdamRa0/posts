@@ -45,7 +45,7 @@ export default function HeaderComponent() {
           </span>
         </div>
         <div className={styles.headerOptions}>
-          <ButtonComponent type="button" variant={"btnSignIn"}>
+          <ButtonComponent type="button" variant={"btnSignIn"} onClick={handleOpenModal}>
             Sign In
           </ButtonComponent>
           <ButtonComponent
