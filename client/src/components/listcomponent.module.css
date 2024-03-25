@@ -1,0 +1,11 @@
+.postList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    grid-column: 2;
+    border-left: 1px rgb(214, 214, 214) solid;
+    border-right: 1px rgb(214, 214, 214) solid;
+    padding: 5px;
+}

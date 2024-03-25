@@ -1,15 +1,3 @@
-.postList {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    grid-column: 2;
-    border-left: 1px rgb(214, 214, 214) solid;
-    border-right: 1px rgb(214, 214, 214) solid;
-    padding: 5px;
-}
-
 .header {
     position: fixed;
     width: 100%;
@@ -22,38 +10,4 @@
     grid-template-columns: 1fr 2.5fr 1fr;
     margin-top: 68px;
     height: 100vh;
-}
-
-.postHeader {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    .authorAvatar {
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-    }
-}
-
-.postItem {
-    border-bottom: 1px rgb(214, 214, 214) solid;
-    padding: 10px;
-
-    &:hover,
-    &:focus {
-        background-color: rgb(236, 236, 236);
-    }
-}
-
-.postImage {
-    border-radius: 12px;
-}
-
-.postInteractionButtons {
-    display: flex;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    gap: 15px;
-    align-items: center;
 }
