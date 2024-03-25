@@ -3,11 +3,19 @@ import HeaderComponent from "../components/HeaderComponent";
 import styles from "./applayout.module.css";
 import { provideDummyPosts, postsData } from "../data/dummyPostsData";
 import dateFormatter from "../helpers/dateFormatter";
+import formatNumber from "../helpers/numericalFormatter";
+import ButtonComponent from "../components/ButtonComponent";
+
+import {
+  MdOutlineThumbUp,
+  MdOutlineThumbDown,
+  MdModeComment,
+} from "react-icons/md";
 
 function PostsList(posts: { posts: postsData[] }): React.JSX.Element {
   const postItems = posts.posts.map((post) => (
     <li key={post.id}>
-      <div>
+      <div className={styles.postItem} tabIndex={0}>
         <div className={styles.postHeader}>
           <img
             className={styles.authorAvatar}
@@ -20,12 +28,29 @@ function PostsList(posts: { posts: postsData[] }): React.JSX.Element {
         </div>
         {post.postContent}
         {post.postImage ? (
-          <img src={post.postImage} alt="Accompanying post image" />
+          <img
+            className={styles.postImage}
+            src={post.postImage}
+            alt="Accompanying post image"
+          />
         ) : null}
-        <div>
-          {post.likes}
-          {post.dislikes}
-          {post.numOfComments}
+        <div className={styles.postInteractionButtons}>
+          <ButtonComponent variant="postInteractionButton">
+            <MdOutlineThumbUp />
+            {post.likes >= 1000 ? formatNumber(post.likes) : post.likes}
+          </ButtonComponent>
+          <ButtonComponent variant="postInteractionButton">
+            <MdOutlineThumbDown />
+            {post.dislikes >= 1000
+              ? formatNumber(post.dislikes)
+              : post.dislikes}
+          </ButtonComponent>
+          <ButtonComponent variant="postInteractionButton">
+            <MdModeComment />
+            {post.numOfComments >= 1000
+              ? formatNumber(post.numOfComments)
+              : post.numOfComments}
+          </ButtonComponent>
         </div>
       </div>
     </li>

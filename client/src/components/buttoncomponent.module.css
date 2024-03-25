@@ -13,7 +13,7 @@
     color: white;
     font-weight: 700;
 
-    &:hover {
+    &:hover, &:focus {
         background-color: #5783db;
     }
 
@@ -43,7 +43,23 @@
     background-color: transparent;
     color: #4681f4;
 
-    &:hover {
+    &:hover, &:focus {
         background-color: transparent;
+    }
+}
+
+.postInteractionButton {
+    border-radius: 12px;
+    background-color: rgb(214, 214, 214);
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 30px;
+    width: 80px;
+    gap: 5px;
+
+    &:hover, &:focus {
+        background-color: rgb(187, 185, 185);
     }
 }
