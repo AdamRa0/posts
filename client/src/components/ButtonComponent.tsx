@@ -14,7 +14,7 @@ export default function ButtonComponent({
   return (
     <button
       className={`${
-        variant === "modalButton" || variant === "moreOptions"
+        variant === "modalButton" || variant === "moreOptions" || variant === "tabButton"
           ? null
           : styles.primaryButton
       } ${styles[variant]}`}

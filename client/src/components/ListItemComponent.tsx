@@ -28,8 +28,10 @@ export default function ListItemComponent({
               src={data.avatar}
               alt="Post author avatar"
             />
-            <h4>{data.username}</h4>
-            <p>{data.handle}</p>
+            <div className={styles.postUserDetails}>
+              <h4>{data.username}</h4>
+              <p>{data.handle}</p>
+            </div>
             <p>{dateFormatter(data.timeStamp)}</p>
           </div>
           <p>{data.postContent}</p>
