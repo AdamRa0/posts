@@ -11,3 +11,10 @@
     margin-top: 68px;
     height: 100vh;
 }
+
+.someImportantButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 50px;
+}

@@ -6,6 +6,13 @@ type buttonComponentProps = React.ComponentProps<"button"> & {
   children: ReactNode;
 };
 
+const buttonVariants: string[] = [
+  "modalButton",
+  "moreOptions",
+  "tabButton",
+  "settingsButton"
+];
+
 export default function ButtonComponent({
   variant,
   children,
@@ -14,7 +21,7 @@ export default function ButtonComponent({
   return (
     <button
       className={`${
-        variant === "modalButton" || variant === "moreOptions" || variant === "tabButton"
+        buttonVariants.includes(variant)
           ? null
           : styles.primaryButton
       } ${styles[variant]}`}
