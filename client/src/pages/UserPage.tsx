@@ -5,6 +5,7 @@ import provideDummyUser, { userData } from "../data/dummyUserData";
 import { MdCalendarMonth } from "react-icons/md";
 import formatNumber from "../helpers/numericalFormatter";
 import ButtonComponent from "../components/ButtonComponent";
+import TabComponent from "../components/TabComponent";
 
 const user: userData = provideDummyUser();
 
@@ -12,12 +13,15 @@ enum TabStates {
   INPOSTS,
   INREPLIES,
   INMEDIA,
-  INLIKES
+  INLIKES,
 }
 
 export default function UserPage(): React.JSX.Element {
+  const [currentTab, setCurrentTab] = useState<TabStates>(TabStates.INPOSTS);
 
-  const [currentTab, setCurrentTab] = useState<TabStates>(TabStates.INPOSTS)
+  function onTabClick(state: TabStates) {
+    setCurrentTab(state);
+  }
 
   return (
     <>
@@ -58,16 +62,54 @@ export default function UserPage(): React.JSX.Element {
                 </p>
               </div>
             </div>
-            <div className={styles.contentTabs}>
-              <ButtonComponent variant="tabButton" onClick={() => setCurrentTab(TabStates.INPOSTS)}>Posts<span className={currentTab === TabStates.INPOSTS ? styles.active : ""}></span></ButtonComponent>
-              <ButtonComponent variant="tabButton" onClick={() => setCurrentTab(TabStates.INREPLIES)}>Replies<span className={currentTab === TabStates.INREPLIES ? styles.active : ""}></span></ButtonComponent>
-              <ButtonComponent variant="tabButton" onClick={() => setCurrentTab(TabStates.INMEDIA)}>Media<span className={currentTab === TabStates.INMEDIA ? styles.active : ""}></span></ButtonComponent>
-              <ButtonComponent variant="tabButton" onClick={() => setCurrentTab(TabStates.INLIKES)}>Likes<span className={currentTab === TabStates.INLIKES ? styles.active : ""}></span></ButtonComponent>
-            </div>
+            <TabComponent>
+              <ButtonComponent
+                variant="tabButton"
+                onClick={() => onTabClick(TabStates.INPOSTS)}
+              >
+                Posts
+                <span
+                  className={
+                    currentTab === TabStates.INPOSTS ? styles.active : ""
+                  }
+                ></span>
+              </ButtonComponent>
+              <ButtonComponent
+                variant="tabButton"
+                onClick={() => onTabClick(TabStates.INREPLIES)}
+              >
+                Replies
+                <span
+                  className={
+                    currentTab === TabStates.INREPLIES ? styles.active : ""
+                  }
+                ></span>
+              </ButtonComponent>
+              <ButtonComponent
+                variant="tabButton"
+                onClick={() => onTabClick(TabStates.INMEDIA)}
+              >
+                Media
+                <span
+                  className={
+                    currentTab === TabStates.INMEDIA ? styles.active : ""
+                  }
+                ></span>
+              </ButtonComponent>
+              <ButtonComponent
+                variant="tabButton"
+                onClick={() => setCurrentTab(TabStates.INLIKES)}
+              >
+                Likes
+                <span
+                  className={
+                    currentTab === TabStates.INLIKES ? styles.active : ""
+                  }
+                ></span>
+              </ButtonComponent>
+            </TabComponent>
           </div>
-          <div className={styles.pageContent}>
-              Page Content Goes Here
-          </div>
+          <div className={styles.pageContent}>Page Content Goes Here</div>
         </div>
       </AppLayout>
     </>
