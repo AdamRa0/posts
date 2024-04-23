@@ -73,6 +73,7 @@
     padding: 10px;
     border: none;
     position: relative;
+    z-index: -1;
 
     &:focus,
     &:hover {
@@ -87,4 +88,51 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+}
+
+.priorityThreeButton {
+    padding: 10px;
+    color: #4681f4;
+    border: 2px #4681f4 solid;
+    background-color: transparent;
+    border-radius: 12px;
+    width: 100px;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: #f1f6ff;
+    }
+}
+
+.priorityTwoButton {
+    padding: 10px;
+    color: #333333;
+    border: 2px #333333 solid;
+    background-color: transparent;
+    border-radius: 12px;
+    width: 100px;
+
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: #f1f6ff23;
+    }
+}
+
+.priorityOneButton {
+    padding: 10px;
+    color: #c40505;
+    border: 2px #c40505 solid;
+    background-color: transparent;
+    border-radius: 12px;
+    width: 100px;
+
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: #ffbfbf;
+    }
 }

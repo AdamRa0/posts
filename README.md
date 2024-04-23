@@ -10,8 +10,7 @@ Twitter Clone
 - PostgreSQL
 - Pydantic
 - PyTest
-- NextJS
-- Black
+- ReactJS
 
 
 ## Acknowledgments

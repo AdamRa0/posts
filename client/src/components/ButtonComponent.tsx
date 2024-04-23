@@ -10,7 +10,10 @@ const buttonVariants: string[] = [
   "modalButton",
   "moreOptions",
   "tabButton",
-  "settingsButton"
+  "settingsButton",
+  "priorityOneButton",
+  "priorityTwoButton",
+  "priorityThreeButton",
 ];
 
 export default function ButtonComponent({
@@ -21,9 +24,7 @@ export default function ButtonComponent({
   return (
     <button
       className={`${
-        buttonVariants.includes(variant)
-          ? null
-          : styles.primaryButton
+        buttonVariants.includes(variant) ? null : styles.primaryButton
       } ${styles[variant]}`}
       {...others}
     >
