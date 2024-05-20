@@ -3,7 +3,6 @@ import HeaderComponent from "../components/HeaderComponent";
 import styles from "./applayout.module.css";
 import ButtonComponent from "../components/ButtonComponent";
 import { MdOutlineSettings, MdCreate } from "react-icons/md";
-import { NavLink } from "react-router-dom";
 
 type AppLayoutProps = {
   children: ReactNode;
@@ -19,13 +18,13 @@ export default function AppLayout({
       </div>
       <div className={styles.contentContainer}>
         <div className={styles.someImportantButtons}>
-          <NavLink className={styles.settingsLink} to="/settings">
+          <ButtonComponent variant="settingsButton">
             <MdOutlineSettings />
             Settings
-          </NavLink>
+          </ButtonComponent>
           <ButtonComponent variant="createPostButton">
             <MdCreate />
-            Create Post
+            Login
           </ButtonComponent>
         </div>
         {children}
