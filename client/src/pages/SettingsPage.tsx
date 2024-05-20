@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import AppLayout from "../layouts/AppLayout";
 import styles from "./settingspage.module.css";
-import TabComponent from "../components/TabComponent";
 import ButtonComponent from "../components/ButtonComponent";
 import { faker } from "@faker-js/faker";
 
@@ -26,7 +25,7 @@ export default function SettingsPage(): React.JSX.Element {
       <AppLayout>
         <div className={styles.settingsPageContainer}>
           <h1>User Settings</h1>
-          <TabComponent>
+          {/* <TabComponent>
             <ButtonComponent
               onClick={() => onTabClick(TabButtonState.INACCOUNT)}
               variant="tabButton"
@@ -60,7 +59,7 @@ export default function SettingsPage(): React.JSX.Element {
                 }
               ></span>
             </ButtonComponent>
-          </TabComponent>
+          </TabComponent> */}
           <div className={styles.settingsContent}>
             <h2>
               {currentTab === TabButtonState.INACCOUNT

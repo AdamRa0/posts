@@ -70,8 +70,7 @@
     padding: 10px;
     border: none;
     position: relative;
-    z-index: -1;
-
+    
     &:focus, &:hover {
         background-color: rgb(214, 214, 214)
     }
