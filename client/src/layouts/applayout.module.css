@@ -17,4 +17,6 @@
     flex-direction: column;
     gap: 10px;
     margin-top: 50px;
+    position: fixed;
+    width: 20%;
 }
