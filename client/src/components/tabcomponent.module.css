@@ -1,0 +1,12 @@
+.contentTabs {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-left: 20px;
+    margin-right: 20px;
+
+
+    button {
+        flex: 1;
+    }
+}

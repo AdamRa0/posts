@@ -27,10 +27,6 @@
 }
 
 .accountEmailSettingsContainer {
-    display: flex;
-    align-items: center;
-    gap: 350px;
-
     h3 {
         margin-bottom: 0;
     }
@@ -40,16 +36,13 @@
     }
 }
 
-.accountDeactivateSettingsContainer, .accountDeleteSettingsContainer {
+.accountDeactivateSettingsContainer, .accountDeleteSettingsContainer, .accountEmailSettingsContainer {
     margin-top: 20px;
     display: flex;
     align-items: center;
-}
+    gap: 300px;
 
-.accountDeactivateSettingsContainer {
-    gap: 340px;
-}
-
-.accountDeleteSettingsContainer {
-    gap: 385px;
+    div {
+        width: 35%;
+    }
 }

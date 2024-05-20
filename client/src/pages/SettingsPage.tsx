@@ -3,6 +3,7 @@ import AppLayout from "../layouts/AppLayout";
 import styles from "./settingspage.module.css";
 import ButtonComponent from "../components/ButtonComponent";
 import { faker } from "@faker-js/faker";
+import TabComponent from "../components/TabComponent";
 
 enum TabButtonState {
   INACCOUNT,
@@ -17,7 +18,6 @@ export default function SettingsPage(): React.JSX.Element {
 
   function onTabClick(state: TabButtonState) {
     setCurrentTab(state);
-    console.log("clicked");
   }
 
   return (
@@ -25,7 +25,7 @@ export default function SettingsPage(): React.JSX.Element {
       <AppLayout>
         <div className={styles.settingsPageContainer}>
           <h1>User Settings</h1>
-          {/* <TabComponent>
+          <TabComponent>
             <ButtonComponent
               onClick={() => onTabClick(TabButtonState.INACCOUNT)}
               variant="tabButton"
@@ -59,7 +59,7 @@ export default function SettingsPage(): React.JSX.Element {
                 }
               ></span>
             </ButtonComponent>
-          </TabComponent> */}
+          </TabComponent>
           <div className={styles.settingsContent}>
             <h2>
               {currentTab === TabButtonState.INACCOUNT
