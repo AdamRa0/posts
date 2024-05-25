@@ -93,7 +93,7 @@ export default function AccountSettingsComponent(): React.JSX.Element {
               </ButtonComponent>
             </>
           ) : state === 2 ? (
-            <>
+            <form>
               <InputComponent
                 className={"formInputModal"}
                 type="email"
@@ -102,7 +102,7 @@ export default function AccountSettingsComponent(): React.JSX.Element {
               <ButtonComponent variant="modalButtonTwo">
                 Change Email Address
               </ButtonComponent>
-            </>
+            </form>
           ) : (
             <>
               <h4>

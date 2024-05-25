@@ -15,7 +15,6 @@ const buttonVariants: string[] = [
   "priorityTwoButton",
   "priorityThreeButton",
   "modalButtonOne",
-  "modalButtonTwo",
   "modalButtonThree",
 ];
 

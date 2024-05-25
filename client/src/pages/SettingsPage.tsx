@@ -4,6 +4,7 @@ import styles from "./settingspage.module.css";
 import ButtonComponent from "../components/ButtonComponent";
 import TabComponent from "../components/TabComponent";
 import AccountSettingsComponent from "../components/AccountSettingsComponent";
+import ProfileSettingsComponent from "../components/ProfileSettingsComponent";
 
 enum TabButtonState {
   INACCOUNT,
@@ -79,16 +80,6 @@ export default function SettingsPage(): React.JSX.Element {
           </div>
         </div>
       </AppLayout>
-    </>
-  );
-}
-
-
-
-function ProfileSettingsComponent(): React.JSX.Element {
-  return (
-    <>
-      <div>Profile Settings</div>
     </>
   );
 }

@@ -174,3 +174,14 @@
 .modalButtonThree {
     background-color: #c40505;
 }
+
+.userDetailsForm {
+    width: 340px;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    color: white;
+    background-color: #4681f4;
+    margin-top: 20px;
+}
