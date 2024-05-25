@@ -153,3 +153,24 @@
         background-color: #ffbfbf;
     }
 }
+
+.modalButtonOne, .modalButtonTwo, .modalButtonThree {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    color: white;
+}
+
+.modalButtonOne {
+    background-color: #333333;
+}
+
+.modalButtonTwo {
+    background-color: #4681f4;
+}
+
+.modalButtonThree {
+    background-color: #c40505;
+}

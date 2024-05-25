@@ -24,3 +24,11 @@ input {
     height: 50px;
     width: 320px;
 }
+
+.formInputModal {
+    height: 50px;
+    width: 92%;
+    padding-left: 20px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}

@@ -14,6 +14,9 @@ const buttonVariants: string[] = [
   "priorityOneButton",
   "priorityTwoButton",
   "priorityThreeButton",
+  "modalButtonOne",
+  "modalButtonTwo",
+  "modalButtonThree",
 ];
 
 export default function ButtonComponent({

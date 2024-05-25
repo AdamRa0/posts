@@ -22,7 +22,7 @@ export default function ModalComponent({
           isVisible ? styles.buttonContainer : styles.buttonContainerAlt
         }
       >
-        {isVisible ? (
+        {isVisible && goBack !== undefined ? (
           <ButtonComponent variant={"modalButton"} onClick={goBack}>
             &larr;
           </ButtonComponent>
