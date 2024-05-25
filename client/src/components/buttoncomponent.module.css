@@ -175,8 +175,7 @@
     background-color: #c40505;
 }
 
-.userDetailsForm {
-    width: 340px;
+.userDetailsForm, .changePassword {
     padding: 10px;
     border-radius: 12px;
     border: none;
@@ -184,4 +183,12 @@
     color: white;
     background-color: #4681f4;
     margin-top: 20px;
+}
+
+.userDetailsForm {
+    width: 340px;
+}
+
+.changePassword {
+    width: 300px;
 }

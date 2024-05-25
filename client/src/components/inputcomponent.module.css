@@ -1,4 +1,4 @@
-input:not([type="file"]) {
+input:not([type="file"]), input:not([type="checkbox"]) {
     border-radius: 12px;
     border: 1px rgb(214, 214, 214) solid;
     background-color: rgb(214, 214, 214);
@@ -32,3 +32,9 @@ input:not([type="file"]) {
     margin-bottom: 30px;
     margin-top: 20px;
 }
+
+.switch-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }

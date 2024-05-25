@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react";
 import HeaderComponent from "../components/HeaderComponent";
 import styles from "./applayout.module.css";
 import ButtonComponent from "../components/ButtonComponent";
-import { MdOutlineSettings, MdCreate } from "react-icons/md";
+import { MdOutlineSettings, MdCreate, MdLogin } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import AuthPage from "../pages/AuthPage";
 
@@ -31,7 +31,7 @@ export default function AppLayout({
             Settings
           </NavLink>
           <ButtonComponent onClick={handleModal} variant="createPostButton">
-            <MdCreate />
+            <MdLogin />
             Login
           </ButtonComponent>
         </div>

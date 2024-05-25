@@ -5,6 +5,7 @@ import ButtonComponent from "../components/ButtonComponent";
 import TabComponent from "../components/TabComponent";
 import AccountSettingsComponent from "../components/AccountSettingsComponent";
 import ProfileSettingsComponent from "../components/ProfileSettingsComponent";
+import SafetyAndPrivacySettingsComponent from "../components/SafetyAndPrivacySettingsComponent";
 
 enum TabButtonState {
   INACCOUNT,
@@ -83,12 +84,3 @@ export default function SettingsPage(): React.JSX.Element {
     </>
   );
 }
-
-function SafetyAndPrivacySettingsComponent(): React.JSX.Element {
-  return (
-    <>
-      <div>Safety &amp; Privacy Settings</div>
-    </>
-  );
-}
-
