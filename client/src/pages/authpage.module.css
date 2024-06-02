@@ -1,0 +1,11 @@
+.authForm {
+    .inputFields {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    button {
+        align-self: center;
+    }
+}
