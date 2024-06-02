@@ -1,16 +1,29 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import UserPage from "../pages/UserPage";
 import SettingsPage from "../pages/SettingsPage";
 
+const routes = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomePage />,
+    index: true,
+  },
+  {
+    path: "/user",
+    element: <UserPage />,
+  },
+  {
+    path: "/settings",
+    element: <SettingsPage />,
+  },
+]);
+
 export default function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route index path="/" element={<HomePage />} />
-        <Route path="/user" element={<UserPage />}/>
-        <Route path="/settings" element={<SettingsPage />}/>
-      </Routes>
-    </BrowserRouter>
+    <RouterProvider router={routes}/>
   );
 }
