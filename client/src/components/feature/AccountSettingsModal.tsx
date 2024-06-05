@@ -1,6 +1,6 @@
 import React from "react";
-import PageOverlayComponent from "./PageOverlayComponent";
-import ModalComponent from "./ModalComponent";
+import PageOverlayComponent from "../ui/PageOverlayComponent";
+import ModalComponent from "../ui/ModalComponent";
 
 type accountSettingsModalProps = {
   children: React.ReactNode;
@@ -14,9 +14,7 @@ export default function AccountSettingsModal({
   return (
     <>
       <PageOverlayComponent>
-        <ModalComponent closeModal={closeModal}>
-          { children }
-        </ModalComponent>
+        <ModalComponent closeModal={closeModal}>{children}</ModalComponent>
       </PageOverlayComponent>
     </>
   );

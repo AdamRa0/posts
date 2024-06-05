@@ -1,0 +1,15 @@
+.item {
+    border-bottom: 1px rgb(214, 214, 214) solid;
+    padding: 10px;
+
+    &:hover,
+    &:focus {
+        background-color: rgb(236, 236, 236);
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    width: 98.5%;
+}

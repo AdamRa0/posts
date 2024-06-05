@@ -3,6 +3,7 @@ import { postsData } from "./dummyPostsData";
 
 
 export type userData = {
+    id: string;
     bannerImage: string;
     avatar: string;
     subscribed: number;
@@ -17,6 +18,7 @@ export type userData = {
 
 export default function provideDummyUser(): userData {
     return {
+        id: faker.string.uuid(),
         bannerImage: faker.image.url(),
         avatar: faker.image.avatar(),
         subscribed: faker.number.int({ min: 0, max: 100000 }),

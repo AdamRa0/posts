@@ -1,8 +1,8 @@
 import { useState } from "react";
-import HeaderComponent from "../components/HeaderComponent";
+import HeaderComponent from "../components/ui/HeaderComponent";
 import styles from "./applayout.module.css";
-import ButtonComponent from "../components/ButtonComponent";
-import { MdOutlineSettings, MdCreate, MdLogin } from "react-icons/md";
+import ButtonComponent from "../components/ui/ButtonComponent";
+import { MdOutlineSettings, MdLogin } from "react-icons/md";
 import { NavLink, Outlet } from "react-router-dom";
 import AuthPage from "../pages/AuthPage";
 

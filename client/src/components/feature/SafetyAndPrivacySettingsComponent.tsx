@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./safetyandprivacycomponent.module.css";
-import ButtonComponent from "./ButtonComponent";
-import InputComponent from "./InputComponent";
+import ButtonComponent from "../ui/ButtonComponent";
+import InputComponent from "../ui/InputComponent";
 import AccountSettingsModal from "./AccountSettingsModal";
 
 export default function SafetyAndPrivacySettingsComponent(): React.JSX.Element {
