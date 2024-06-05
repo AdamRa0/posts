@@ -2,7 +2,7 @@
 
 # Posts
 
-Twitter Clone
+Twitter + Reddit Clone
 
 ## Technologies Used
 - Python 3.10

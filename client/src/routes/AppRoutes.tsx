@@ -3,6 +3,8 @@ import HomePage from "../pages/HomePage";
 import UserPage from "../pages/UserPage";
 import SettingsPage from "../pages/SettingsPage";
 import AppLayout from "../layouts/AppLayout";
+import PostPage from "../pages/PostPage";
+import NewPostPage from "../pages/NewPostPage";
 
 const routes = createBrowserRouter([
   {
@@ -16,6 +18,19 @@ const routes = createBrowserRouter([
       {
         path: "/settings",
         element: <SettingsPage />,
+      },
+      {
+        path: "/posts",
+        children: [
+          {
+            path: ":postId",
+            element: <PostPage />,
+          },
+          {
+            path: "new",
+            element: <NewPostPage />,
+          },
+        ],
       },
     ],
   },

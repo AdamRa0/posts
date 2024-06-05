@@ -25,7 +25,7 @@
     }
 }
 
-.postItem {
+.item {
     border-bottom: 1px rgb(214, 214, 214) solid;
     padding: 10px;
     &:hover,

@@ -1,9 +1,9 @@
 import styles from "./listitemcomponent.module.css";
 
-import dateFormatter from "../helpers/dateFormatter";
-import formatNumber from "../helpers/numericalFormatter";
-import ButtonComponent from "../components/ButtonComponent";
-import { postsData } from "../data/dummyPostsData";
+import dateFormatter from "../../helpers/dateFormatter";
+import formatNumber from "../../helpers/numericalFormatter";
+import ButtonComponent from "./ButtonComponent";
+import { postsData } from "../../data/dummyPostsData";
 
 import {
   MdOutlineThumbUp,
@@ -18,9 +18,10 @@ type ListComponentData = {
 export default function ListItemComponent({
   data,
 }: ListComponentData): React.JSX.Element {
+
   return (
     <>
-      <li className={styles.postItem} key={data.id} tabIndex={0}>
+      <li className={styles.item} key={data.id} tabIndex={0}>
         <div>
           <div className={styles.postHeader}>
             <img

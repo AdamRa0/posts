@@ -1,4 +1,4 @@
-import ListComponent from "../components/ListComponent";
+import ListComponent from "../components/ui/ListComponent";
 import { provideDummyPosts, postsData } from "../data/dummyPostsData";
 
 export default function HomePage() {

@@ -3,10 +3,13 @@ import styles from "./userpage.module.css";
 import provideDummyUser, { userData } from "../data/dummyUserData";
 import { MdCalendarMonth } from "react-icons/md";
 import formatNumber from "../helpers/numericalFormatter";
-import ButtonComponent from "../components/ButtonComponent";
-import TabComponent from "../components/TabComponent";
+import ButtonComponent from "../components/ui/ButtonComponent";
+import TabComponent from "../components/ui/TabComponent";
+import { postsData, provideDummyPosts } from "../data/dummyPostsData";
+import ListComponent from "../components/ui/ListComponent";
 
 const user: userData = provideDummyUser();
+const posts: postsData[] = provideDummyPosts();
 
 enum TabStates {
   INPOSTS,
@@ -103,7 +106,9 @@ export default function UserPage(): React.JSX.Element {
             </ButtonComponent>
           </TabComponent>
         </div>
-        <div className={styles.pageContent}>Page Content Goes Here</div>
+        <div className={styles.pageContent}>
+          <ListComponent posts={posts} />
+        </div>
       </div>
     </>
   );

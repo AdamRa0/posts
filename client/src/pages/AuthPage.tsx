@@ -1,9 +1,9 @@
 import styles from "./authpage.module.css";
 
-import ModalComponent from "../components/ModalComponent";
-import PageOverlayComponent from "../components/PageOverlayComponent";
-import InputComponent from "../components/InputComponent";
-import ButtonComponent from "../components/ButtonComponent";
+import ModalComponent from "../components/ui/ModalComponent";
+import PageOverlayComponent from "../components/ui/PageOverlayComponent";
+import InputComponent from "../components/ui/InputComponent";
+import ButtonComponent from "../components/ui/ButtonComponent";
 import { useReducer } from "react";
 
 type authPageProps = {

@@ -9,7 +9,7 @@ export default function ListComponent(posts: { posts: postsData[] }): React.JSX.
     ));
     return (
       <>
-        <ul className={styles.postList}>{postItems}</ul>
+        <ul className={styles.list}>{postItems}</ul>
       </>
     );
   }

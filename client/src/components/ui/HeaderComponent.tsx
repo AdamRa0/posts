@@ -6,7 +6,7 @@ import styles from "./headercomponent.module.css";
 
 import InputComponent from "./InputComponent";
 import ButtonComponent from "./ButtonComponent";
-import AuthPage from "../pages/AuthPage";
+import AuthPage from "../../pages/AuthPage";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);

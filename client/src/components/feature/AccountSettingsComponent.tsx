@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
-import ButtonComponent from "./ButtonComponent";
+import ButtonComponent from "../ui/ButtonComponent";
 import React, { useReducer, useState } from "react";
 import styles from "./accountsettingscomponent.module.css";
 import AccountSettingsModal from "./AccountSettingsModal";
-import InputComponent from "./InputComponent";
+import InputComponent from "../ui/InputComponent";
 
 enum ModalTypes {
   ACCOUNT_DEACTIVATION,
