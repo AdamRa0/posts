@@ -1,15 +1,24 @@
-import styles from "./listcomponent.module.css";
-import { postsData } from "../data/dummyPostsData";
+import { postsData } from "../../data/dummyPostsData";
+import { userData } from "../../data/dummyUserData";
 import ListItemComponent from "./ListItemComponent";
+import styles from "./listcomponent.module.css";
 
-export default function ListComponent(posts: { posts: postsData[] }): React.JSX.Element {
+type ListComponentProps = {
+  data: postsData[] | userData[];
+  typeOfData: string;
+};
 
-    const postItems = posts.posts.map((post) => (
-      <ListItemComponent data={post}/>
-    ));
-    return (
-      <>
-        <ul className={styles.list}>{postItems}</ul>
-      </>
-    );
-  }
+export default function ListComponent({
+  data,
+  typeOfData,
+}: ListComponentProps): React.JSX.Element {
+  const items = data.map((item: postsData | userData) => (
+    <ListItemComponent item={item} typeOfData={typeOfData} />
+  ));
+
+  return (
+    <>
+      <ul className={styles.list}>{items}</ul>
+    </>
+  );
+}

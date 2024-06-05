@@ -107,7 +107,7 @@ export default function UserPage(): React.JSX.Element {
           </TabComponent>
         </div>
         <div className={styles.pageContent}>
-          <ListComponent posts={posts} />
+          <ListComponent data={posts} typeOfData="post" />
         </div>
       </div>
     </>

@@ -5,7 +5,7 @@ export default function HomePage() {
   const posts: postsData[] = provideDummyPosts();
   return (
     <>
-      <ListComponent posts={posts} />
+      <ListComponent data={posts} typeOfData={"post"}/>
     </>
   );
 }

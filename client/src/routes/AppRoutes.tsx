@@ -20,7 +20,7 @@ const routes = createBrowserRouter([
         element: <SettingsPage />,
       },
       {
-        path: "/posts",
+        path: "/post",
         children: [
           {
             path: ":postId",
