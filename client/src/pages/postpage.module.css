@@ -1,0 +1,53 @@
+.contentContainer {
+    grid-column: 2;
+    border-left: 1px rgb(214, 214, 214) solid;
+    border-right: 1px rgb(214, 214, 214) solid;
+    margin-top: 10px;
+    padding: 10px;
+    overflow-y: scroll;
+
+    .postHeader {
+        display: flex;
+        gap: 15px;
+
+        .authorAvatar {
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+        }
+
+        .postUserDetails {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            h4 {
+                margin-bottom: 0;
+                margin-top: 0;
+            }
+
+        }
+
+        p {
+            margin-top: 0;
+        }
+    }
+
+    .postImage {
+        border-radius: 12px;
+    }
+
+    .postInteractionButtons {
+        display: flex;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .commentSection {
+        margin-top: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+}
