@@ -4,7 +4,7 @@ import UserPage from "../pages/UserPage";
 import SettingsPage from "../pages/SettingsPage";
 import AppLayout from "../layouts/AppLayout";
 import PostPage from "../pages/PostPage";
-import NewPostPage from "../pages/NewPostPage";
+import React from "react";
 
 const routes = createBrowserRouter([
   {
@@ -26,16 +26,12 @@ const routes = createBrowserRouter([
             path: ":postId",
             element: <PostPage />,
           },
-          {
-            path: "new",
-            element: <NewPostPage />,
-          },
         ],
       },
     ],
   },
 ]);
 
-export default function AppRoutes() {
+export default function AppRoutes(): React.JSX.Element {
   return <RouterProvider router={routes} />;
 }

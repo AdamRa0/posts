@@ -14,7 +14,7 @@ export default function ListItemComponent({
   typeOfData,
 }: ListComponentData): React.JSX.Element {
   const link =
-    typeOfData === "post" ? `post/${item.id}` : `user/${item.handle}`;
+    typeOfData === "post" ? `/post/${item.id}` : `/user/${item.handle}`;
 
   const navigate = useNavigate();
 
