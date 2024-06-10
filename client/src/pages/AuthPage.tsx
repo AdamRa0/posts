@@ -1,7 +1,7 @@
 import ModalComponent from "@components/ui/ModalComponent";
 import PageOverlayComponent from "@components/ui/PageOverlayComponent";
 import { useReducer } from "react";
-import { countState } from "types/countState";
+import { countState } from "types/states/countState";
 import { RenderData } from "types/enums/renderData";
 import AuthForm from "@components/feature/forms/AuthForm";
 
@@ -86,7 +86,7 @@ export default function AuthPage({ closeModal }: authPageProps) {
             <AuthForm
               handleToggle={handleToggle}
               state={state}
-              dispatch={dispatch}
+              dispatchFunc={dispatch}
             />
           </div>
         </ModalComponent>
