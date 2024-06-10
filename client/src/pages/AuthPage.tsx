@@ -1,24 +1,12 @@
-import styles from "./authpage.module.css";
-
 import ModalComponent from "@components/ui/ModalComponent";
 import PageOverlayComponent from "@components/ui/PageOverlayComponent";
-import InputComponent from "@components/ui/InputComponent";
-import ButtonComponent from "@components/ui/ButtonComponent";
 import { useReducer } from "react";
+import { countState } from "types/states/countState";
+import { RenderData } from "types/enums/renderData";
+import AuthForm from "@components/feature/forms/AuthForm";
 
 type authPageProps = {
   closeModal: (event: React.MouseEvent<HTMLElement>) => void;
-};
-
-enum RenderData {
-  SIGNUP,
-  LOGIN,
-  FORGOT_PASSWORD,
-  FORGOT_USERNAME,
-}
-
-type countState = {
-  count: number;
 };
 
 function reducer(currentState: countState, action: RenderData) {
@@ -95,89 +83,11 @@ export default function AuthPage({ closeModal }: authPageProps) {
               {state.count === 3 &&
                 "Tell us the username and email address associated with your Posts account, and we’ll send you an email with a link to reset your password."}
             </p>
-            <form className={styles.authForm}>
-              <div className={styles.inputFields}>
-                {(state.count === 0 ||
-                  state.count === 1 ||
-                  state.count === 3) && (
-                  <InputComponent
-                    className={"formInput"}
-                    type="text"
-                    placeholder="Username"
-                  />
-                )}
-                {(state.count === 0 ||
-                  state.count === 2 ||
-                  state.count === 3) && (
-                  <InputComponent
-                    className={"formInput"}
-                    type="email"
-                    placeholder="Email Address"
-                  />
-                )}
-                {(state.count === 0 || state.count === 1) && (
-                  <InputComponent
-                    className={"formInput"}
-                    type="password"
-                    placeholder="Password"
-                  />
-                )}
-              </div>
-              {(state.count === 0 || state.count === 1) && (
-                <>
-                  <p>
-                    {state.count === 0 ? (
-                      <span>
-                        Forgot your{" "}
-                        <ButtonComponent
-                          type="button"
-                          variant="linkButton"
-                          onClick={() => {
-                            dispatch(RenderData.FORGOT_USERNAME);
-                          }}
-                        >
-                          username
-                        </ButtonComponent>{" "}
-                        or{" "}
-                        <ButtonComponent
-                          type="button"
-                          variant="linkButton"
-                          onClick={() => {
-                            dispatch(RenderData.FORGOT_PASSWORD);
-                          }}
-                        >
-                          password
-                        </ButtonComponent>
-                        ?
-                      </span>
-                    ) : null}
-                  </p>
-                  <p>
-                    {state.count === 1 ? "New to Posts?" : "Already a poster?"}{" "}
-                    <ButtonComponent
-                      type="button"
-                      variant="linkButton"
-                      onClick={handleToggle}
-                    >
-                      {state.count === 1 ? "Sign Up" : "Log In"}
-                    </ButtonComponent>
-                  </p>
-                </>
-              )}
-              <div style={{ marginTop: "20px" }}>
-                <ButtonComponent type="button" variant={"btnSignInAlt"}>
-                  {state.count === 0
-                    ? "Sign Up"
-                    : state.count === 1
-                    ? "Log In"
-                    : state.count === 2
-                    ? "Email Me"
-                    : state.count === 3
-                    ? "Reset Password"
-                    : ""}
-                </ButtonComponent>
-              </div>
-            </form>
+            <AuthForm
+              handleToggle={handleToggle}
+              state={state}
+              dispatchFunc={dispatch}
+            />
           </div>
         </ModalComponent>
       </PageOverlayComponent>

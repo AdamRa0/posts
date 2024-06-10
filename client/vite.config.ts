@@ -8,8 +8,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "http://localhost:5000/api",
         changeOrigin: true,
+        secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
       }
     }
@@ -23,7 +24,7 @@ export default defineConfig({
       '@pages': path.resolve(__dirname, './src/pages'),
       '@routes': path.resolve(__dirname, './src/routes'),
       '@services': path.resolve(__dirname, './src/services'),
-      '@types': path.resolve(__dirname, './src/types'),
+      'types': path.resolve(__dirname, './src/types'),
     }
   }
 })

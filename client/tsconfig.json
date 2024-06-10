@@ -32,7 +32,7 @@
       "@services/*": [
         "./src/services/*"
       ],
-      "@types/*": [
+      "types/*": [
         "./src/types/*"
       ]
     },
