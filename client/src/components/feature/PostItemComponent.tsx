@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./postitemcomponent.module.css";
 import { postsData } from "../../data/dummyPostsData";
-import dateFormatter from "../../helpers/dateFormatter";
-import formatNumber from "../../helpers/numericalFormatter";
-import ButtonComponent from "../ui/ButtonComponent";
+import dateFormatter from "@/helpers/dateFormatter";
+import formatNumber from "@/helpers/numericalFormatter";
+import ButtonComponent from "@components/ui/ButtonComponent";
 
 import {
   MdOutlineThumbDown,

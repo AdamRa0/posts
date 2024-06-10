@@ -6,10 +6,10 @@ import {
   MdAdd,
 } from "react-icons/md";
 import { postsData, provideDummyPosts } from "../data/dummyPostsData";
-import styles from "./postpage.module.css";
-import ButtonComponent from "../components/ui/ButtonComponent";
-import formatNumber from "../helpers/numericalFormatter";
-import dateFormatter from "../helpers/dateFormatter";
+import styles from "@pages/postpage.module.css";
+import ButtonComponent from "@components/ui/ButtonComponent";
+import formatNumber from "@helpers/numericalFormatter";
+import dateFormatter from "@helpers/dateFormatter";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 

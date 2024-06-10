@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import styles from "./settingspage.module.css";
-import ButtonComponent from "../components/ui/ButtonComponent";
-import TabComponent from "../components/ui/TabComponent";
-import AccountSettingsComponent from "../components/feature/AccountSettingsComponent";
-import ProfileSettingsComponent from "../components/feature/ProfileSettingsComponent";
-import SafetyAndPrivacySettingsComponent from "../components/feature/SafetyAndPrivacySettingsComponent";
+import styles from "@pages/settingspage.module.css";
+import ButtonComponent from "@components/ui/ButtonComponent";
+import TabComponent from "@components/ui/TabComponent";
+import AccountSettingsComponent from "@components/feature/AccountSettingsComponent";
+import ProfileSettingsComponent from "@components/feature/ProfileSettingsComponent";
+import SafetyAndPrivacySettingsComponent from "@components/feature/SafetyAndPrivacySettingsComponent";
 
 enum TabButtonState {
   INACCOUNT,

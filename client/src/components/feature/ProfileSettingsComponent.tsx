@@ -1,8 +1,8 @@
 import styles from "./profilesettingscomponent.module.css";
 
 import React from "react";
-import InputComponent from "../ui/InputComponent";
-import ButtonComponent from "../ui/ButtonComponent";
+import InputComponent from "@components/ui/InputComponent";
+import ButtonComponent from "@components/ui/ButtonComponent";
 
 export default function ProfileSettingsComponent(): React.JSX.Element {
   return (

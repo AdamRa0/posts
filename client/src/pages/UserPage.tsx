@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import styles from "./userpage.module.css";
+import styles from "@pages/userpage.module.css";
 import provideDummyUser, { userData } from "../data/dummyUserData";
 import { MdCalendarMonth } from "react-icons/md";
-import formatNumber from "../helpers/numericalFormatter";
-import ButtonComponent from "../components/ui/ButtonComponent";
-import TabComponent from "../components/ui/TabComponent";
+import formatNumber from "@helpers/numericalFormatter";
+import ButtonComponent from "@components/ui/ButtonComponent";
+import TabComponent from "@components/ui/TabComponent";
 import { postsData, provideDummyPosts } from "../data/dummyPostsData";
-import ListComponent from "../components/ui/ListComponent";
+import ListComponent from "@components/ui/ListComponent";
 
 const user: userData = provideDummyUser();
 const posts: postsData[] = provideDummyPosts();

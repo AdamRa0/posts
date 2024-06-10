@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./safetyandprivacycomponent.module.css";
-import ButtonComponent from "../ui/ButtonComponent";
-import InputComponent from "../ui/InputComponent";
-import AccountSettingsModal from "./AccountSettingsModal";
+import ButtonComponent from "@components/ui/ButtonComponent";
+import InputComponent from "@components/ui/InputComponent";
+import AccountSettingsModal from "@components/feature/AccountSettingsModal";
 
 export default function SafetyAndPrivacySettingsComponent(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

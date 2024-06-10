@@ -1,6 +1,6 @@
 import React from "react";
-import ListComponent from "../components/ui/ListComponent";
 import { provideDummyPosts, postsData } from "../data/dummyPostsData";
+import ListComponent from "@components/ui/ListComponent";
 
 export default function HomePage(): React.JSX.Element {
   const posts: postsData[] = provideDummyPosts();

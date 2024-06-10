@@ -1,10 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import HomePage from "../pages/HomePage";
-import UserPage from "../pages/UserPage";
-import SettingsPage from "../pages/SettingsPage";
-import AppLayout from "../layouts/AppLayout";
-import PostPage from "../pages/PostPage";
+import HomePage from "@pages/HomePage";
+import UserPage from "@pages/UserPage";
+import SettingsPage from "@pages/SettingsPage";
+import PostPage from "@pages/PostPage";
 import React from "react";
+import AppLayout from "@layouts/AppLayout";
 
 const routes = createBrowserRouter([
   {

@@ -1,6 +1,6 @@
 import React from "react";
-import PageOverlayComponent from "../ui/PageOverlayComponent";
-import ModalComponent from "../ui/ModalComponent";
+import PageOverlayComponent from "@components/ui/PageOverlayComponent";
+import ModalComponent from "@components/ui/ModalComponent";
 
 type accountSettingsModalProps = {
   children: React.ReactNode;
