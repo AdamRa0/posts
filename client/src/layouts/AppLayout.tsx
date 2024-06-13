@@ -6,11 +6,11 @@ import { MdOutlineSettings, MdCreate } from "react-icons/md";
 import { NavLink, Outlet } from "react-router-dom";
 import AuthPage from "../pages/AuthPage";
 import { AuthContext } from "@/contexts/authContext";
-import { User } from "types/data/userData";
+import { authContextProp } from "@/types/props/AuthContextProps";
 
 export default function AppLayout(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const authenticatedUser = useContext<User | null>(AuthContext);
+  const { user } = useContext<authContextProp>(AuthContext);
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
@@ -27,7 +27,7 @@ export default function AppLayout(): React.JSX.Element {
             <MdOutlineSettings />
             Settings
           </NavLink>
-          {authenticatedUser && (
+          {user && (
             <ButtonComponent variant="createPostButton">
               <MdCreate />
               Post

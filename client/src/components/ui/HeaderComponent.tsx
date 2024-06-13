@@ -8,12 +8,14 @@ import InputComponent from "@components/ui/InputComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import AuthPage from "@pages/AuthPage";
 import { AuthContext } from "@contexts/authContext";
+import { authContextProp } from "@/types/props/AuthContextProps";
+import { redirect } from "react-router-dom";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [userProfileImage, setUserProfileImage] = useState<string>("");
-  const authenticatedUser = useContext(AuthContext);
+  const { user, signOut } = useContext<authContextProp>(AuthContext);
 
   function handleClick() {
     setIsOptionsMenuOpen(!isOptionsMenuOpen);
@@ -29,15 +31,15 @@ export default function HeaderComponent() {
   }
 
   useEffect(() => {
-    if (authenticatedUser !== null) {
-      fetch(`/api/v1/media/${authenticatedUser.profileImage}`)
+    if (user) {
+      fetch(`/api/v1/media/${user.profileImage}`)
         .then((response) => response.blob())
         .then((imageBlob) => {
           const imageURL = URL.createObjectURL(imageBlob);
           setUserProfileImage(imageURL);
         });
     }
-  }, [authenticatedUser]);
+  }, [user]);
 
   return (
     <>
@@ -59,7 +61,7 @@ export default function HeaderComponent() {
           </span>
         </div>
         <div className={styles.headerOptions}>
-          {authenticatedUser === null ? (
+          {!user ? (
             <>
               <ButtonComponent
                 type="button"
@@ -83,7 +85,14 @@ export default function HeaderComponent() {
                 src={userProfileImage}
                 alt="logged in user avatar"
               />
-              <ButtonComponent type="button" variant={"btnSignIn"}>
+              <ButtonComponent
+                onClick={() => {
+                  signOut!();
+                  redirect("/");
+                }}
+                type="button"
+                variant={"btnSignIn"}
+              >
                 Log Out
               </ButtonComponent>
             </>

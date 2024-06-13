@@ -1,4 +1,4 @@
-import { User } from "types/data/userData";
 import { createContext } from "react";
+import { authContextProp } from "types/props/AuthContextProps";
 
-export const AuthContext = createContext<User | null>(null);
+export const AuthContext = createContext<authContextProp>({ user: null });

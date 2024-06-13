@@ -1,5 +1,6 @@
+import { signoutService } from "@/services/auth/signoutService";
 import { getUserService } from "@/services/user/getUser";
-import { User } from "@/types/data/userData";
+import { User } from "types/data/userData";
 import { AuthContext } from "@contexts/authContext";
 import { getCookie } from "@helpers/extractCookie";
 import React, { ReactNode, useEffect, useState } from "react";
@@ -11,7 +12,7 @@ type AuthContextProviderProps = {
 export default function AuthContextProvider({
   children,
 }: AuthContextProviderProps): React.JSX.Element {
-  const [authenticatedUser, setAuthenticatedUser] = useState<User | null>(null);
+  const [authenticatedUser, setAuthenticatedUser] = useState<User | null>();
 
   const token: string | undefined = getCookie("csrf_access_token");
 
@@ -34,9 +35,19 @@ export default function AuthContextProvider({
       .catch((e) => console.log(e));
   }, [token]);
 
+  async function signOutUser() {
+    const statusCode: number = await signoutService();
+
+    if (statusCode === 200) {
+      setAuthenticatedUser(null);
+    }
+  }
+
   return (
     <>
-      <AuthContext.Provider value={authenticatedUser}>
+      <AuthContext.Provider
+        value={{ user: authenticatedUser, signOut: signOutUser }}
+      >
         {children}
       </AuthContext.Provider>
     </>
