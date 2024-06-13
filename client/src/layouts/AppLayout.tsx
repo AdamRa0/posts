@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import HeaderComponent from "../components/ui/HeaderComponent";
 import styles from "./applayout.module.css";
-import ButtonComponent from "../components/ui/ButtonComponent";
-import { MdOutlineSettings, MdLogin } from "react-icons/md";
+import ButtonComponent from "@components/ui/ButtonComponent";
+import { MdOutlineSettings, MdCreate } from "react-icons/md";
 import { NavLink, Outlet } from "react-router-dom";
 import AuthPage from "../pages/AuthPage";
+import { AuthContext } from "@/contexts/authContext";
+import { User } from "types/data/userData";
 
 export default function AppLayout(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const authenticatedUser = useContext<User | null>(AuthContext);
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
@@ -24,10 +27,12 @@ export default function AppLayout(): React.JSX.Element {
             <MdOutlineSettings />
             Settings
           </NavLink>
-          <ButtonComponent onClick={handleModal} variant="createPostButton">
-            <MdLogin />
-            Login
-          </ButtonComponent>
+          {authenticatedUser && (
+            <ButtonComponent onClick={handleModal} variant="createPostButton">
+              <MdCreate />
+              Post
+            </ButtonComponent>
+          )}
         </div>
         {isModalOpen ? <AuthPage closeModal={handleModal} /> : null}
         <Outlet />
