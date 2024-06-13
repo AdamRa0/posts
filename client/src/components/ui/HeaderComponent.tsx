@@ -1,16 +1,21 @@
 import { MdSearch } from "react-icons/md";
 import { FiMoreHorizontal, FiLogIn } from "react-icons/fi";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import styles from "./headercomponent.module.css";
 
-import InputComponent from "./InputComponent";
-import ButtonComponent from "./ButtonComponent";
-import AuthPage from "../../pages/AuthPage";
+import InputComponent from "@components/ui/InputComponent";
+import ButtonComponent from "@components/ui/ButtonComponent";
+import AuthPage from "@pages/AuthPage";
+import { AuthContext } from "@contexts/authContext";
+import { authContextProp } from "@/types/props/AuthContextProps";
+import { redirect } from "react-router-dom";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [userProfileImage, setUserProfileImage] = useState<string>("");
+  const { user, signOut } = useContext<authContextProp>(AuthContext);
 
   function handleClick() {
     setIsOptionsMenuOpen(!isOptionsMenuOpen);
@@ -24,6 +29,17 @@ export default function HeaderComponent() {
     setIsOptionsMenuOpen(false);
     setIsModalOpen(true);
   }
+
+  useEffect(() => {
+    if (user) {
+      fetch(`/api/v1/media/${user.profileImage}`)
+        .then((response) => response.blob())
+        .then((imageBlob) => {
+          const imageURL = URL.createObjectURL(imageBlob);
+          setUserProfileImage(imageURL);
+        });
+    }
+  }, [user]);
 
   return (
     <>
@@ -45,16 +61,42 @@ export default function HeaderComponent() {
           </span>
         </div>
         <div className={styles.headerOptions}>
-          <ButtonComponent type="button" variant={"btnSignIn"} onClick={handleOpenModal}>
-            Sign In
-          </ButtonComponent>
-          <ButtonComponent
-            type="button"
-            variant={"moreOptions"}
-            onClick={handleClick}
-          >
-            <FiMoreHorizontal className="optionsMenuIcon" />
-          </ButtonComponent>
+          {!user ? (
+            <>
+              <ButtonComponent
+                type="button"
+                variant={"btnSignIn"}
+                onClick={handleOpenModal}
+              >
+                Sign In
+              </ButtonComponent>
+              <ButtonComponent
+                type="button"
+                variant={"moreOptions"}
+                onClick={handleClick}
+              >
+                <FiMoreHorizontal className="optionsMenuIcon" />
+              </ButtonComponent>
+            </>
+          ) : (
+            <>
+              <img
+                className={styles.userAvatar}
+                src={userProfileImage}
+                alt="logged in user avatar"
+              />
+              <ButtonComponent
+                onClick={() => {
+                  signOut!();
+                  redirect("/");
+                }}
+                type="button"
+                variant={"btnSignIn"}
+              >
+                Log Out
+              </ButtonComponent>
+            </>
+          )}
         </div>
         {isOptionsMenuOpen ? (
           <div

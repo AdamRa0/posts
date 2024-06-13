@@ -17,6 +17,9 @@
       "@components/*": [
         "./src/components/*"
       ],
+      "@contexts/*": [
+        "./src/contexts/*"
+      ],
       "@helpers/*": [
         "./src/helpers/*"
       ],
@@ -25,6 +28,9 @@
       ],
       "@pages/*": [
         "./src/pages/*"
+      ],
+      "@providers/*": [
+        "./src/providers/*"
       ],
       "@routes/*": [
         "./src/routes/*"

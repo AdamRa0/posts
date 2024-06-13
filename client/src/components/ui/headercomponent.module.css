@@ -32,8 +32,15 @@
 
     .headerOptions {
         display: flex;
+        align-items: center;
         gap: 20px;
         margin-left: 40px;
+
+        .userAvatar {
+            border-radius: 50%;
+            height: 55px;
+            width: 55px;
+        }
     }
 
     .headerOptionsMenu {

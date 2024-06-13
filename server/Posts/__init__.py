@@ -16,6 +16,9 @@ from flask_jwt_extended import (
 )
 
 
+COOKIE_MAX_AGE: int = 172800
+
+
 def create_app():
     """
     Creates and returns an instance of our application
@@ -23,9 +26,9 @@ def create_app():
 
     app: Flask = Flask(
         __name__,
-        instance_relative_config=True
-        if os.environ.get("ENVIRONMENT") == "development"
-        else False,
+        instance_relative_config=(
+            True if os.environ.get("ENVIRONMENT") == "development" else False
+        ),
     )
 
     init_app(app)
@@ -49,7 +52,7 @@ def create_app():
 
             if target_timestatmp > expiring_timestamp:
                 access_token = create_access_token(identity=get_jwt_identity())
-                set_access_cookies(response, access_token)
+                set_access_cookies(response, access_token, max_age=COOKIE_MAX_AGE)
             return response
         except (RuntimeError, KeyError):
             return response

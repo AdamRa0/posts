@@ -30,8 +30,6 @@ export default function AccountSettingsComponent(): React.JSX.Element {
     (currentState: number, action: ModalTypes) => number
   >(AccountSettingsReducer, 0);
 
-  console.log(state);
-
   function handleModal(): void {
     isModalOpen ? setIsModalOpen(false) : setIsModalOpen(true);
   }

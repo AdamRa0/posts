@@ -74,7 +74,7 @@ export default function AuthForm({
     <>
       <form className={styles.authForm} onSubmit={handleFormSubmit}>
         <div className={styles.inputFields}>
-          {(state.count === 0 || state.count === 1 || state.count === 3) && (
+          {(state.count === 0 || state.count === 3) && (
             <InputComponent
               className={"formInput"}
               type="text"
@@ -85,17 +85,15 @@ export default function AuthForm({
               }
             />
           )}
-          {(state.count === 0 || state.count === 2 || state.count === 3) && (
-            <InputComponent
-              className={"formInput"}
-              type="email"
-              value={userDetails.emailAddress}
-              placeholder="Email Address"
-              onChange={(input) =>
-                handleOnChange("update/emailAddress", input.target.value)
-              }
-            />
-          )}
+          <InputComponent
+            className={"formInput"}
+            type="email"
+            value={userDetails.emailAddress}
+            placeholder="Email Address"
+            onChange={(input) =>
+              handleOnChange("update/emailAddress", input.target.value)
+            }
+          />
           {(state.count === 0 || state.count === 1) && (
             <InputComponent
               className={"formInput"}
