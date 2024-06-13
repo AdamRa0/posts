@@ -28,7 +28,7 @@ export default function AppLayout(): React.JSX.Element {
             Settings
           </NavLink>
           {authenticatedUser && (
-            <ButtonComponent onClick={handleModal} variant="createPostButton">
+            <ButtonComponent variant="createPostButton">
               <MdCreate />
               Post
             </ButtonComponent>
