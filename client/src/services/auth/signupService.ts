@@ -1,6 +1,6 @@
 import { AuthFormState } from "types/states/authFomState";
 
-export async function signupService({ username, emailAddress, handle, password }: AuthFormState): Promise<void> {
+export async function signupService({ username, emailAddress, handle, password }: AuthFormState): Promise<number> {
     const form: FormData = new FormData();
 
     form.append("username", username);
@@ -14,8 +14,9 @@ export async function signupService({ username, emailAddress, handle, password }
             body: form
         });
 
-        console.log(response.json());
+        return response.status;
     } catch (e) {
         console.log(e);
+        return 500;
     }
 }
