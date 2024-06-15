@@ -1,13 +1,13 @@
-import { signoutService } from "@/services/auth/signoutService";
-import { getUserService } from "@/services/user/getUser";
+import { signoutService } from "@services/auth/signoutService";
+import { getUserService } from "@services/user/getUser";
 import { User } from "types/data/userData";
 import { AuthContext } from "@contexts/authContext";
 import { getCookie } from "@helpers/extractCookie";
-import React, { ReactNode, useEffect, useState } from "react";
-
-type AuthContextProviderProps = {
-  children: ReactNode;
-};
+import React, { useEffect, useState } from "react";
+import { AuthFormState } from "types/states/authFomState";
+import { signinService } from "@services/auth/signinService";
+import { signupService } from "@services/auth/signupService";
+import { AuthContextProviderProps } from "types/props/AuthContextProviderProps";
 
 export default function AuthContextProvider({
   children,
@@ -43,10 +43,33 @@ export default function AuthContextProvider({
     }
   }
 
+  async function signInUser(userDetails: AuthFormState) {
+    const statusCode: number = await signinService(userDetails);
+
+    // Authenticated user set to null as it will be fetched by useEffect during re-render
+    if (statusCode === 200) {
+      setAuthenticatedUser(null);
+    }
+  }
+
+  async function signUpUser(userDetails: AuthFormState) {
+    const statusCode: number = await signupService(userDetails);
+
+    // Authenticated user set to null as it will be fetched by useEffect during re-render
+    if (statusCode === 201) {
+      setAuthenticatedUser(null);
+    }
+  }
+
   return (
     <>
       <AuthContext.Provider
-        value={{ user: authenticatedUser, signOut: signOutUser }}
+        value={{
+          user: authenticatedUser,
+          signOut: signOutUser,
+          signIn: signInUser,
+          signUp: signUpUser,
+        }}
       >
         {children}
       </AuthContext.Provider>

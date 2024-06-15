@@ -71,6 +71,8 @@ def get_user_profile_by_handle():
     return user_schema.dump(user), 200
 
 
+# Route that handles fetching user profile
+# Route also handles fetching post author details
 @user_routes.route("/profile")
 @jwt_required(optional=True)
 def get_user_profile():

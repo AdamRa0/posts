@@ -4,10 +4,7 @@ import { useReducer } from "react";
 import { countState } from "types/states/countState";
 import { RenderData } from "types/enums/renderData";
 import AuthForm from "@components/feature/forms/AuthForm";
-
-type authPageProps = {
-  closeModal: (event: React.MouseEvent<HTMLElement>) => void;
-};
+import { authPageProps } from "types/props/AuthPageProps";
 
 function reducer(currentState: countState, action: RenderData) {
   switch (action) {

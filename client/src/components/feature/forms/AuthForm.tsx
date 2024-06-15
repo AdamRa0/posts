@@ -2,12 +2,11 @@ import { RenderData } from "types/enums/renderData";
 import styles from "@components/feature/forms/authform.module.css";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import InputComponent from "@components/ui/InputComponent";
-import React, { useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import { AuthFormProps } from "types/props/AuthFormProps";
 import { AuthFormState } from "types/states/authFomState";
 import { AuthFormReducerActions } from "types/actions/authFormReducerActions";
-import { signupService } from "@services/auth/signupService";
-import { signinService } from "@services/auth/signinService";
+import { AuthContext } from "@contexts/authContext";
 
 function reducer(
   currentUserDetails: AuthFormState,
@@ -51,19 +50,20 @@ export default function AuthForm({
   dispatchFunc,
 }: AuthFormProps): React.JSX.Element {
   const [userDetails, dispatch] = useReducer(reducer, initialState);
+  const { signIn, signUp } = useContext(AuthContext);
 
   function handleOnChange(dispatchType: string, data: string) {
     dispatch({ type: dispatchType, data: data });
   }
 
-  function handleFormSubmit(e: { preventDefault: () => void }) {
+  function handleFormSubmit(e: { preventDefault: () => void; }) {
     e.preventDefault();
     switch (state.count) {
       case 0:
-        signupService(userDetails);
+        signUp!(userDetails);
         break;
       case 1:
-        signinService(userDetails);
+        signIn!(userDetails);
         break;
       default:
         break;

@@ -40,3 +40,11 @@
         background-color: rgb(214, 214, 214);
     }
 }
+
+.postFormButtons {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}

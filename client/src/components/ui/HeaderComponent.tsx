@@ -9,7 +9,6 @@ import ButtonComponent from "@components/ui/ButtonComponent";
 import AuthPage from "@pages/AuthPage";
 import { AuthContext } from "@contexts/authContext";
 import { authContextProp } from "@/types/props/AuthContextProps";
-import { redirect } from "react-router-dom";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);
@@ -88,7 +87,6 @@ export default function HeaderComponent() {
               <ButtonComponent
                 onClick={() => {
                   signOut!();
-                  redirect("/");
                 }}
                 type="button"
                 variant={"btnSignIn"}
