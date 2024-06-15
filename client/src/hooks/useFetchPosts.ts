@@ -10,7 +10,7 @@ export default function useFetchPosts(): PostData[] | undefined {
             .then(data => setPosts(data))
             // 404 occurs since page does not exist
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .catch(_ => setPosts([])); 
+            .catch(error => console.log(error)); 
     }, [])
 
     return posts;

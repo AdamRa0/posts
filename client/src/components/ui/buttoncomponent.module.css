@@ -1,3 +1,7 @@
+button:disabled {
+    cursor: not-allowed;
+}
+
 .modalButton,
 .postBackButton {
     border-radius: 50%;

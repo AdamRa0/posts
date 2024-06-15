@@ -19,3 +19,29 @@
         margin-left: auto;
     }
 }
+
+.postFormModal {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    width: 45dvw;
+    height: 70dvh;
+    position: absolute;
+    top: 50px;
+
+    .buttonContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .buttonContainerAlt {
+        margin-left: auto;
+    }
+}

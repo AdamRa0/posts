@@ -1,22 +1,16 @@
-import { ReactNode } from "react";
 import ButtonComponent from "./ButtonComponent";
 import styles from "./modalcomponent.module.css";
-
-type modalComponentProps = {
-  children: ReactNode;
-  closeModal: (event: React.MouseEvent<HTMLElement>) => void;
-  isVisible?: boolean;
-  goBack?: (event: React.MouseEvent<HTMLElement>) => void;
-};
+import { ModalComponentProps } from "types/props/ModalComponentProps";
 
 export default function ModalComponent({
   children,
   closeModal,
   goBack,
   isVisible = false,
-}: modalComponentProps) {
+  variant = "modal"
+}: ModalComponentProps) {
   return (
-    <div className={styles.modal}>
+    <div className={styles[variant]}>
       <div
         className={
           isVisible ? styles.buttonContainer : styles.buttonContainerAlt

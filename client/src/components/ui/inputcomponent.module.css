@@ -1,4 +1,4 @@
-input:not([type="file"]), input:not([type="checkbox"]) {
+input:not([type="file"]):not([type="checkbox"]) {
     border-radius: 12px;
     border: 1px rgb(214, 214, 214) solid;
     background-color: rgb(214, 214, 214);
@@ -37,4 +37,9 @@ input:not([type="file"]), input:not([type="checkbox"]) {
     opacity: 0;
     width: 0;
     height: 0;
-  }
+}
+
+.postFormInput {
+    border: none;
+    padding: 10px;
+}
