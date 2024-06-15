@@ -1,11 +1,11 @@
 import styles from "./listitemcomponent.module.css";
-import PostItemComponent from "../feature/PostItemComponent";
-import { postsData } from "../../data/dummyPostsData";
-import { userData } from "../../data/dummyUserData";
+import PostItemComponent from "@components/feature/PostItemComponent";
 import { useNavigate } from "react-router-dom";
+import { PostData } from "types/data/postData";
+import { User } from "types/data/userData";
 
 type ListComponentData = {
-  item: postsData | userData;
+  item: PostData | User;
   typeOfData: string;
 };
 
@@ -14,7 +14,9 @@ export default function ListItemComponent({
   typeOfData,
 }: ListComponentData): React.JSX.Element {
   const link =
-    typeOfData === "post" ? `/post/${item.id}` : `/user/${item.handle}`;
+    typeOfData === "post"
+      ? `/post/${item.id}`
+      : `/user/${(item as User).handle}`;
 
   const navigate = useNavigate();
 
@@ -31,7 +33,7 @@ export default function ListItemComponent({
         tabIndex={0}
       >
         {typeOfData === "post" ? (
-          <PostItemComponent post={item as postsData} />
+          <PostItemComponent post={item as PostData} />
         ) : null}
       </li>
     </>

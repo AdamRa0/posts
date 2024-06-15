@@ -1,10 +1,10 @@
-import { postsData } from "../../data/dummyPostsData";
-import { userData } from "../../data/dummyUserData";
+import { PostData } from "types/data/postData";
 import ListItemComponent from "./ListItemComponent";
 import styles from "./listcomponent.module.css";
+import { User } from "types/data/userData";
 
 type ListComponentProps = {
-  data: postsData[] | userData[];
+  data: PostData[] | User[];
   typeOfData: string;
 };
 
@@ -12,7 +12,7 @@ export default function ListComponent({
   data,
   typeOfData,
 }: ListComponentProps): React.JSX.Element {
-  const items = data.map((item: postsData | userData) => (
+  const items = data.map((item: PostData | User) => (
     <ListItemComponent item={item} typeOfData={typeOfData} />
   ));
 

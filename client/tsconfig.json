@@ -23,6 +23,9 @@
       "@helpers/*": [
         "./src/helpers/*"
       ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
       "@layouts/*": [
         "./src/layouts/*"
       ],

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
@@ -12,6 +13,13 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
+        configure: (proxy, _options) => {
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
+              proxyReq.setHeader('Connection', 'keep-alive');
+            }
+          });
+        },
       }
     }
   },
@@ -21,6 +29,7 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/components'),
       '@contexts': path.resolve(__dirname, './src/contexts'),
       '@helpers': path.resolve(__dirname, './src/helpers'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
       '@layouts': path.resolve(__dirname, './src/layouts'),
       '@pages': path.resolve(__dirname, './src/pages'),
       '@providers': path.resolve(__dirname, './src/providers'),
