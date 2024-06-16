@@ -62,8 +62,7 @@ def create_new_post():
     msg = format_sse(data=posts_schema.dump(author_posts)[0], event="new-post")
     announcer.announce(msg)
 
-    # return posts_schema.dump(author_posts)[0], 201
-    return {}, 201
+    return posts_schema.dump(author_posts)[0], 201
 
 
 @post_routes.route("/<post_id>")
