@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./postitemcomponent.module.css";
 import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
@@ -20,19 +20,37 @@ export default function PostItemComponent({
   post,
 }: PostItemComponentProps): React.JSX.Element {
   const postAuthor = useFetchPostAuthorDetails(post.author_id);
+  const [authorImage, setAuthorImage] = useState<string>("");
+
+  useEffect(() => {
+    if (postAuthor) {
+      fetch(`/api/v1/media/${postAuthor.avatar}`)
+        .then((response) => response.blob())
+        .then((imageBlob) => {
+          const imageURL = URL.createObjectURL(imageBlob);
+          setAuthorImage(imageURL);
+        });
+    }
+  }, [postAuthor]);
 
   return (
     <>
       <div className={styles.postHeader}>
-        <img
-          className={styles.authorAvatar}
-          src={postAuthor!.avatar}
-          alt="Post author avatar"
-        />
-        <div className={styles.postUserDetails}>
-          <h4>{postAuthor!.username}</h4>
-          <p>{postAuthor!.handle}</p>
-        </div>
+        {postAuthor === undefined ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <img
+              className={styles.authorAvatar}
+              src={authorImage}
+              alt="Post author avatar"
+            />
+            <div className={styles.postUserDetails}>
+              <h4>{postAuthor!.username}</h4>
+              <p>{postAuthor!.handle}</p>
+            </div>
+          </>
+        )}
         <p>{dateFormatter(post.time_created)}</p>
       </div>
       <p>{post.body}</p>

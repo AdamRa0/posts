@@ -12,9 +12,12 @@ from ..models.post_creation_model import PostCreationModel
 from ..models.post_update_model import PostUpdateModel
 
 from ...utils.show_true_path import show_true_path
+from ...utils.streams.format_sse import format_sse
 from ...utils.upload_file import upload_file
 
 from ...follow.controllers.get_sub_subees import get_subscribers
+
+from Posts.announcer import announcer
 
 from flask import Blueprint, jsonify, request, current_app
 from flask_pydantic import validate
@@ -55,6 +58,10 @@ def create_new_post():
     )
 
     author_posts = get_post_by_author_id(current_user.id)
+
+    # TODO: Revist when you get SSE's working
+    # msg = format_sse(data=posts_schema.dump(author_posts)[0], event="new-post")
+    # announcer.announce(msg)
 
     return posts_schema.dump(author_posts)[0], 201
 

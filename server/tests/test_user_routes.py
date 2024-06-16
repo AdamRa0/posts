@@ -252,9 +252,9 @@ def test_update_user_details(create_new_user_1, test_client):
     THEN the account reflects the changes
     """
 
-    new_user_name = "test_user"
-    new_email_address = "testuser@example.com"
-    new_handle = "@testuser"
+    new_user_name = "test_user1"
+    new_email_address = "testuser1@example.com"
+    new_handle = "@testuser1"
 
     data = dict(
         email_address=create_new_user_1.email_address,
@@ -287,7 +287,7 @@ def test_delete_user(create_new_user_1, test_client):
     THEN the account is deleted successfully
     """
     data = dict(
-        email_address="testuser@example.com",
+        email_address="testuser1@example.com",
         password=create_new_user_1.password,
     )
 

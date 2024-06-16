@@ -13,14 +13,13 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
-        configure: (proxy, _options) => {
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
-            if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
-              proxyReq.setHeader('Connection', 'keep-alive');
-            }
-          });
-        },
-      }
+      },
+      '/listen': {
+        target: 'http://localhost:5000',  // URL of your Flask server
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
     }
   },
   resolve: {
