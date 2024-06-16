@@ -12,6 +12,8 @@ def get_posts(page: int):
     """
     # return db.session.execute(db.select(PostModel)).scalars()
     return db.paginate(db.select(PostModel).order_by(desc(PostModel.time_created)), page=page)
+    # return db.paginate(db.select(PostModel), page=page)
+
 
 
 def get_posts_by_user(author_id: str, page: int):
