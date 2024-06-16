@@ -14,7 +14,7 @@ export default function useFetchPostAuthorDetails(authorID: UUID): PostAuthor | 
                 setAuthor({
                     username: data.username,
                     handle: data.handle,
-                    avatar: data.avatar
+                    avatar: data.profile_image
                 })
             })
     }, [token, authorID]);

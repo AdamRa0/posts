@@ -59,7 +59,7 @@ def create_new_post():
 
     author_posts = get_post_by_author_id(current_user.id)
 
-    msg = format_sse(data="post created successfully", event="new-post")
+    msg = format_sse(data=posts_schema.dump(author_posts)[0], event="new-post")
     announcer.announce(msg)
 
     # return posts_schema.dump(author_posts)[0], 201
