@@ -1,13 +1,15 @@
 import os
 from datetime import datetime, timezone, timedelta
+from queue import Queue
 
 from .users.routes.user_routes import user_routes
 from .posts_.routes.post_routes import post_routes
 from .media.routes.media_routes import media_routes
 from .auth.routes.auth_routes import auth_routes
 from .database.db import create_tables, init_app
+from .announcer import announcer
 
-from flask import Flask
+from flask import Flask, Response
 from flask_jwt_extended import (
     get_jwt,
     get_jwt_identity,
@@ -56,5 +58,15 @@ def create_app():
             return response
         except (RuntimeError, KeyError):
             return response
+
+    @app.route("/listen", methods=["GET"])
+    def listen():
+        def stream():
+            messages: Queue = announcer.listen()
+            while True:
+                msg = messages.get()
+                yield msg
+
+        return Response(stream(), mimetype="text/event-stream")
 
     return app
