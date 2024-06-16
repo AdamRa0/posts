@@ -12,6 +12,7 @@ import ModalComponent from "@components/ui/ModalComponent";
 import MarkdownEditor from "@uiw/react-markdown-editor";
 import InputComponent from "@/components/ui/InputComponent";
 import { PostType } from "types/data/postFormType";
+import createPostService from "@/services/posts/createPostService";
 
 export default function AppLayout(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -45,11 +46,15 @@ export default function AppLayout(): React.JSX.Element {
 
   function handleFormSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
-    console.log(post);
     setPost({
       body: "",
       file: undefined,
     });
+
+    (async () => {
+      await createPostService(post);
+    })();
+
     handleFormModal();
   }
 
