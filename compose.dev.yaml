@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: posts
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./server/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
+    ports:
+      - "5432:5432"
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    container_name: server
+    environment:
+      ENVIRONMENT: docker_dev
+    depends_on:
+      - postgres
+    volumes:
+      - ./server:/app
+    ports:
+      - "5000:5000"
+    command: flask --app Posts run --debug
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+    command: bun run dev
+
+volumes:
+  postgres-data:
