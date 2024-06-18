@@ -13,7 +13,7 @@ Twitter + Reddit Clone
 - Docker
 
 ## Instructions
-To run the code locally, first make the following changes.
+To run the project locally, first make the following changes.
 
 - Inside the client folder, change the vite.config.ts file from
 ```typescript
@@ -73,5 +73,5 @@ docker compose up -f compose.dev.yaml --build
 - ReactJS
 
 ## Acknowledgments
-[Banner Image by Rasmus Smedstrup Mortensen on Unsplash](https://unsplash.com/photos/_ZtPsxAomeI?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink)
-[Server-side SSE code](https://maxhalford.github.io/blog/flask-sse-no-deps/)
+- [Banner Image by Rasmus Smedstrup Mortensen on Unsplash](https://unsplash.com/photos/_ZtPsxAomeI?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink)
+- [Server-side SSE code](https://maxhalford.github.io/blog/flask-sse-no-deps/)
