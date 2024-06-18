@@ -29,7 +29,12 @@ def create_app():
     app: Flask = Flask(
         __name__,
         instance_relative_config=(
-            True if os.environ.get("ENVIRONMENT") == "development" else False
+            True
+            if (
+                os.environ.get("ENVIRONMENT") == "development"
+                or os.environ.get("ENVIRONMENT") == "docker_dev"
+            )
+            else False
         ),
     )
 
