@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./postitemcomponent.module.css";
 import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
@@ -10,7 +10,10 @@ import {
   MdOutlineThumbUp,
   MdModeComment,
 } from "react-icons/md";
-import useFetchPostAuthorDetails from "@/hooks/useFetchPostAuthorDetails";
+import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
+import { AuthContext } from "@contexts/authContext";
+import { authContextProp } from "types/props/AuthContextProps";
+import AuthPage from "@pages/AuthPage";
 
 type PostItemComponentProps = {
   post: PostData;
@@ -21,6 +24,8 @@ export default function PostItemComponent({
 }: PostItemComponentProps): React.JSX.Element {
   const postAuthor = useFetchPostAuthorDetails(post.author_id);
   const [authorImage, setAuthorImage] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { user } = useContext<authContextProp>(AuthContext);
 
   useEffect(() => {
     if (postAuthor) {
@@ -32,6 +37,19 @@ export default function PostItemComponent({
         });
     }
   }, [postAuthor]);
+
+  function handleModal(e: { stopPropagation: () => void; }) {
+    e.stopPropagation();
+    setIsModalOpen(!isModalOpen);
+  }
+
+  function handlePostInterraction(e: { stopPropagation: () => void; }) {
+    e.stopPropagation();
+
+    if (user === null) {
+      setIsModalOpen(true);
+    }
+  }
 
   return (
     <>
@@ -62,23 +80,27 @@ export default function PostItemComponent({
         />
       ) : null}
       <div className={styles.postInteractionButtons}>
-        <ButtonComponent variant="postInteractionButton">
+        <ButtonComponent variant="postInteractionButton"
+        onClick={(e) => handlePostInterraction(e)}>
           <MdOutlineThumbUp />
           {post.approvals >= 1000
             ? formatNumber(post.approvals)
             : post.approvals}
         </ButtonComponent>
-        <ButtonComponent variant="postInteractionButton">
+        <ButtonComponent variant="postInteractionButton"
+        onClick={(e) => handlePostInterraction(e)}>
           <MdOutlineThumbDown />
           {post.disapprovals >= 1000
             ? formatNumber(post.disapprovals)
             : post.disapprovals}
         </ButtonComponent>
-        <ButtonComponent variant="postInteractionButton">
+        <ButtonComponent variant="postInteractionButton"
+        onClick={(e) => handlePostInterraction(e)}>
           <MdModeComment />
           {post.comments >= 1000 ? formatNumber(post.comments) : post.comments}
         </ButtonComponent>
       </div>
+      {isModalOpen ? <AuthPage closeModal={(e) => handleModal(e)} /> : null}
     </>
   );
 }

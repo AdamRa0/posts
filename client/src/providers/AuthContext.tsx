@@ -12,7 +12,7 @@ import { AuthContextProviderProps } from "types/props/AuthContextProviderProps";
 export default function AuthContextProvider({
   children,
 }: AuthContextProviderProps): React.JSX.Element {
-  const [authenticatedUser, setAuthenticatedUser] = useState<User | null>();
+  const [authenticatedUser, setAuthenticatedUser] = useState<User | null>(null);
 
   const token: string | undefined = getCookie("csrf_access_token");
 
