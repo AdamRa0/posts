@@ -8,7 +8,8 @@ import InputComponent from "@components/ui/InputComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import AuthPage from "@pages/AuthPage";
 import { AuthContext } from "@contexts/authContext";
-import { authContextProp } from "@/types/props/AuthContextProps";
+import { authContextProp } from "types/props/AuthContextProps";
+import getImageService from "@services/media/getImageService";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);
@@ -31,7 +32,7 @@ export default function HeaderComponent() {
 
   useEffect(() => {
     if (user) {
-      fetch(`/api/v1/media/${user.profileImage}`)
+      getImageService(user.profileImage)
         .then((response) => response.blob())
         .then((imageBlob) => {
           const imageURL = URL.createObjectURL(imageBlob);

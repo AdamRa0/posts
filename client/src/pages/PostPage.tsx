@@ -10,13 +10,32 @@ import styles from "@pages/postpage.module.css";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import formatNumber from "@helpers/numericalFormatter";
 import dateFormatter from "@helpers/dateFormatter";
-import { useNavigate } from "react-router-dom";
-import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { authContextProp } from "types/props/AuthContextProps";
+import { AuthContext } from "@contexts/authContext";
+import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
 
 const post: postsData = provideDummyPosts()[0];
 
 export default function PostPage(): React.JSX.Element {
+  // const postAuthor = useFetchPostAuthorDetails(post.author_id);
+  const [authorImage, setAuthorImage] = useState<string>("");
+  const { user } = useContext<authContextProp>(AuthContext);
   const navigate = useNavigate();
+  const { postId } = useParams();
+
+  useEffect(() => {
+    // if (postAuthor) {
+    //   fetch(`/api/v1/media/${postAuthor.avatar}`)
+    //     .then((response) => response.blob())
+    //     .then((imageBlob) => {
+    //       const imageURL = URL.createObjectURL(imageBlob);
+    //       setAuthorImage(imageURL);
+    //     });
+    // }
+  }, []);
+
 
   function handleBackNavigation(): void {
     navigate(-1);
@@ -26,6 +45,7 @@ export default function PostPage(): React.JSX.Element {
     <>
       <div className={styles.contentContainer}>
         <div className={styles.postHeader}>
+
           <ButtonComponent
             variant="postBackButton"
             onClick={handleBackNavigation}

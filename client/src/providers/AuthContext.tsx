@@ -1,5 +1,5 @@
 import { signoutService } from "@services/auth/signoutService";
-import { getUserService } from "@services/user/getUser";
+import { getUserService } from "@services/user/getUserService";
 import { User } from "types/data/userData";
 import { AuthContext } from "@contexts/authContext";
 import { getCookie } from "@helpers/extractCookie";

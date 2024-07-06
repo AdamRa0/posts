@@ -1,4 +1,4 @@
-import { getUserService } from "@services/user/getUser";
+import { getUserService } from "@services/user/getUserService";
 import { getCookie } from "@helpers/extractCookie";
 import { UUID } from "crypto";
 import { useEffect, useState } from "react";

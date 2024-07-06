@@ -15,8 +15,9 @@ import { AuthContext } from "@contexts/authContext";
 import { authContextProp } from "types/props/AuthContextProps";
 import AuthPage from "@pages/AuthPage";
 import { useNavigate } from "react-router-dom";
-import approvePostService from "@/services/posts/approvePostService";
-import disapprovePostService from "@/services/posts/disapprovePostService";
+import approvePostService from "@services/posts/approvePostService";
+import disapprovePostService from "@services/posts/disapprovePostService";
+import getImageService from "@services/media/getImageService";
 
 type PostItemComponentProps = {
   post: PostData;
@@ -33,7 +34,7 @@ export default function PostItemComponent({
 
   useEffect(() => {
     if (postAuthor) {
-      fetch(`/api/v1/media/${postAuthor.avatar}`)
+      getImageService(postAuthor.avatar)
         .then((response) => response.blob())
         .then((imageBlob) => {
           const imageURL = URL.createObjectURL(imageBlob);
@@ -68,7 +69,7 @@ export default function PostItemComponent({
         break;
 
       case "comment":
-        navigate(`/post/${post.id}`)
+        navigate(`/post/${post.id}`);
         break;
 
       default:
