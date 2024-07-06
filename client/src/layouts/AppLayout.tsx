@@ -93,6 +93,7 @@ export default function AppLayout(): React.JSX.Element {
                     value={post.body}
                     width="45dvw"
                     height="50dvh"
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     onChange={(value, _) => handleBodyChange(value)}
                   />
                   <div className={styles.postFormButtons}>

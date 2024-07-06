@@ -14,6 +14,9 @@ import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
 import { AuthContext } from "@contexts/authContext";
 import { authContextProp } from "types/props/AuthContextProps";
 import AuthPage from "@pages/AuthPage";
+import { useNavigate } from "react-router-dom";
+import approvePostService from "@/services/posts/approvePostService";
+import disapprovePostService from "@/services/posts/disapprovePostService";
 
 type PostItemComponentProps = {
   post: PostData;
@@ -26,6 +29,7 @@ export default function PostItemComponent({
   const [authorImage, setAuthorImage] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (postAuthor) {
@@ -38,16 +42,37 @@ export default function PostItemComponent({
     }
   }, [postAuthor]);
 
-  function handleModal(e: { stopPropagation: () => void; }) {
+  function handleModal(e: { stopPropagation: () => void }) {
     e.stopPropagation();
     setIsModalOpen(!isModalOpen);
   }
 
-  function handlePostInterraction(e: { stopPropagation: () => void; }) {
+  function handlePostInterraction(
+    e: { stopPropagation: () => void },
+    action: string
+  ) {
     e.stopPropagation();
 
     if (user === null) {
       setIsModalOpen(true);
+      return;
+    }
+
+    switch (action) {
+      case "approve":
+        approvePostService(post.id);
+        break;
+
+      case "disapprove":
+        disapprovePostService(post.id);
+        break;
+
+      case "comment":
+        navigate(`/post/${post.id}`)
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -80,22 +105,28 @@ export default function PostItemComponent({
         />
       ) : null}
       <div className={styles.postInteractionButtons}>
-        <ButtonComponent variant="postInteractionButton"
-        onClick={(e) => handlePostInterraction(e)}>
+        <ButtonComponent
+          variant="postInteractionButton"
+          onClick={(e) => handlePostInterraction(e, "approve")}
+        >
           <MdOutlineThumbUp />
           {post.approvals >= 1000
             ? formatNumber(post.approvals)
             : post.approvals}
         </ButtonComponent>
-        <ButtonComponent variant="postInteractionButton"
-        onClick={(e) => handlePostInterraction(e)}>
+        <ButtonComponent
+          variant="postInteractionButton"
+          onClick={(e) => handlePostInterraction(e, "disapprove")}
+        >
           <MdOutlineThumbDown />
           {post.disapprovals >= 1000
             ? formatNumber(post.disapprovals)
             : post.disapprovals}
         </ButtonComponent>
-        <ButtonComponent variant="postInteractionButton"
-        onClick={(e) => handlePostInterraction(e)}>
+        <ButtonComponent
+          variant="postInteractionButton"
+          onClick={(e) => handlePostInterraction(e, "comment")}
+        >
           <MdModeComment />
           {post.comments >= 1000 ? formatNumber(post.comments) : post.comments}
         </ButtonComponent>
