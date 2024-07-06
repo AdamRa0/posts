@@ -15,6 +15,17 @@ Twitter + Reddit Clone
 ## Instructions
 To run the project locally, first make the following changes.
 
+- Inside the server directory, create a folder called instance.
+- Inside the instance folder, create a file called config-docker.py
+- Set create and assign values to the following environmental variables:
+  - JWT_SECRET_KEY
+  - JWT_COOKIE_SECURE
+  - SQLALCHEMY_DATABASE_URI
+  - JWT_TOKEN_LOCATION
+  - JWT_ACCESS_TOKEN_EXPIRES
+  - MAX_CONTENT_LENGTH
+  - UPLOAD_FOLDER
+
 - Inside the client folder, change the vite.config.ts file from
 ```typescript
 export default defineConfig({
