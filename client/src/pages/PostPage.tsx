@@ -16,14 +16,18 @@ import { authContextProp } from "types/props/AuthContextProps";
 import { AuthContext } from "@contexts/authContext";
 import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 import AuthPage from "@pages/AuthPage";
-import useFetchPost from "@/hooks/useFetchPost";
+import useFetchPost from "@hooks/useFetchPost";
+import PostForm from "@components/feature/forms/PostForm";
 
 export default function PostPage(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const { user } = useContext<authContextProp>(AuthContext);
   const navigate = useNavigate();
   const { postId } = useParams();
   const { post, postImage } = useFetchPost(postId!);
+
+  const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${postId!}/create-comment`;
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
@@ -31,13 +35,6 @@ export default function PostPage(): React.JSX.Element {
 
   function handleBackNavigation(): void {
     navigate(-1);
-  }
-
-  function handleCommentModal() {
-    if (user === null) {
-      handleModal();
-      return;
-    }
   }
 
   if (post === undefined)
@@ -89,14 +86,25 @@ export default function PostPage(): React.JSX.Element {
           </ButtonComponent>
         </div>
         <div>
-          <ButtonComponent variant="addCommentButton" onClick={handleCommentModal}>
+          <ButtonComponent variant="addCommentButton" onClick={handleModal}>
             <MdAdd size={20} />
             Add Comment
           </ButtonComponent>
         </div>
         <div className={styles.commentSection}>No Comments Yet</div>
       </div>
-      {isModalOpen && user === null ? <AuthPage closeModal={handleModal}/> : null}
+      {isModalOpen && user === null ? (
+        <AuthPage closeModal={handleModal} />
+      ) : null}
+      {isModalOpen && user ? (
+        <>
+          <PostForm
+            handleFormModal={handleModal}
+            formActionRoute={CREATE_COMMENT_ROUTE}
+            buttonName="Create Comment"
+          />
+        </>
+      ) : null}
     </>
   );
 }

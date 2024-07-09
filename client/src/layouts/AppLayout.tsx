@@ -8,38 +8,16 @@ import ButtonComponent from "@components/ui/ButtonComponent";
 import PostForm from "@components/feature/forms/PostForm";
 import { AuthContext } from "@contexts/authContext";
 import AuthPage from "@pages/AuthPage";
-import createPostService from "@services/posts/createPostService";
-import { PostType } from "types/data/postFormType";
 import { authContextProp } from "types/props/AuthContextProps";
 
 export default function AppLayout(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isFormModalOpen, setIsFormModalOpen] = useState<boolean>(false);
-
-  const [post, setPost] = useState<PostType>({ body: "" });
+  const CREATE_POST_ROUTE: string = "/api/v1/posts/create_post";
 
   const { user } = useContext<authContextProp>(AuthContext);
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
-  }
-
-  function handleFormModal() {
-    setIsFormModalOpen(!isFormModalOpen);
-  }
-
-  function handleFormSubmit(e: { preventDefault: () => void }) {
-    e.preventDefault();
-    setPost({
-      body: "",
-      file: undefined,
-    });
-
-    (async () => {
-      await createPostService(post);
-    })();
-
-    handleFormModal();
   }
 
   return (
@@ -56,19 +34,19 @@ export default function AppLayout(): React.JSX.Element {
           {user && (
             <ButtonComponent
               variant="createPostButton"
-              onClick={handleFormModal}
+              onClick={handleModal}
             >
               <MdCreate />
               Post
             </ButtonComponent>
           )}
         </div>
-        {isModalOpen ? <AuthPage closeModal={handleModal} /> : null}
-        {isFormModalOpen ? (
+        {isModalOpen && !user ? <AuthPage closeModal={handleModal} /> : null}
+        {isModalOpen && user ? (
           <>
             <PostForm
-              handleFormModal={handleFormModal}
-              handleFormSubmit={handleFormSubmit}
+              handleFormModal={handleModal}
+              formActionRoute={CREATE_POST_ROUTE}
               buttonName="Create Post"
             />
           </>

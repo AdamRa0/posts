@@ -5,19 +5,20 @@ import ModalComponent from "@components/ui/ModalComponent";
 import PageOverlayComponent from "@components/ui/PageOverlayComponent";
 import ButtonComponent from "@components/ui/ButtonComponent"; 
 import MarkdownEditor from "@uiw/react-markdown-editor";
+import createPostService from '@services/posts/createPostService';
 
 import { PostType } from "types/data/postFormType";
 import React, { useState } from "react";
 
 type PostFormProps = {
   handleFormModal: () => void;
-  handleFormSubmit: (e: { preventDefault: () => void }) => void;
+  formActionRoute: string;
   buttonName: string;
 };
 
 export default function PostForm({
   handleFormModal,
-  handleFormSubmit,
+  formActionRoute,
   buttonName,
 }: PostFormProps): React.JSX.Element {
   const [post, setPost] = useState<PostType>({ body: "" });
@@ -34,6 +35,20 @@ export default function PostForm({
       ...post,
       body: value,
     });
+  }
+
+  function handleFormSubmit(e: { preventDefault: () => void }) {
+    e.preventDefault();
+    setPost({
+      body: "",
+      file: undefined,
+    });
+
+    (async () => {
+      await createPostService(post, formActionRoute);
+    })();
+
+    handleFormModal();
   }
 
   return (
