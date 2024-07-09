@@ -18,6 +18,7 @@ export default function AuthContextProvider({
 
   useEffect(() => {
     getUserService(token!)
+      .then((response) => response.json())
       .then((data) => {
         setAuthenticatedUser({
           id: data.id,

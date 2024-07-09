@@ -9,7 +9,8 @@ export default function useFetchPostAuthorDetails(authorID: UUID): PostAuthor | 
 
     const token = getCookie("csrf_access_token");
     useEffect(() => {
-        getUserService(token!, false, authorID)
+        getUserService(token, false, authorID)
+            .then(response => response.json())
             .then(data => {
                 setAuthor({
                     username: data.username,

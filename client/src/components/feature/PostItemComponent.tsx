@@ -1,15 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import styles from "./postitemcomponent.module.css";
-import dateFormatter from "@helpers/dateFormatter";
-import formatNumber from "@helpers/numericalFormatter";
-import ButtonComponent from "@components/ui/ButtonComponent";
-import { PostData } from "types/data/postData";
-
 import {
   MdOutlineThumbDown,
   MdOutlineThumbUp,
   MdModeComment,
 } from "react-icons/md";
+import styles from "./postitemcomponent.module.css";
+import React, { useContext, useState } from "react";
+
+import dateFormatter from "@helpers/dateFormatter";
+import formatNumber from "@helpers/numericalFormatter";
+import ButtonComponent from "@components/ui/ButtonComponent";
+import { PostData } from "types/data/postData";
+
 import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
 import { AuthContext } from "@contexts/authContext";
 import { authContextProp } from "types/props/AuthContextProps";
@@ -17,7 +18,7 @@ import AuthPage from "@pages/AuthPage";
 import { useNavigate } from "react-router-dom";
 import approvePostService from "@services/posts/approvePostService";
 import disapprovePostService from "@services/posts/disapprovePostService";
-import getImageService from "@services/media/getImageService";
+import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 
 type PostItemComponentProps = {
   post: PostData;
@@ -27,21 +28,9 @@ export default function PostItemComponent({
   post,
 }: PostItemComponentProps): React.JSX.Element {
   const postAuthor = useFetchPostAuthorDetails(post.author_id);
-  const [authorImage, setAuthorImage] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (postAuthor) {
-      getImageService(postAuthor.avatar)
-        .then((response) => response.blob())
-        .then((imageBlob) => {
-          const imageURL = URL.createObjectURL(imageBlob);
-          setAuthorImage(imageURL);
-        });
-    }
-  }, [postAuthor]);
 
   function handleModal(e: { stopPropagation: () => void }) {
     e.stopPropagation();
@@ -83,17 +72,7 @@ export default function PostItemComponent({
         {postAuthor === undefined ? (
           <p>Loading...</p>
         ) : (
-          <>
-            <img
-              className={styles.authorAvatar}
-              src={authorImage}
-              alt="Post author avatar"
-            />
-            <div className={styles.postUserDetails}>
-              <h4>{postAuthor!.username}</h4>
-              <p>{postAuthor!.handle}</p>
-            </div>
-          </>
+          <AuthorDetailsComponent authorID={post.author_id} />
         )}
         <p>{dateFormatter(post.time_created)}</p>
       </div>

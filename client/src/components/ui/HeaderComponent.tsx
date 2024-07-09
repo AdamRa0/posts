@@ -1,6 +1,6 @@
 import { MdSearch } from "react-icons/md";
 import { FiMoreHorizontal, FiLogIn } from "react-icons/fi";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import styles from "./headercomponent.module.css";
 
@@ -9,12 +9,11 @@ import ButtonComponent from "@components/ui/ButtonComponent";
 import AuthPage from "@pages/AuthPage";
 import { AuthContext } from "@contexts/authContext";
 import { authContextProp } from "types/props/AuthContextProps";
-import getImageService from "@services/media/getImageService";
+import AvatarComponent from "./AvatarComponent";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [userProfileImage, setUserProfileImage] = useState<string>("");
   const { user, signOut } = useContext<authContextProp>(AuthContext);
 
   function handleClick() {
@@ -29,17 +28,6 @@ export default function HeaderComponent() {
     setIsOptionsMenuOpen(false);
     setIsModalOpen(true);
   }
-
-  useEffect(() => {
-    if (user) {
-      getImageService(user.profileImage)
-        .then((response) => response.blob())
-        .then((imageBlob) => {
-          const imageURL = URL.createObjectURL(imageBlob);
-          setUserProfileImage(imageURL);
-        });
-    }
-  }, [user]);
 
   return (
     <>
@@ -80,10 +68,9 @@ export default function HeaderComponent() {
             </>
           ) : (
             <>
-              <img
-                className={styles.userAvatar}
-                src={userProfileImage}
-                alt="logged in user avatar"
+              <AvatarComponent
+                imagePath={user.profileImage}
+                altText="Logged in user avatar"
               />
               <ButtonComponent
                 onClick={() => {

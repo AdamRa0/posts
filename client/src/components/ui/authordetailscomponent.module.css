@@ -1,0 +1,20 @@
+.detailsHeader {
+    display: flex;
+    gap: 15px;
+
+    .postAuthorDetails {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        h4 {
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+
+    }
+
+    p {
+        margin-top: 0;
+    }
+}
