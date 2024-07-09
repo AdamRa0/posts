@@ -11,30 +11,19 @@ import ButtonComponent from "@components/ui/ButtonComponent";
 import formatNumber from "@helpers/numericalFormatter";
 import dateFormatter from "@helpers/dateFormatter";
 import { useNavigate, useParams } from "react-router-dom";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { authContextProp } from "types/props/AuthContextProps";
 import { AuthContext } from "@contexts/authContext";
-import fetchPostService from "@services/posts/fetchPostService";
-import { PostData } from "types/data/postData";
 import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 import AuthPage from "@pages/AuthPage";
+import useFetchPost from "@/hooks/useFetchPost";
 
 export default function PostPage(): React.JSX.Element {
-  const [postImage, setPostImage] = useState<string>("");
-  const [post, setPost] = useState<PostData | undefined>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
   const navigate = useNavigate();
   const { postId } = useParams();
-
-  useEffect(() => {
-    fetchPostService(postId!)
-      .then((response) => response.json())
-      .then((data) => {
-        setPost(data);
-        if (data.post_file) setPostImage(data.post_file);
-      });
-  }, [postId]);
+  const { post, postImage } = useFetchPost(postId!);
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
