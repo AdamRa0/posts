@@ -16,7 +16,8 @@ import { authContextProp } from "types/props/AuthContextProps";
 import { AuthContext } from "@contexts/authContext";
 import fetchPostService from "@services/posts/fetchPostService";
 import { PostData } from "types/data/postData";
-import AuthorDetailsComponent from "@/components/ui/AuthorDetailsComponent";
+import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
+import AuthPage from "@pages/AuthPage";
 
 export default function PostPage(): React.JSX.Element {
   const [postImage, setPostImage] = useState<string>("");
@@ -35,12 +36,19 @@ export default function PostPage(): React.JSX.Element {
       });
   }, [postId]);
 
+  function handleModal() {
+    setIsModalOpen(!isModalOpen);
+  }
+
   function handleBackNavigation(): void {
     navigate(-1);
   }
 
   function handleCommentModal() {
-    setIsModalOpen(!isModalOpen);
+    if (user === null) {
+      handleModal();
+      return;
+    }
   }
 
   if (post === undefined)
@@ -92,13 +100,14 @@ export default function PostPage(): React.JSX.Element {
           </ButtonComponent>
         </div>
         <div>
-          <ButtonComponent variant="addCommentButton">
+          <ButtonComponent variant="addCommentButton" onClick={handleCommentModal}>
             <MdAdd size={20} />
             Add Comment
           </ButtonComponent>
         </div>
         <div className={styles.commentSection}>No Comments Yet</div>
       </div>
+      {isModalOpen && user === null ? <AuthPage closeModal={handleModal}/> : null}
     </>
   );
 }
