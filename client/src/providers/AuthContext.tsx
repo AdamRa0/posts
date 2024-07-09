@@ -1,5 +1,5 @@
 import { signoutService } from "@services/auth/signoutService";
-import { getUserService } from "@services/user/getUser";
+import { getUserService } from "@services/user/getUserService";
 import { User } from "types/data/userData";
 import { AuthContext } from "@contexts/authContext";
 import { getCookie } from "@helpers/extractCookie";
@@ -12,12 +12,13 @@ import { AuthContextProviderProps } from "types/props/AuthContextProviderProps";
 export default function AuthContextProvider({
   children,
 }: AuthContextProviderProps): React.JSX.Element {
-  const [authenticatedUser, setAuthenticatedUser] = useState<User | null>();
+  const [authenticatedUser, setAuthenticatedUser] = useState<User | null>(null);
 
   const token: string | undefined = getCookie("csrf_access_token");
 
   useEffect(() => {
     getUserService(token!)
+      .then((response) => response.json())
       .then((data) => {
         setAuthenticatedUser({
           id: data.id,

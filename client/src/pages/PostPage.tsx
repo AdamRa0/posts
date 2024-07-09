@@ -5,22 +5,44 @@ import {
   MdArrowBack,
   MdAdd,
 } from "react-icons/md";
-import { postsData, provideDummyPosts } from "../data/dummyPostsData";
-import styles from "@pages/postpage.module.css";
+import styles from "./postpage.module.css";
+
 import ButtonComponent from "@components/ui/ButtonComponent";
 import formatNumber from "@helpers/numericalFormatter";
 import dateFormatter from "@helpers/dateFormatter";
-import { useNavigate } from "react-router-dom";
-import React from "react";
-
-const post: postsData = provideDummyPosts()[0];
+import { useNavigate, useParams } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { authContextProp } from "types/props/AuthContextProps";
+import { AuthContext } from "@contexts/authContext";
+import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
+import AuthPage from "@pages/AuthPage";
+import useFetchPost from "@hooks/useFetchPost";
+import PostForm from "@components/feature/forms/PostForm";
 
 export default function PostPage(): React.JSX.Element {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const { user } = useContext<authContextProp>(AuthContext);
   const navigate = useNavigate();
+  const { postId } = useParams();
+  const { post, postImage } = useFetchPost(postId!);
+
+  const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${postId!}/create-comment`;
+
+  function handleModal() {
+    setIsModalOpen(!isModalOpen);
+  }
 
   function handleBackNavigation(): void {
     navigate(-1);
   }
+
+  if (post === undefined)
+    return (
+      <div className={styles.contentContainer}>
+        <p>Loading...</p>
+      </div>
+    );
 
   return (
     <>
@@ -32,53 +54,57 @@ export default function PostPage(): React.JSX.Element {
           >
             <MdArrowBack size={24} />
           </ButtonComponent>
-          <img
-            className={styles.authorAvatar}
-            src={post.avatar}
-            alt="Post author avatar"
-          />
-          <div className={styles.postUserDetails}>
-            <h4>{post.username}</h4>
-            <p>{post.handle}</p>
-          </div>
-          <p>{dateFormatter(post.timeStamp)}</p>
+          <AuthorDetailsComponent authorID={post.author_id} />
+          <p>{dateFormatter(post!.time_created)}</p>
         </div>
-        <p>{post.postContent}</p>
-        {post.postImage ? (
+        <p>{post!.body}</p>
+        {postImage ? (
           <img
             className={styles.postImage}
-            src={post.postImage}
+            src={postImage}
             alt="Accompanying post image"
           />
         ) : null}
         <div className={styles.postInteractionButtons}>
           <ButtonComponent variant="postInteractionButton">
             <MdOutlineThumbUp />
-            {post.likes >= 1000 ? formatNumber(post.likes) : post.likes}
+            {post!.approvals >= 1000
+              ? formatNumber(post!.approvals)
+              : post!.approvals}
           </ButtonComponent>
           <ButtonComponent variant="postInteractionButton">
             <MdOutlineThumbDown />
-            {post.dislikes >= 1000
-              ? formatNumber(post.dislikes)
-              : post.dislikes}
+            {post!.disapprovals >= 1000
+              ? formatNumber(post!.disapprovals)
+              : post!.disapprovals}
           </ButtonComponent>
           <ButtonComponent variant="postInteractionButton">
             <MdModeComment />
-            {post.numOfComments >= 1000
-              ? formatNumber(post.numOfComments)
-              : post.numOfComments}
+            {post!.comments >= 1000
+              ? formatNumber(post!.comments)
+              : post!.comments}
           </ButtonComponent>
         </div>
         <div>
-          <ButtonComponent variant="addCommentButton">
-            <MdAdd size={20}/>
+          <ButtonComponent variant="addCommentButton" onClick={handleModal}>
+            <MdAdd size={20} />
             Add Comment
           </ButtonComponent>
         </div>
-        <div className={styles.commentSection}>
-          No Comments Yet
-        </div>
+        <div className={styles.commentSection}>No Comments Yet</div>
       </div>
+      {isModalOpen && user === null ? (
+        <AuthPage closeModal={handleModal} />
+      ) : null}
+      {isModalOpen && user ? (
+        <>
+          <PostForm
+            handleFormModal={handleModal}
+            formActionRoute={CREATE_COMMENT_ROUTE}
+            buttonName="Create Comment"
+          />
+        </>
+      ) : null}
     </>
   );
 }

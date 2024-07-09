@@ -1,4 +1,4 @@
-import { getUserService } from "@services/user/getUser";
+import { getUserService } from "@services/user/getUserService";
 import { getCookie } from "@helpers/extractCookie";
 import { UUID } from "crypto";
 import { useEffect, useState } from "react";
@@ -9,7 +9,8 @@ export default function useFetchPostAuthorDetails(authorID: UUID): PostAuthor | 
 
     const token = getCookie("csrf_access_token");
     useEffect(() => {
-        getUserService(token!, false, authorID)
+        getUserService(token, false, authorID)
+            .then(response => response.json())
             .then(data => {
                 setAuthor({
                     username: data.username,
