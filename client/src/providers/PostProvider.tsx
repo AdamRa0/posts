@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PostContext } from "@contexts/postContext";
 import useFetchPost from "@hooks/useFetchPost";
 import useUpdatePost from "@hooks/useUpdatePost";
@@ -6,6 +6,7 @@ import useDeletePost from "@hooks/useDeletePost";
 import createPostService from "@services/posts/createPostService";
 import { PostContextProviderProps } from "types/props/PostContextProps";
 import { PostData } from "types/data/postData";
+import { useParams } from "react-router-dom";
 
 async function createPost(post: PostData, route: string) {
   await createPostService(post, route);
@@ -13,21 +14,37 @@ async function createPost(post: PostData, route: string) {
 
 export default function PostContextProvider({
   children,
-  postId,
 }: PostContextProviderProps) {
-  const [post, setPost] = useState<PostData | undefined>();
+  const [body, setBody] = useState<PostData | undefined>();
+  const [image, setImage] = useState<string>();
 
-  setPost(useFetchPost(postId).post);
+  const { postId } = useParams();
+  const { post, postImage } = useFetchPost(postId!);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setBody(post);
+    setImage(postImage);
+  }, [post, postImage]);
 
-  if (post === undefined) return <p>Loading...</p>;
+  const commentsById = useMemo(() => {
+    const comments = {};
+    body?.children?.forEach((comment) => {
+      comments[comment?.parent_id] ||= [];
+      comments[comment?.parent_id].push(comment);
+    });
+    return comments;
+  }, [body?.children]);
+
+  if (body === undefined) return <p>Loading...</p>;
 
   return (
     <>
       <PostContext.Provider
         value={{
-          post: post!,
+          post: body!,
+          postImage: image!,
+          comments: commentsById,
+          rootComments: commentsById[null],
           createPost: createPost,
           updatePost: useUpdatePost,
           deletePost: useDeletePost,

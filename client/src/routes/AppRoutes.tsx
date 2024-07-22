@@ -1,10 +1,11 @@
+import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "@pages/HomePage";
 import UserPage from "@pages/UserPage";
 import SettingsPage from "@pages/SettingsPage";
 import PostPage from "@pages/PostPage";
-import React from "react";
 import AppLayout from "@layouts/AppLayout";
+import PostContextProvider from "@providers/PostProvider";
 
 const routes = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const routes = createBrowserRouter([
         children: [
           {
             path: ":postId",
-            element: <PostPage />,
+            element: (
+              <PostContextProvider>
+                <PostPage />
+              </PostContextProvider>
+            ),
           },
         ],
       },
