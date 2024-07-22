@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { PostContext } from "@contexts/postContext";
 import useFetchPost from "@hooks/useFetchPost";
 import useUpdatePost from "@hooks/useUpdatePost";
@@ -6,7 +7,6 @@ import useDeletePost from "@hooks/useDeletePost";
 import createPostService from "@services/posts/createPostService";
 import { PostContextProviderProps } from "types/props/PostContextProps";
 import { PostData } from "types/data/postData";
-import { useParams } from "react-router-dom";
 
 async function createPost(post: PostData, route: string) {
   await createPostService(post, route);
@@ -35,6 +35,10 @@ export default function PostContextProvider({
     return comments;
   }, [body?.children]);
 
+  function getReplies(id: UUID): PostData[] {
+    return commentsById[id] as PostData[];
+  }
+
   if (body === undefined) return <p>Loading...</p>;
 
   return (
@@ -43,8 +47,7 @@ export default function PostContextProvider({
         value={{
           post: body!,
           postImage: image!,
-          comments: commentsById,
-          rootComments: commentsById[null],
+          replies: getReplies,
           createPost: createPost,
           updatePost: useUpdatePost,
           deletePost: useDeletePost,
