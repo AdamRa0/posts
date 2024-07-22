@@ -17,7 +17,8 @@ export default async function updatePostService(postId: UUID, body: string): Pro
         body: JSON.stringify(data),
         headers: {
             "X-CSRF-TOKEN": token!
-        }
+        },
+        method: "PATCH",
     }).then(response => responseCode = response.status).catch(e => {
         responseCode = 400;
         console.log(e);

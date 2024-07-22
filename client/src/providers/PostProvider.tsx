@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { PostContext } from "@contexts/postContext";
 import useFetchPost from "@hooks/useFetchPost";
+import useUpdatePost from "@hooks/useUpdatePost";
+import useDeletePost from "@hooks/useDeletePost";
+import createPostService from "@services/posts/createPostService";
 import { PostContextProviderProps } from "types/props/PostContextProps";
 import { PostData } from "types/data/postData";
-import createPostService from "@/services/posts/createPostService";
 
 async function createPost(post: PostData, route: string) {
   await createPostService(post, route);
@@ -17,13 +19,20 @@ export default function PostContextProvider({
 
   setPost(useFetchPost(postId).post);
 
-  useEffect(() => { }, [])
+  useEffect(() => {}, []);
 
   if (post === undefined) return <p>Loading...</p>;
 
   return (
     <>
-      <PostContext.Provider value={{ post: post!, createPost: createPost }}>
+      <PostContext.Provider
+        value={{
+          post: post!,
+          createPost: createPost,
+          updatePost: useUpdatePost,
+          deletePost: useDeletePost,
+        }}
+      >
         {children}
       </PostContext.Provider>
     </>
