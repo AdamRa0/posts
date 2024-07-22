@@ -152,4 +152,4 @@ def comment_on_post(post_id: str):
 
     post_comment(post_id, comment)
 
-    return jsonify({"status": "success"}), 200
+    return jsonify({"status": "success"}), 201
