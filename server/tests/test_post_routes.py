@@ -258,7 +258,7 @@ def test_comment_on_post(create_new_user_1, test_client):
         headers=header,
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json["status"] == "success"
 
 

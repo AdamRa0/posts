@@ -1,3 +1,4 @@
+import { useNavigate, useParams } from "react-router-dom";
 import {
   MdModeComment,
   MdOutlineThumbDown,
@@ -6,26 +7,25 @@ import {
   MdAdd,
 } from "react-icons/md";
 import styles from "./postpage.module.css";
+import React, { useContext, useState } from "react";
 
 import ButtonComponent from "@components/ui/ButtonComponent";
+import PostForm from "@components/feature/forms/PostForm";
+import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
+import { AuthContext } from "@contexts/authContext";
+import { PostContext } from "@contexts/postContext";
 import formatNumber from "@helpers/numericalFormatter";
 import dateFormatter from "@helpers/dateFormatter";
-import { useNavigate, useParams } from "react-router-dom";
-import React, { useContext, useState } from "react";
-import { authContextProp } from "types/props/AuthContextProps";
-import { AuthContext } from "@contexts/authContext";
-import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 import AuthPage from "@pages/AuthPage";
-import useFetchPost from "@hooks/useFetchPost";
-import PostForm from "@components/feature/forms/PostForm";
+import { authContextProp } from "types/props/AuthContextProps";
+import { PostContextProps } from "types/props/PostContextProviderProps";
 
 export default function PostPage(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  const { user } = useContext<authContextProp>(AuthContext);
-  const navigate = useNavigate();
   const { postId } = useParams();
-  const { post, postImage } = useFetchPost(postId!);
+  const { user } = useContext<authContextProp>(AuthContext);
+  const { post, postImage } = useContext<PostContextProps>(PostContext);
+  const navigate = useNavigate();
 
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${postId!}/create-comment`;
 
@@ -54,7 +54,7 @@ export default function PostPage(): React.JSX.Element {
           >
             <MdArrowBack size={24} />
           </ButtonComponent>
-          <AuthorDetailsComponent authorID={post.author_id} />
+          <AuthorDetailsComponent authorID={post!.author_id} />
           <p>{dateFormatter(post!.time_created)}</p>
         </div>
         <p>{post!.body}</p>
