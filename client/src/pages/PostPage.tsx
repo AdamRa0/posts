@@ -31,9 +31,7 @@ export default function PostPage(): React.JSX.Element {
   const navigate = useNavigate();
 
   const comments = replies(postId! as UUID);
-
-  console.log(comments);
-
+  
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${postId!}/create-comment`;
 
   function handleModal() {

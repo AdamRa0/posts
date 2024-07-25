@@ -1,11 +1,15 @@
-.list {
+.list,
+.generalList {
     list-style: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     grid-column: 2;
+    padding: 5px;
+}
+
+.generalList {
     border-left: 1px rgb(214, 214, 214) solid;
     border-right: 1px rgb(214, 214, 214) solid;
-    padding: 5px;
 }

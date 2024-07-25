@@ -18,7 +18,11 @@ export default function ListComponent({
 
   return (
     <>
-      <ul className={styles.list}>{items}</ul>
+      <ul
+        className={typeOfData !== "comment" ? styles.generalList : styles.list}
+      >
+        {items}
+      </ul>
     </>
   );
 }

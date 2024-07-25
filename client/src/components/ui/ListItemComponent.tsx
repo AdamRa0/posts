@@ -1,6 +1,10 @@
 import styles from "./listitemcomponent.module.css";
-import PostItemComponent from "@components/feature/PostItemComponent";
+
 import { useNavigate } from "react-router-dom";
+
+import PostItemComponent from "@components/feature/PostItemComponent";
+import CommentComponent from "@components/feature/CommentComponent";
+
 import { PostData } from "types/data/postData";
 import { User } from "types/data/userData";
 
@@ -35,7 +39,7 @@ export default function ListItemComponent({
         tabIndex={0}
       >
         {typeOfData === "post" && <PostItemComponent post={item as PostData} />}
-        {typeOfData === "comment" && <PostItemComponent post={item as PostData} />}
+        {typeOfData === "comment" && <CommentComponent post={item as PostData} />}
       </li>
     </>
   );

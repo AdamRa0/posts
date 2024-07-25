@@ -1,0 +1,20 @@
+.postHeader {
+    display: flex;
+    gap: 15px;
+
+    p {
+        margin-top: 0;
+    }
+}
+
+.postImage {
+    border-radius: 12px;
+}
+
+.postInteractionButtons {
+    display: flex;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    gap: 15px;
+    align-items: center;
+}
