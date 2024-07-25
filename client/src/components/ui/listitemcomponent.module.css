@@ -1,4 +1,4 @@
-.item {
+.postOrUser {
     border-bottom: 1px rgb(214, 214, 214) solid;
     padding: 10px;
 
@@ -12,4 +12,9 @@
     }
 
     width: 98.5%;
+}
+
+.comment {
+    width: 98.5%;
+    padding: 10px;
 }

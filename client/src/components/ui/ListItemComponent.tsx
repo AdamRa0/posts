@@ -1,6 +1,10 @@
 import styles from "./listitemcomponent.module.css";
-import PostItemComponent from "@components/feature/PostItemComponent";
+
 import { useNavigate } from "react-router-dom";
+
+import PostItemComponent from "@components/feature/PostItemComponent";
+import CommentComponent from "@components/feature/CommentComponent";
+
 import { PostData } from "types/data/postData";
 import { User } from "types/data/userData";
 
@@ -21,20 +25,21 @@ export default function ListItemComponent({
   const navigate = useNavigate();
 
   function handleNavigate() {
-    navigate(link);
+    typeOfData !== "comment" ? navigate(link) : () => {};
   }
 
   return (
     <>
       <li
-        className={styles.item}
+        className={
+          typeOfData !== "comment" ? styles.postOrUser : styles.comment
+        }
         key={item.id}
         onClick={handleNavigate}
         tabIndex={0}
       >
-        {typeOfData === "post" ? (
-          <PostItemComponent post={item as PostData} />
-        ) : null}
+        {typeOfData === "post" && <PostItemComponent post={item as PostData} />}
+        {typeOfData === "comment" && <CommentComponent post={item as PostData} />}
       </li>
     </>
   );

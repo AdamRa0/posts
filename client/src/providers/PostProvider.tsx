@@ -4,13 +4,9 @@ import { PostContext } from "@contexts/postContext";
 import useFetchPost from "@hooks/useFetchPost";
 import useUpdatePost from "@hooks/useUpdatePost";
 import useDeletePost from "@hooks/useDeletePost";
-import createPostService from "@services/posts/createPostService";
 import { PostContextProviderProps } from "types/props/PostContextProps";
 import { PostData } from "types/data/postData";
-
-async function createPost(post: PostData, route: string) {
-  await createPostService(post, route);
-}
+import { UUID } from "crypto";
 
 export default function PostContextProvider({
   children,
@@ -48,7 +44,6 @@ export default function PostContextProvider({
           post: body!,
           postImage: image!,
           replies: getReplies,
-          createPost: createPost,
           updatePost: useUpdatePost,
           deletePost: useDeletePost,
         }}
