@@ -19,13 +19,20 @@ import dateFormatter from "@helpers/dateFormatter";
 import AuthPage from "@pages/AuthPage";
 import { authContextProp } from "types/props/AuthContextProps";
 import { PostContextProps } from "types/props/PostContextProviderProps";
+import { UUID } from "crypto";
+import ListComponent from "@/components/ui/ListComponent";
 
 export default function PostPage(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { postId } = useParams();
   const { user } = useContext<authContextProp>(AuthContext);
-  const { post, postImage } = useContext<PostContextProps>(PostContext);
+  const { post, postImage, replies } =
+    useContext<PostContextProps>(PostContext);
   const navigate = useNavigate();
+
+  const comments = replies(postId! as UUID);
+
+  console.log(comments);
 
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${postId!}/create-comment`;
 
@@ -91,7 +98,12 @@ export default function PostPage(): React.JSX.Element {
             Add Comment
           </ButtonComponent>
         </div>
-        <div className={styles.commentSection}>No Comments Yet</div>
+        <div className={styles.commentSection}>
+          {(comments.length === 0 || comments === undefined) && (
+            <p>No Comments Yet</p>
+          )}
+          <ListComponent data={comments} typeOfData="comment" />
+        </div>
       </div>
       {isModalOpen && user === null ? (
         <AuthPage closeModal={handleModal} />

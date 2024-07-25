@@ -7,6 +7,7 @@ import useDeletePost from "@hooks/useDeletePost";
 import createPostService from "@services/posts/createPostService";
 import { PostContextProviderProps } from "types/props/PostContextProps";
 import { PostData } from "types/data/postData";
+import { UUID } from "crypto";
 
 async function createPost(post: PostData, route: string) {
   await createPostService(post, route);

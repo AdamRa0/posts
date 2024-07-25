@@ -21,20 +21,21 @@ export default function ListItemComponent({
   const navigate = useNavigate();
 
   function handleNavigate() {
-    navigate(link);
+    typeOfData !== "comment" ? navigate(link) : () => {};
   }
 
   return (
     <>
       <li
-        className={styles.item}
+        className={
+          typeOfData !== "comment" ? styles.postOrUser : styles.comment
+        }
         key={item.id}
         onClick={handleNavigate}
         tabIndex={0}
       >
-        {typeOfData === "post" ? (
-          <PostItemComponent post={item as PostData} />
-        ) : null}
+        {typeOfData === "post" && <PostItemComponent post={item as PostData} />}
+        {typeOfData === "comment" && <PostItemComponent post={item as PostData} />}
       </li>
     </>
   );
