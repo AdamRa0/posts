@@ -18,3 +18,7 @@
     gap: 15px;
     align-items: center;
 }
+
+.nestedComment {
+    margin-left: 25px;
+}

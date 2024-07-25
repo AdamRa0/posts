@@ -6,19 +6,21 @@ import {
 import styles from "./commentcomponent.module.css";
 import React, { useContext, useState } from "react";
 
+import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
+import ButtonComponent from "@components/ui/ButtonComponent";
+import PostForm from "@components/feature/forms/PostForm";
+import { AuthContext } from "@contexts/authContext";
+
 import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
-import ButtonComponent from "@components/ui/ButtonComponent";
-import { PostData } from "types/data/postData";
-
 import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
-import { AuthContext } from "@contexts/authContext";
-import { authContextProp } from "types/props/AuthContextProps";
+
 import AuthPage from "@pages/AuthPage";
 import approvePostService from "@services/posts/approvePostService";
 import disapprovePostService from "@services/posts/disapprovePostService";
-import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
-import PostForm from "@components/feature/forms/PostForm";
+import { authContextProp } from "types/props/AuthContextProps";
+import { PostData } from "types/data/postData";
+import ListComponent from "../ui/ListComponent";
 
 type CommentComponentProps = {
   post: PostData;
@@ -29,7 +31,9 @@ export default function CommentComponent({
 }: CommentComponentProps): React.JSX.Element {
   const postAuthor = useFetchPostAuthorDetails(post.author_id);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [showReplies, setShowReplies] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
+  // const { replies } = useContext<PostContextProps>(PostContext);
 
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${post.id}/create-comment`;
 
@@ -37,10 +41,7 @@ export default function CommentComponent({
     setIsModalOpen(!isModalOpen);
   }
 
-  function handlePostInterraction(
-    action: string
-  ) {
-
+  function handlePostInterraction(action: string) {
     if (user === null) {
       handleModal();
       return;
@@ -62,6 +63,10 @@ export default function CommentComponent({
       default:
         break;
     }
+  }
+
+  function handleShowReplies() {
+    setShowReplies(!showReplies);
   }
 
   return (
@@ -109,6 +114,19 @@ export default function CommentComponent({
           Reply
         </ButtonComponent>
       </div>
+      {post.children!.length > 0 && (
+        <ButtonComponent variant="linkButton" onClick={handleShowReplies}>
+          {showReplies ? "Hide Replies" : "Show Replies"}
+        </ButtonComponent>
+      )}
+      {showReplies && (
+        <div className={styles.nestedComment}>
+          <ListComponent
+            data={post.children as PostData[]}
+            typeOfData="comment"
+          />
+        </div>
+      )}
       {isModalOpen && !user && <AuthPage closeModal={handleModal} />}
       {isModalOpen && user && (
         <PostForm
