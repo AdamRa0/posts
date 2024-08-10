@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./safetyandprivacycomponent.module.css";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import InputComponent from "@components/ui/InputComponent";
 import AccountSettingsModal from "@components/feature/AccountSettingsModal";
+import { AuthContext } from "@contexts/authContext";
+import { authContextProp } from "types/props/AuthContextProps";
+import setAccountPrivacyService from "@/services/user/setAccountPrivacyService";
 
 export default function SafetyAndPrivacySettingsComponent(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [userPrivate, setUserPrivate] = useState<boolean>(false);
+
+  const { user } = useContext<authContextProp>(AuthContext);
+
+  useEffect(() => {
+    if (user) {
+      setUserPrivate(JSON.parse(JSON.stringify(user)).isPrivate)
+    }
+  }, [user])
 
   function handleModal() {
     isModalOpen ? setIsModalOpen(false) : setIsModalOpen(true);
@@ -21,7 +33,7 @@ export default function SafetyAndPrivacySettingsComponent(): React.JSX.Element {
               type="password"
               placeholder="Enter new password"
             />
-            <ButtonComponent variant="modalButtonTwo">
+            <ButtonComponent variant="modalButtonTwo" type="submit">
               Change Password
             </ButtonComponent>
           </form>
@@ -34,6 +46,8 @@ export default function SafetyAndPrivacySettingsComponent(): React.JSX.Element {
             className="switch-input"
             type="checkbox"
             id="ac-privacy"
+            checked={userPrivate}
+            onChange={setAccountPrivacyService}
           />
           <span className={`${styles.slider} ${styles.round}`}></span>
         </label>

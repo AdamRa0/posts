@@ -4,8 +4,10 @@ import styles from "./accountsettingscomponent.module.css";
 import AccountSettingsModal from "@components/feature/AccountSettingsModal";
 import InputComponent from "@components//ui/InputComponent";
 import { AuthContext } from "@contexts/authContext";
+import { updateUserDetailsService } from "@services/user/updateUserDetails";
+import deactivateUserService from "@services/user/deactivateUserService";
+import deleteUserService from "@services/user/deleteUserService";
 import { authContextProp } from "types/props/AuthContextProps";
-import { updateUserDetailsService } from "@/services/user/updateUserDetails";
 
 enum ModalTypes {
   ACCOUNT_DEACTIVATION,
@@ -103,7 +105,10 @@ export default function AccountSettingsComponent(): React.JSX.Element {
           {state == 0 ? (
             <>
               <h4>You can reactivate your account by signing back in</h4>
-              <ButtonComponent variant="modalButtonOne">
+              <ButtonComponent
+                variant="modalButtonOne"
+                onClick={deactivateUserService}
+              >
                 Deactivate Account
               </ButtonComponent>
             </>
@@ -125,7 +130,10 @@ export default function AccountSettingsComponent(): React.JSX.Element {
                 This is a permanent action. Deleting your account will result in
                 it being lost forever.
               </h4>
-              <ButtonComponent variant="modalButtonThree">
+              <ButtonComponent
+                variant="modalButtonThree"
+                onClick={deleteUserService}
+              >
                 Delete Account
               </ButtonComponent>
             </>
