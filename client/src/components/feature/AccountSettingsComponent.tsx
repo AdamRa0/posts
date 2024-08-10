@@ -1,9 +1,13 @@
-import { faker } from "@faker-js/faker";
 import ButtonComponent from "@components/ui/ButtonComponent";
-import React, { useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import styles from "./accountsettingscomponent.module.css";
 import AccountSettingsModal from "@components/feature/AccountSettingsModal";
 import InputComponent from "@components//ui/InputComponent";
+import { AuthContext } from "@contexts/authContext";
+import { updateUserDetailsService } from "@services/user/updateUserDetails";
+import deactivateUserService from "@services/user/deactivateUserService";
+import deleteUserService from "@services/user/deleteUserService";
+import { authContextProp } from "types/props/AuthContextProps";
 
 enum ModalTypes {
   ACCOUNT_DEACTIVATION,
@@ -25,7 +29,10 @@ function AccountSettingsReducer(_: number, action: ModalTypes): number {
 }
 
 export default function AccountSettingsComponent(): React.JSX.Element {
+  const { user } = useContext<authContextProp>(AuthContext);
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [email, setEmailAddress] = useState<string>("");
   const [state, dispatch] = useReducer<
     (currentState: number, action: ModalTypes) => number
   >(AccountSettingsReducer, 0);
@@ -34,13 +41,25 @@ export default function AccountSettingsComponent(): React.JSX.Element {
     isModalOpen ? setIsModalOpen(false) : setIsModalOpen(true);
   }
 
+  function handleChangeEmailAddressForm(e: { preventDefault: () => void }) {
+    e.preventDefault();
+    updateUserDetailsService(email);
+    handleModal();
+  }
+
+  useEffect(() => {
+    if (user) {
+      setEmailAddress(JSON.parse(JSON.stringify(user)).emailAddress);
+    }
+  }, [user]);
+
   return (
     <>
       <div>
         <div className={styles.accountEmailSettingsContainer}>
           <div>
             <h3>Email Address</h3>
-            <p>{faker.internet.email()}</p>
+            <p>{email}</p>
           </div>
           <ButtonComponent
             variant="priorityThreeButton"
@@ -86,18 +105,22 @@ export default function AccountSettingsComponent(): React.JSX.Element {
           {state == 0 ? (
             <>
               <h4>You can reactivate your account by signing back in</h4>
-              <ButtonComponent variant="modalButtonOne">
+              <ButtonComponent
+                variant="modalButtonOne"
+                onClick={deactivateUserService}
+              >
                 Deactivate Account
               </ButtonComponent>
             </>
           ) : state === 2 ? (
-            <form>
+            <form onSubmit={handleChangeEmailAddressForm}>
               <InputComponent
                 className={"formInputModal"}
                 type="email"
-                placeholder="New Email Address"
+                value={email}
+                onChange={(e) => setEmailAddress(e.target.value)}
               />
-              <ButtonComponent variant="modalButtonTwo">
+              <ButtonComponent variant="modalButtonTwo" type="submit">
                 Change Email Address
               </ButtonComponent>
             </form>
@@ -107,7 +130,10 @@ export default function AccountSettingsComponent(): React.JSX.Element {
                 This is a permanent action. Deleting your account will result in
                 it being lost forever.
               </h4>
-              <ButtonComponent variant="modalButtonThree">
+              <ButtonComponent
+                variant="modalButtonThree"
+                onClick={deleteUserService}
+              >
                 Delete Account
               </ButtonComponent>
             </>

@@ -22,7 +22,7 @@ export default function AuthContextProvider({
       .then((data) => {
         setAuthenticatedUser({
           id: data.id,
-          emailAddress: data.emailAddress,
+          emailAddress: data.email_address,
           username: data.username,
           handle: data.handle,
           bio: data.bio,

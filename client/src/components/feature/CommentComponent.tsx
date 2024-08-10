@@ -33,7 +33,6 @@ export default function CommentComponent({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
-  // const { replies } = useContext<PostContextProps>(PostContext);
 
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${post.id}/create-comment`;
 
