@@ -1,4 +1,4 @@
-import { getCookie } from "@/helpers/extractCookie";
+import { getCookie } from "@helpers/extractCookie";
 
 export async function updateUserDetailsService(emailAddress?: string, handle?: string, username?: string): Promise<Response> {
 

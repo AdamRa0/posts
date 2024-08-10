@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from ..controllers.account_creation_and_use.get_user import (
     get_user_by_handle,
     get_user_by_id,
@@ -145,15 +147,16 @@ def update_user_images():
     """
     profile_image = request.form.get("profile_image")
     banner_image = request.form.get("banner_image")
+    filenames = defaultdict(str)
 
     if request.files:
-        filename = upload_file()
+        filenames = upload_file()
+    
+    if filenames is not None and profile_image == "True":
+        change_profile_image(current_app, current_user, filenames.get("profile_image"))
 
-    if filename is not None and profile_image is True:
-        change_profile_image(current_app, current_user, filename)
-
-    if filename is not None and banner_image is True:
-        change_banner_image(current_app, current_user, filename)
+    if filenames is not None and banner_image == "True":
+        change_banner_image(current_app, current_user, filenames.get("banner_image"))
 
     return jsonify({"message": "Image updated"}), 200
 
