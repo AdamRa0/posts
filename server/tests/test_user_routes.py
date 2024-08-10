@@ -150,7 +150,7 @@ def test_upload_image(create_new_user_1, test_client):
         filename="suprised_anime_woman.png",
     )
 
-    data = {"profile_image": True, "file": image_file}
+    data = {"profile_image": "True", "file": image_file}
 
     response = test_client.patch(
         "/api/v1/users/profile/update-image", headers=header, data=data
