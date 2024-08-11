@@ -21,7 +21,11 @@ export default function AuthorDetailsComponent({
       ) : (
         <div className={styles.detailsHeader}>
           <AvatarComponent
-            imagePath={author.avatar}
+            imagePath={
+              author.avatar !== "default_profile_image.jpg"
+                ? `${authorID}_${author.avatar}`
+                : author.avatar
+            }
             altText="Post author avatar"
           />
           <div className={styles.postAuthorDetails}>

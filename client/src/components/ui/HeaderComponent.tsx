@@ -69,7 +69,11 @@ export default function HeaderComponent() {
           ) : (
             <>
               <AvatarComponent
-                imagePath={user.profileImage}
+                imagePath={
+                  user.profileImage !== "default_profile_image.jpg"
+                    ? `${user.id}_${user.profileImage}`
+                    : user.profileImage
+                }
                 altText="Logged in user avatar"
               />
               <ButtonComponent
