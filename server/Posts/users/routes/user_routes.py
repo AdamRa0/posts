@@ -202,7 +202,7 @@ def vet_user():
 
 
 @user_routes.route("/subscribers")
-@jwt_required()
+@jwt_required(optional=True)
 def subscribers_to_user():
     query_params = request.args
 
@@ -214,7 +214,7 @@ def subscribers_to_user():
 
 
 @user_routes.route("/subscribees")
-@jwt_required()
+@jwt_required(optional=True)
 def users_subscribed_by_user():
     query_params = request.args
 
