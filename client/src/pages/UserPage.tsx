@@ -1,15 +1,18 @@
-import React, { useState } from "react";
-import styles from "@pages/userpage.module.css";
-import provideDummyUser, { userData } from "../data/dummyUserData";
+import React, { useContext, useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
-import formatNumber from "@helpers/numericalFormatter";
+
+import AvatarComponent from "@/components/ui/AvatarComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import TabComponent from "@components/ui/TabComponent";
-import { postsData, provideDummyPosts } from "../data/dummyPostsData";
 import ListComponent from "@components/ui/ListComponent";
+import { AuthContext } from "@/contexts/authContext";
+import formatNumber from "@helpers/numericalFormatter";
+import styles from "@pages/userpage.module.css";
 
-const user: userData = provideDummyUser();
-const posts: postsData[] = provideDummyPosts();
+import { authContextProp } from "types/props/AuthContextProps";
+import { User } from "types/data/userData";
+import { useParams } from "react-router-dom";
+import BannerComponent from "@/components/ui/BannerComponent";
 
 enum TabStates {
   INPOSTS,
@@ -20,6 +23,21 @@ enum TabStates {
 
 export default function UserPage(): React.JSX.Element {
   const [currentTab, setCurrentTab] = useState<TabStates>(TabStates.INPOSTS);
+  const [appUser, setAppUser] = useState<User | undefined>();
+  const [bannerImg, setBannerImg] = useState<string>();
+  const [profileImg, setProfileImg] = useState<string>();
+  const { user } = useContext<authContextProp>(AuthContext);
+  const { userId } = useParams();
+
+  useEffect(() => {
+    if (user) {
+      setAppUser(JSON.parse(JSON.stringify(user)));
+      setProfileImg(JSON.parse(JSON.stringify(user)).profileImage);
+      setBannerImg(JSON.parse(JSON.stringify(user)).bannerImage);
+
+      console.log(user);
+    }
+  }, [user]);
 
   return (
     <>
@@ -27,34 +45,47 @@ export default function UserPage(): React.JSX.Element {
         <div className={styles.userPageBanner}>
           <div className={styles.userImages}>
             <div className={styles.userBannerImage}>
-              <img src={user.bannerImage} alt="user banner image" />
+              <BannerComponent
+                imagePath={
+                  bannerImg !== "default_banner_image.jpg"
+                    ? `${userId}_${bannerImg}`
+                    : bannerImg
+                }
+                altText="user avatar"
+              />
             </div>
             <div className={styles.userAvatar}>
-              <img src={user.avatar} alt="user avatar" />
+              <AvatarComponent
+                imagePath={
+                  profileImg !== "default_profile_image.jpg"
+                    ? `${userId}_${profileImg}`
+                    : profileImg
+                }
+                altText="user avatar"
+              />
             </div>
           </div>
           <div className={styles.userDisplayNames}>
-            <h4>{user.username}</h4>
-            <p>{`@${user.handle}`}</p>
+            <h4>{appUser?.username}</h4>
+            <p>{`${appUser?.handle}`}</p>
           </div>
           <div className={styles.userOtherInfo}>
-            <p>{user.bio}</p>
+            <p>{appUser?.bio}</p>
             <div className={styles.userJoined}>
               <MdCalendarMonth />{" "}
-              {user.dateJoined.toLocaleString("en-GB", { month: "long" })}{" "}
-              {user.dateJoined.getFullYear()}
+              {appUser &&
+                new Date(appUser.dateCreated).toLocaleString("en-GB", {
+                  month: "long",
+                })}{" "}
+              {appUser && new Date(appUser.dateCreated).getFullYear()}
             </div>
             <div className={styles.userCommunityCount}>
               <p>
-                <span className={styles.count}>
-                  {formatNumber(user.subscribed)}
-                </span>{" "}
+                <span className={styles.count}>{formatNumber(0)}</span>{" "}
                 <span className={styles.countText}>Subscribed-To</span>
               </p>{" "}
               <p>
-                <span className={styles.count}>
-                  {formatNumber(user.subscribers)}
-                </span>{" "}
+                <span className={styles.count}>{formatNumber(0)}</span>{" "}
                 <span className={styles.countText}>Subscribers</span>
               </p>
             </div>
@@ -107,7 +138,7 @@ export default function UserPage(): React.JSX.Element {
           </TabComponent>
         </div>
         <div className={styles.pageContent}>
-          <ListComponent data={posts} typeOfData="post" />
+          <ListComponent data={[]} typeOfData="post" />
         </div>
       </div>
     </>

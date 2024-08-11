@@ -20,11 +20,12 @@ export default function ListItemComponent({
   const link =
     typeOfData === "post"
       ? `/post/${item.id}`
-      : `/user/${(item as User).handle}`;
+      : `/user/${(item as User).id}`;
 
   const navigate = useNavigate();
 
-  function handleNavigate() {
+  function handleNavigate(e: { stopPropagation: () => void }) {
+    e.stopPropagation();
     typeOfData !== "comment" ? navigate(link) : () => {};
   }
 
@@ -35,11 +36,13 @@ export default function ListItemComponent({
           typeOfData !== "comment" ? styles.postOrUser : styles.comment
         }
         key={item.id}
-        onClick={handleNavigate}
+        onClick={(e) => handleNavigate(e)}
         tabIndex={0}
       >
         {typeOfData === "post" && <PostItemComponent post={item as PostData} />}
-        {typeOfData === "comment" && <CommentComponent post={item as PostData} />}
+        {typeOfData === "comment" && (
+          <CommentComponent post={item as PostData} />
+        )}
       </li>
     </>
   );
