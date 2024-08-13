@@ -170,7 +170,9 @@ export default function UserPage(): React.JSX.Element {
                 <span className={styles.count}>
                   {formatNumber(subscribers)}
                 </span>{" "}
-                <span className={styles.countText}>Subscribers</span>
+                <span className={styles.countText}>
+                  {subscribers === 1 ? "Subscriber" : "Subscribers"}{" "}
+                </span>
               </p>
             </div>
           </div>
