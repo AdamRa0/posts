@@ -122,7 +122,8 @@ button:disabled {
 }
 
 .settingsButton,
-.createPostButton {
+.createPostButton,
+.followButton {
     margin: 0 10px 0 10px;
     padding: 10px;
     display: flex;

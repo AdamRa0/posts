@@ -31,7 +31,7 @@ export default function PostPage(): React.JSX.Element {
   const navigate = useNavigate();
 
   const comments = replies(postId! as UUID);
-  
+
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${postId!}/create-comment`;
 
   function handleModal() {
@@ -97,10 +97,12 @@ export default function PostPage(): React.JSX.Element {
           </ButtonComponent>
         </div>
         <div className={styles.commentSection}>
-          {(comments.length === 0 || comments === undefined) && (
+          {(comments === undefined || comments.length === 0) && (
             <p>No Comments Yet</p>
           )}
-          <ListComponent data={comments} typeOfData="comment" />
+          {(comments !== undefined) && (
+            <ListComponent data={comments} typeOfData="comment" />
+          )}
         </div>
       </div>
       {isModalOpen && user === null ? (

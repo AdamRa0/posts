@@ -1,15 +1,22 @@
-import React, { useState } from "react";
-import styles from "@pages/userpage.module.css";
-import provideDummyUser, { userData } from "../data/dummyUserData";
+import React, { useContext, useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
-import formatNumber from "@helpers/numericalFormatter";
+import { useParams } from "react-router-dom";
+
+import AvatarComponent from "@components/ui/AvatarComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import TabComponent from "@components/ui/TabComponent";
-import { postsData, provideDummyPosts } from "../data/dummyPostsData";
 import ListComponent from "@components/ui/ListComponent";
+import BannerComponent from "@components/ui/BannerComponent";
+import { AuthContext } from "@contexts/authContext";
+import formatNumber from "@helpers/numericalFormatter";
+import styles from "@pages/userpage.module.css";
+import { getUserService } from "@services/user/getUserService";
+import subscribeToUserService from "@services/user/subscribeToUserService";
+import unsubscribeToUserService from "@services/user/unsubscribeToUserService";
 
-const user: userData = provideDummyUser();
-const posts: postsData[] = provideDummyPosts();
+import { authContextProp } from "types/props/AuthContextProps";
+import { User } from "types/data/userData";
+import { UUID } from "crypto";
 
 enum TabStates {
   INPOSTS,
@@ -20,6 +27,83 @@ enum TabStates {
 
 export default function UserPage(): React.JSX.Element {
   const [currentTab, setCurrentTab] = useState<TabStates>(TabStates.INPOSTS);
+  const [appUser, setAppUser] = useState<User | undefined>();
+  const [subscribers, setSubscribers] = useState<number>(0);
+  const [subscribees, setSubscribees] = useState<number>(0);
+  const [isSubscribedToUser, setIsSubscribedToUser] = useState<boolean>(false);
+  const { user } = useContext<authContextProp>(AuthContext);
+  const { userId } = useParams();
+
+  useEffect(() => {
+    if (user) {
+      if (user.id === userId) {
+        setAppUser(JSON.parse(JSON.stringify(user)));
+      } else {
+        getUserService(undefined, false, userId! as UUID)
+          .then((response) => response.json())
+          .then((data) => {
+            setAppUser({
+              id: data.id,
+              emailAddress: data.email_address,
+              username: data.username,
+              handle: data.handle,
+              bio: data.bio,
+              dateCreated: data.date_created,
+              profileImage: data.profile_image,
+              bannerImage: data.banner_image,
+              isActive: data.is_active,
+              isPrivate: data.is_private,
+            });
+          });
+      }
+
+      fetch(
+        "/api/v1/users/subscribers?" +
+          new URLSearchParams({ "user-id": userId! })
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const { id: authId } = JSON.parse(JSON.stringify(user));
+          const { id: subId } = data.find(
+            (sub: { id: User }) => sub.id === authId
+          );
+          setSubscribers(data.length);
+          if (authId === subId) setIsSubscribedToUser(true);
+        })
+        .catch((e) => console.log(e));
+
+      fetch(
+        "/api/v1/users/subscribees?" +
+          new URLSearchParams({ "user-id": userId! })
+      )
+        .then((response) => response.json())
+        .then((data) => setSubscribees(data.length))
+        .catch((e) => console.log(e));
+    } else {
+      getUserService(undefined, false, userId! as UUID)
+        .then((response) => response.json())
+        .then((data) => {
+          setAppUser({
+            id: data.id,
+            emailAddress: data.email_address,
+            username: data.username,
+            handle: data.handle,
+            bio: data.bio,
+            dateCreated: data.date_created,
+            profileImage: data.profile_image,
+            bannerImage: data.banner_image,
+            isActive: data.is_active,
+            isPrivate: data.is_private,
+          });
+        });
+    }
+  }, [user, userId]);
+
+  function handleSubscribe() {
+    isSubscribedToUser
+      ? unsubscribeToUserService(userId!)
+      : subscribeToUserService(userId!);
+  }
 
   return (
     <>
@@ -27,35 +111,68 @@ export default function UserPage(): React.JSX.Element {
         <div className={styles.userPageBanner}>
           <div className={styles.userImages}>
             <div className={styles.userBannerImage}>
-              <img src={user.bannerImage} alt="user banner image" />
+              {appUser === undefined ? (
+                <p>Loading...</p>
+              ) : (
+                <BannerComponent
+                  imagePath={
+                    appUser.bannerImage !== "default_banner_image.jpg"
+                      ? `${userId}_${appUser.bannerImage}`
+                      : appUser.bannerImage
+                  }
+                  altText="user banner"
+                />
+              )}
             </div>
             <div className={styles.userAvatar}>
-              <img src={user.avatar} alt="user avatar" />
+              {appUser === undefined ? (
+                <p>Loading...</p>
+              ) : (
+                <AvatarComponent
+                  imagePath={
+                    appUser.profileImage !== "default_profile_image.jpg"
+                      ? `${userId}_${appUser.profileImage}`
+                      : appUser.profileImage
+                  }
+                  altText="user avatar"
+                />
+              )}
             </div>
           </div>
           <div className={styles.userDisplayNames}>
-            <h4>{user.username}</h4>
-            <p>{`@${user.handle}`}</p>
+            <h4>{appUser?.username}</h4>
+            <p>{`${appUser?.handle}`}</p>
           </div>
           <div className={styles.userOtherInfo}>
-            <p>{user.bio}</p>
+            {user && user.id !== userId && (
+              // TODO: Change text if user is subscribed
+              <ButtonComponent variant="followButton" onClick={handleSubscribe}>
+                {!isSubscribedToUser ? "Subscribe" : "Unsubscribe"}
+              </ButtonComponent>
+            )}
+            <p>{appUser?.bio}</p>
             <div className={styles.userJoined}>
               <MdCalendarMonth />{" "}
-              {user.dateJoined.toLocaleString("en-GB", { month: "long" })}{" "}
-              {user.dateJoined.getFullYear()}
+              {appUser &&
+                new Date(appUser.dateCreated).toLocaleString("en-GB", {
+                  month: "long",
+                })}{" "}
+              {appUser && new Date(appUser.dateCreated).getFullYear()}
             </div>
             <div className={styles.userCommunityCount}>
               <p>
                 <span className={styles.count}>
-                  {formatNumber(user.subscribed)}
+                  {formatNumber(subscribees)}
                 </span>{" "}
                 <span className={styles.countText}>Subscribed-To</span>
               </p>{" "}
               <p>
                 <span className={styles.count}>
-                  {formatNumber(user.subscribers)}
+                  {formatNumber(subscribers)}
                 </span>{" "}
-                <span className={styles.countText}>Subscribers</span>
+                <span className={styles.countText}>
+                  {subscribers === 1 ? "Subscriber" : "Subscribers"}{" "}
+                </span>
               </p>
             </div>
           </div>
@@ -107,7 +224,7 @@ export default function UserPage(): React.JSX.Element {
           </TabComponent>
         </div>
         <div className={styles.pageContent}>
-          <ListComponent data={posts} typeOfData="post" />
+          <ListComponent data={[]} typeOfData="post" />
         </div>
       </div>
     </>
