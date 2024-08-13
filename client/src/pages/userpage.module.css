@@ -56,6 +56,13 @@
 
     .userOtherInfo {
         margin-left: 20px;
+        position: relative;
+
+        button {
+            position: absolute;
+            right: 30px;
+            width: 100px;
+        }
 
         .userCommunityCount {
             display: flex;

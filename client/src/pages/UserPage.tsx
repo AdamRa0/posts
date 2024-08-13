@@ -10,9 +10,12 @@ import BannerComponent from "@components/ui/BannerComponent";
 import { AuthContext } from "@contexts/authContext";
 import formatNumber from "@helpers/numericalFormatter";
 import styles from "@pages/userpage.module.css";
+import { getUserService } from "@services/user/getUserService";
 
 import { authContextProp } from "types/props/AuthContextProps";
 import { User } from "types/data/userData";
+import { UUID } from "crypto";
+import subscribeToUserService from "@/services/user/subscribeToUserService";
 
 enum TabStates {
   INPOSTS,
@@ -24,8 +27,6 @@ enum TabStates {
 export default function UserPage(): React.JSX.Element {
   const [currentTab, setCurrentTab] = useState<TabStates>(TabStates.INPOSTS);
   const [appUser, setAppUser] = useState<User | undefined>();
-  const [bannerImg, setBannerImg] = useState<string>("");
-  const [profileImg, setProfileImg] = useState<string>("");
   const [subscribers, setSubscribers] = useState<number>(0);
   const [subscribees, setSubscribees] = useState<number>(0);
   const { user } = useContext<authContextProp>(AuthContext);
@@ -33,9 +34,26 @@ export default function UserPage(): React.JSX.Element {
 
   useEffect(() => {
     if (user) {
-      setAppUser(JSON.parse(JSON.stringify(user)));
-      setProfileImg(JSON.parse(JSON.stringify(user)).profileImage);
-      setBannerImg(JSON.parse(JSON.stringify(user)).bannerImage);
+      if (user.id === userId) {
+        setAppUser(JSON.parse(JSON.stringify(user)));
+      } else {
+        getUserService(undefined, false, userId! as UUID)
+          .then((response) => response.json())
+          .then((data) => {
+            setAppUser({
+              id: data.id,
+              emailAddress: data.email_address,
+              username: data.username,
+              handle: data.handle,
+              bio: data.bio,
+              dateCreated: data.date_created,
+              profileImage: data.profile_image,
+              bannerImage: data.banner_image,
+              isActive: data.is_active,
+              isPrivate: data.is_private,
+            });
+          });
+      }
 
       fetch(
         "/api/v1/users/subscribers?" +
@@ -45,7 +63,6 @@ export default function UserPage(): React.JSX.Element {
         .then((data) => setSubscribers(data.length))
         .catch((e) => console.log(e));
 
-
       fetch(
         "/api/v1/users/subscribees?" +
           new URLSearchParams({ "user-id": userId! })
@@ -53,33 +70,64 @@ export default function UserPage(): React.JSX.Element {
         .then((response) => response.json())
         .then((data) => setSubscribees(data.length))
         .catch((e) => console.log(e));
+    } else {
+      getUserService(undefined, false, userId! as UUID)
+        .then((response) => response.json())
+        .then((data) => {
+          setAppUser({
+            id: data.id,
+            emailAddress: data.email_address,
+            username: data.username,
+            handle: data.handle,
+            bio: data.bio,
+            dateCreated: data.date_created,
+            profileImage: data.profile_image,
+            bannerImage: data.banner_image,
+            isActive: data.is_active,
+            isPrivate: data.is_private,
+          });
+        });
     }
   }, [user, userId]);
 
+  function handleSubscribe() {
+    subscribeToUserService(userId!);
+  }
+
+  console.log(formatNumber(subscribers));
+  console.log(subscribers);
   return (
     <>
       <div className={styles.userPageContent}>
         <div className={styles.userPageBanner}>
           <div className={styles.userImages}>
             <div className={styles.userBannerImage}>
-              <BannerComponent
-                imagePath={
-                  bannerImg !== "default_banner_image.jpg"
-                    ? `${userId}_${bannerImg}`
-                    : bannerImg
-                }
-                altText="user avatar"
-              />
+              {appUser === undefined ? (
+                <p>Loading...</p>
+              ) : (
+                <BannerComponent
+                  imagePath={
+                    appUser.bannerImage !== "default_banner_image.jpg"
+                      ? `${userId}_${appUser.bannerImage}`
+                      : appUser.bannerImage
+                  }
+                  altText="user avatar"
+                />
+              )}
             </div>
             <div className={styles.userAvatar}>
-              <AvatarComponent
-                imagePath={
-                  profileImg !== "default_profile_image.jpg"
-                    ? `${userId}_${profileImg}`
-                    : profileImg
-                }
-                altText="user avatar"
-              />
+              {appUser === undefined ? (
+                <p>Loading...</p>
+              ) : (
+                <AvatarComponent
+                  imagePath={
+                    appUser.profileImage !== "default_profile_image.jpg"
+                      ? `${userId}_${appUser.profileImage}`
+                      : appUser.profileImage
+                  }
+                  altText="user avatar"
+                />
+              )}
             </div>
           </div>
           <div className={styles.userDisplayNames}>
@@ -87,6 +135,12 @@ export default function UserPage(): React.JSX.Element {
             <p>{`${appUser?.handle}`}</p>
           </div>
           <div className={styles.userOtherInfo}>
+            {(user && user.id !== userId) && (
+              // TODO: Change text if user is subscribed
+              <ButtonComponent variant="followButton" onClick={handleSubscribe}>
+                Subscribe
+              </ButtonComponent>
+            )}
             <p>{appUser?.bio}</p>
             <div className={styles.userJoined}>
               <MdCalendarMonth />{" "}
