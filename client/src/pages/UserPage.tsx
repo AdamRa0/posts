@@ -11,11 +11,12 @@ import { AuthContext } from "@contexts/authContext";
 import formatNumber from "@helpers/numericalFormatter";
 import styles from "@pages/userpage.module.css";
 import { getUserService } from "@services/user/getUserService";
+import subscribeToUserService from "@services/user/subscribeToUserService";
+import unsubscribeToUserService from "@services/user/unsubscribeToUserService";
 
 import { authContextProp } from "types/props/AuthContextProps";
 import { User } from "types/data/userData";
 import { UUID } from "crypto";
-import subscribeToUserService from "@/services/user/subscribeToUserService";
 
 enum TabStates {
   INPOSTS,
@@ -29,6 +30,7 @@ export default function UserPage(): React.JSX.Element {
   const [appUser, setAppUser] = useState<User | undefined>();
   const [subscribers, setSubscribers] = useState<number>(0);
   const [subscribees, setSubscribees] = useState<number>(0);
+  const [isSubscribedToUser, setIsSubscribedToUser] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
   const { userId } = useParams();
 
@@ -60,7 +62,14 @@ export default function UserPage(): React.JSX.Element {
           new URLSearchParams({ "user-id": userId! })
       )
         .then((response) => response.json())
-        .then((data) => setSubscribers(data.length))
+        .then((data) => {
+          const { id: authId } = JSON.parse(JSON.stringify(user));
+          const { id: subId } = data.find(
+            (sub: { id: User }) => sub.id === authId
+          );
+          setSubscribers(data.length);
+          if (authId === subId) setIsSubscribedToUser(true);
+        })
         .catch((e) => console.log(e));
 
       fetch(
@@ -91,11 +100,11 @@ export default function UserPage(): React.JSX.Element {
   }, [user, userId]);
 
   function handleSubscribe() {
-    subscribeToUserService(userId!);
+    isSubscribedToUser
+      ? unsubscribeToUserService(userId!)
+      : subscribeToUserService(userId!);
   }
 
-  console.log(formatNumber(subscribers));
-  console.log(subscribers);
   return (
     <>
       <div className={styles.userPageContent}>
@@ -111,7 +120,7 @@ export default function UserPage(): React.JSX.Element {
                       ? `${userId}_${appUser.bannerImage}`
                       : appUser.bannerImage
                   }
-                  altText="user avatar"
+                  altText="user banner"
                 />
               )}
             </div>
@@ -135,10 +144,10 @@ export default function UserPage(): React.JSX.Element {
             <p>{`${appUser?.handle}`}</p>
           </div>
           <div className={styles.userOtherInfo}>
-            {(user && user.id !== userId) && (
+            {user && user.id !== userId && (
               // TODO: Change text if user is subscribed
               <ButtonComponent variant="followButton" onClick={handleSubscribe}>
-                Subscribe
+                {!isSubscribedToUser ? "Subscribe" : "Unsubscribe"}
               </ButtonComponent>
             )}
             <p>{appUser?.bio}</p>
