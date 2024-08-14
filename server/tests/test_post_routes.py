@@ -77,7 +77,7 @@ def test_get_user_posts(create_new_user_1, test_client):
     user_id = response.json["id"]
 
     user_posts_response = test_client.get(
-        f"/api/v1/posts/user_posts?user-id={user_id}&page=1"
+        f"/api/v1/posts/user-posts?user-id={user_id}&page=1"
     )
 
     print(user_posts_response.json)

@@ -79,7 +79,7 @@ def get_single_post(post_id: str):
     return post_schema.dump(post), 200
 
 
-@post_routes.route("/user_posts")
+@post_routes.route("/user-posts")
 def get_user_posts():
     user_id = request.args.get("user-id")
     page = int(request.args.get("page"))
