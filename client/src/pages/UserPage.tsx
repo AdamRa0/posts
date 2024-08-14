@@ -182,7 +182,7 @@ export default function UserPage(): React.JSX.Element {
               variant="tabButton"
               onClick={() => setCurrentTab(TabStates.INPOSTS)}
             >
-              Posts
+              Board
               <span
                 className={
                   currentTab === TabStates.INPOSTS ? styles.active : ""

@@ -2,6 +2,7 @@ import {
   MdOutlineThumbDown,
   MdOutlineThumbUp,
   MdModeComment,
+  MdOutlineRepeat,
 } from "react-icons/md";
 import styles from "./postitemcomponent.module.css";
 import React, { useContext, useState } from "react";
@@ -12,13 +13,14 @@ import ButtonComponent from "@components/ui/ButtonComponent";
 import { PostData } from "types/data/postData";
 
 import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
+import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 import { AuthContext } from "@contexts/authContext";
 import { authContextProp } from "types/props/AuthContextProps";
 import AuthPage from "@pages/AuthPage";
 import { useNavigate } from "react-router-dom";
 import approvePostService from "@services/posts/approvePostService";
 import disapprovePostService from "@services/posts/disapprovePostService";
-import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
+import repostPostService from "@services/posts/repostPostService";
 
 type PostItemComponentProps = {
   post: PostData;
@@ -59,6 +61,10 @@ export default function PostItemComponent({
 
       case "comment":
         navigate(`/post/${post.id}`);
+        break;
+
+      case "repost":
+        repostPostService(post.id);
         break;
 
       default:
@@ -102,6 +108,17 @@ export default function PostItemComponent({
           {post.disapprovals >= 1000
             ? formatNumber(post.disapprovals)
             : post.disapprovals}
+        </ButtonComponent>
+        <ButtonComponent
+          variant="postInteractionButton"
+          onClick={(e) => handlePostInterraction(e, "repost")}
+        >
+          <MdOutlineRepeat />
+          {post.reposts
+            ? post.reposts >= 1000
+              ? formatNumber(post.reposts)
+              : post.reposts
+            : 0}
         </ButtonComponent>
         <ButtonComponent
           variant="postInteractionButton"
