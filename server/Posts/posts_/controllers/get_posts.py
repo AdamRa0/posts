@@ -16,17 +16,24 @@ def get_posts(page: int):
 
 
 
-def get_posts_by_user(author_id: str, page: int):
+def get_posts_and_reposts_by_user(author_id: str, page: int, user_id: str):
     """
-    Returns all posts created by specific user
+    Returns all posts created and reposted by specific user
 
     Arguments
     ---------
     user_id: User who's post you wish to get
     """
-    posts = db.paginate(db.select(PostModel).filter_by(author_id=author_id), page=page)
-    return posts
-    # return user.posts
+    posts = db.session.execute(db.select(PostModel).filter_by(author_id=author_id)).scalars().all()
+    user = get_user_by_id(user_id)
+    reposts = user.reposts
+
+    all_posts = posts + reposts
+
+    offset = (page - 1) * 20
+    paginated_posts_and_reposts = all_posts[offset:offset + 20]
+
+    return paginated_posts_and_reposts
 
 
 def get_reposts_by_user(user_id: str):
