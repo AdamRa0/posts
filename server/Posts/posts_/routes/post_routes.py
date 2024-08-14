@@ -1,7 +1,7 @@
 from ..controllers.create_post import create_post
 from ..controllers.delete_post import delete_post
 from ..controllers.get_post import get_post, get_post_by_author_id
-from ..controllers.get_posts import get_posts, get_posts_by_user
+from ..controllers.get_posts import get_posts, get_posts_and_reposts_by_user
 from ..controllers.like_dislike_post import like_post, dislike_post
 
 from ..controllers.repost_derepost import repost, del_repost
@@ -79,12 +79,12 @@ def get_single_post(post_id: str):
     return post_schema.dump(post), 200
 
 
-@post_routes.route("/user_posts")
+@post_routes.route("/user-posts")
 def get_user_posts():
     user_id = request.args.get("user-id")
     page = int(request.args.get("page"))
 
-    user_posts = get_posts_by_user(user_id, page)
+    user_posts = get_posts_and_reposts_by_user(user_id, page, user_id)
 
     return posts_schema.dump(user_posts), 200
 

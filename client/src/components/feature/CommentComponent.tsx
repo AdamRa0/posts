@@ -2,6 +2,7 @@ import {
   MdOutlineThumbDown,
   MdOutlineThumbUp,
   MdModeComment,
+  MdOutlineRepeat,
 } from "react-icons/md";
 import styles from "./commentcomponent.module.css";
 import React, { useContext, useState } from "react";
@@ -21,6 +22,7 @@ import disapprovePostService from "@services/posts/disapprovePostService";
 import { authContextProp } from "types/props/AuthContextProps";
 import { PostData } from "types/data/postData";
 import ListComponent from "../ui/ListComponent";
+import repostPostService from "@services/posts/repostPostService";
 
 type CommentComponentProps = {
   post: PostData;
@@ -57,6 +59,10 @@ export default function CommentComponent({
 
       case "reply":
         handleModal();
+        break;
+
+      case "repost":
+        repostPostService(post.id);
         break;
 
       default:
@@ -104,6 +110,17 @@ export default function CommentComponent({
           {post.disapprovals >= 1000
             ? formatNumber(post.disapprovals)
             : post.disapprovals}
+        </ButtonComponent>
+        <ButtonComponent
+          variant="postInteractionButton"
+          onClick={() => handlePostInterraction("repost")}
+        >
+          <MdOutlineRepeat />
+          {post.reposts
+            ? post.reposts >= 1000
+              ? formatNumber(post.reposts)
+              : post.reposts
+            : 0}
         </ButtonComponent>
         <ButtonComponent
           variant="postInteractionButton"

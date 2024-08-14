@@ -36,7 +36,7 @@ class UserModel(db.Model):
     reposts = db.relationship(
         "PostModel",
         secondary=posts_reposts,
-        backref="user_reposts",
+        backref="reposted_by",
         cascade="all, delete",
     )
     waitlist = db.relationship(

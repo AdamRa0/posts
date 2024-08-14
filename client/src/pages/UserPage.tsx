@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import React, { useContext, useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 import { useParams } from "react-router-dom";
@@ -9,6 +10,7 @@ import ListComponent from "@components/ui/ListComponent";
 import BannerComponent from "@components/ui/BannerComponent";
 import { AuthContext } from "@contexts/authContext";
 import formatNumber from "@helpers/numericalFormatter";
+import useFetchUserPosts from "@hooks/useFetchUserPosts";
 import styles from "@pages/userpage.module.css";
 import { getUserService } from "@services/user/getUserService";
 import subscribeToUserService from "@services/user/subscribeToUserService";
@@ -16,7 +18,6 @@ import unsubscribeToUserService from "@services/user/unsubscribeToUserService";
 
 import { authContextProp } from "types/props/AuthContextProps";
 import { User } from "types/data/userData";
-import { UUID } from "crypto";
 
 enum TabStates {
   INPOSTS,
@@ -33,6 +34,7 @@ export default function UserPage(): React.JSX.Element {
   const [isSubscribedToUser, setIsSubscribedToUser] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
   const { userId } = useParams();
+  const { posts: userPosts, error } = useFetchUserPosts(userId!);
 
   useEffect(() => {
     if (user) {
@@ -145,7 +147,6 @@ export default function UserPage(): React.JSX.Element {
           </div>
           <div className={styles.userOtherInfo}>
             {user && user.id !== userId && (
-              // TODO: Change text if user is subscribed
               <ButtonComponent variant="followButton" onClick={handleSubscribe}>
                 {!isSubscribedToUser ? "Subscribe" : "Unsubscribe"}
               </ButtonComponent>
@@ -181,7 +182,7 @@ export default function UserPage(): React.JSX.Element {
               variant="tabButton"
               onClick={() => setCurrentTab(TabStates.INPOSTS)}
             >
-              Posts
+              Board
               <span
                 className={
                   currentTab === TabStates.INPOSTS ? styles.active : ""
@@ -224,7 +225,15 @@ export default function UserPage(): React.JSX.Element {
           </TabComponent>
         </div>
         <div className={styles.pageContent}>
-          <ListComponent data={[]} typeOfData="post" />
+          {(!userPosts && error) && <p>Could not fetch posts</p>}
+          {(!error && userPosts === undefined) && <p>Loading...</p>}
+          {userPosts ? (
+            userPosts.length === 0 ? (
+              <p>User hasn&apos;t posted yet</p>
+            ) : (
+              <ListComponent data={userPosts} typeOfData="post" />
+            )
+          ) : null}
         </div>
       </div>
     </>

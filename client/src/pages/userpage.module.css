@@ -57,6 +57,7 @@
     .userOtherInfo {
         margin-left: 20px;
         position: relative;
+        z-index: -9999;
 
         button {
             position: absolute;
