@@ -85,6 +85,36 @@ def test_get_user_posts(create_new_user_1, test_client):
     assert user_posts_response.status_code == 200
 
 
+def test_get_user_replies(create_new_user_1, test_client):
+    """
+    GIVEN a user,
+    WHEN a user wants to see another user's replies,
+    THEN the user is presented with a list of other user's replies.
+    """
+    data = dict(
+        email_address=create_new_user_1.email_address,
+        password=create_new_user_1.password,
+    )
+
+    test_client.post("/api/v1/auth/signin", data=data)
+
+    authorizer = test_client.get_cookie("csrf_access_token")
+
+    header = {"X-CSRF-TOKEN": f"{authorizer.value}"}
+
+    response = test_client.get("/api/v1/users/profile", headers=header)
+
+    user_id = response.json["id"]
+
+    user_replies_response = test_client.get(
+        f"/api/v1/posts/user-posts?user-replies={user_id}"
+    )
+
+    print(user_replies_response.json)
+
+    assert user_replies_response.status_code == 200
+
+
 def test_update_post(create_new_user_1, test_client):
     """
     GIVEN a post,

@@ -11,9 +11,21 @@ def get_posts(page: int):
     Returns all posts created by registered users
     """
     # return db.session.execute(db.select(PostModel)).scalars()
-    return db.paginate(db.select(PostModel).order_by(desc(PostModel.time_created)), page=page)
+    return db.paginate(
+        db.select(PostModel).order_by(desc(PostModel.time_created)), page=page
+    )
     # return db.paginate(db.select(PostModel), page=page)
 
+
+def get_replies(author_id: str):
+    posts = (
+        db.session.execute(db.select(PostModel).filter_by(author_id=author_id))
+        .scalars()
+        .all()
+    )
+    post_replies = [post for post in posts if post.parent is not None]
+
+    return post_replies
 
 
 def get_posts_and_reposts_by_user(author_id: str, page: int, user_id: str):
@@ -24,14 +36,18 @@ def get_posts_and_reposts_by_user(author_id: str, page: int, user_id: str):
     ---------
     user_id: User who's post you wish to get
     """
-    posts = db.session.execute(db.select(PostModel).filter_by(author_id=author_id)).scalars().all()
+    posts = (
+        db.session.execute(db.select(PostModel).filter_by(author_id=author_id))
+        .scalars()
+        .all()
+    )
     user = get_user_by_id(user_id)
     reposts = user.reposts
 
     all_posts = posts + reposts
 
     offset = (page - 1) * 20
-    paginated_posts_and_reposts = all_posts[offset:offset + 20]
+    paginated_posts_and_reposts = all_posts[offset : offset + 20]
 
     return paginated_posts_and_reposts
 

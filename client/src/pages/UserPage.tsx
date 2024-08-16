@@ -12,6 +12,7 @@ import { AuthContext } from "@contexts/authContext";
 import formatNumber from "@helpers/numericalFormatter";
 import useFetchUserPosts from "@hooks/useFetchUserPosts";
 import useGetUserLikes from "@hooks/useGetUserLikes";
+import useFetchUserReplies from "@hooks/useFetchUserReplies";
 import styles from "@pages/userpage.module.css";
 import { getUserService } from "@services/user/getUserService";
 import subscribeToUserService from "@services/user/subscribeToUserService";
@@ -37,9 +38,7 @@ export default function UserPage(): React.JSX.Element {
   const { userId } = useParams();
   const { posts: userPosts, error } = useFetchUserPosts(userId!);
   const { likes: userLikes, error: likesError } = useGetUserLikes(userId!);
-
-  console.log(userLikes);
-  console.log(likesError);
+  const { replies, error: repliesError } = useFetchUserReplies(userId!);
 
   useEffect(() => {
     if (user) {
@@ -256,6 +255,20 @@ export default function UserPage(): React.JSX.Element {
               <p>User has no likes</p>
             ) : (
               <ListComponent data={userLikes} typeOfData="post" />
+            )
+          ) : null}
+          {/* Replies Tab */}
+          {currentTab === TabStates.INREPLIES && !replies && repliesError && (
+            <p>Could not fetch likes</p>
+          )}
+          {currentTab === TabStates.INREPLIES &&
+            !repliesError &&
+            replies === undefined && <p>Loading...</p>}
+          {currentTab === TabStates.INREPLIES && replies ? (
+            replies.length === 0 ? (
+              <p>User has no likes</p>
+            ) : (
+              <ListComponent data={replies} typeOfData="post" />
             )
           ) : null}
         </div>
