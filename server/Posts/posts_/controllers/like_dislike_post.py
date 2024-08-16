@@ -8,7 +8,7 @@ db = get_db()
 
 def like_post(post_id: str, user_id: str):
     post = get_post(post_id)
-    user = get_user_by_id()
+    user = get_user_by_id(user_id)
 
     post.approvals += 1
     user.likes.append(post)
