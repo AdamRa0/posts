@@ -11,6 +11,8 @@ import BannerComponent from "@components/ui/BannerComponent";
 import { AuthContext } from "@contexts/authContext";
 import formatNumber from "@helpers/numericalFormatter";
 import useFetchUserPosts from "@hooks/useFetchUserPosts";
+import useGetUserLikes from "@hooks/useGetUserLikes";
+import useFetchUserReplies from "@hooks/useFetchUserReplies";
 import styles from "@pages/userpage.module.css";
 import { getUserService } from "@services/user/getUserService";
 import subscribeToUserService from "@services/user/subscribeToUserService";
@@ -35,6 +37,8 @@ export default function UserPage(): React.JSX.Element {
   const { user } = useContext<authContextProp>(AuthContext);
   const { userId } = useParams();
   const { posts: userPosts, error } = useFetchUserPosts(userId!);
+  const { likes: userLikes, error: likesError } = useGetUserLikes(userId!);
+  const { replies, error: repliesError } = useFetchUserReplies(userId!);
 
   useEffect(() => {
     if (user) {
@@ -225,13 +229,46 @@ export default function UserPage(): React.JSX.Element {
           </TabComponent>
         </div>
         <div className={styles.pageContent}>
-          {(!userPosts && error) && <p>Could not fetch posts</p>}
-          {(!error && userPosts === undefined) && <p>Loading...</p>}
-          {userPosts ? (
+          {/* Posts Tab */}
+          {currentTab === TabStates.INPOSTS && !userPosts && error && (
+            <p>Could not fetch posts</p>
+          )}
+          {currentTab === TabStates.INPOSTS &&
+            !error &&
+            userPosts === undefined && <p>Loading...</p>}
+          {currentTab === TabStates.INPOSTS && userPosts ? (
             userPosts.length === 0 ? (
               <p>User hasn&apos;t posted yet</p>
             ) : (
               <ListComponent data={userPosts} typeOfData="post" />
+            )
+          ) : null}
+          {/* Likes Tab */}
+          {currentTab === TabStates.INLIKES && !userLikes && likesError && (
+            <p>Could not fetch likes</p>
+          )}
+          {currentTab === TabStates.INLIKES &&
+            !likesError &&
+            userLikes === undefined && <p>Loading...</p>}
+          {currentTab === TabStates.INLIKES && userLikes ? (
+            userLikes.length === 0 ? (
+              <p>User has no likes</p>
+            ) : (
+              <ListComponent data={userLikes} typeOfData="post" />
+            )
+          ) : null}
+          {/* Replies Tab */}
+          {currentTab === TabStates.INREPLIES && !replies && repliesError && (
+            <p>Could not fetch likes</p>
+          )}
+          {currentTab === TabStates.INREPLIES &&
+            !repliesError &&
+            replies === undefined && <p>Loading...</p>}
+          {currentTab === TabStates.INREPLIES && replies ? (
+            replies.length === 0 ? (
+              <p>User has no likes</p>
+            ) : (
+              <ListComponent data={replies} typeOfData="post" />
             )
           ) : null}
         </div>

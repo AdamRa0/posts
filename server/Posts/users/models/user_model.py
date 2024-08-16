@@ -17,6 +17,12 @@ users_subscribers_waitlist = db.Table(
     Column("judged", UUID, ForeignKey("users.id"), primary_key=True),
 )
 
+user_likes = db.Table(
+    "user_likes",
+    Column("user_id", UUID, ForeignKey("users.id"), primary_key=True),
+    Column("post_id", UUID, ForeignKey("posts.id"), primary_key=True),
+)
+
 
 class UserModel(db.Model):
     __tablename__ = "users"
@@ -24,6 +30,12 @@ class UserModel(db.Model):
     posts = db.relationship("PostModel", backref="author", cascade="delete")
     username = Column(String, nullable=False)
     email_address = Column(String, unique=True, nullable=False)
+    likes = db.relationship(
+        "PostModel",
+        secondary=user_likes,
+        backref="liked_by",
+        cascade="all, delete"
+    )
     network = db.relationship(
         "UserModel",
         secondary=subscribers,
