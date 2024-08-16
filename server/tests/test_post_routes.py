@@ -107,7 +107,7 @@ def test_get_user_replies(create_new_user_1, test_client):
     user_id = response.json["id"]
 
     user_replies_response = test_client.get(
-        f"/api/v1/posts/user-posts?user-replies={user_id}"
+        f"/api/v1/posts/user-replies?user-id={user_id}"
     )
 
     print(user_replies_response.json)
