@@ -101,7 +101,7 @@ def patch_post(body: PostUpdateModel):
 @post_routes.route("/<post_id>/approve", methods=["PATCH"])
 @jwt_required()
 def approve_post(post_id: str):
-    like_post(post_id)
+    like_post(post_id, current_user.id)
 
     return jsonify({"status": "success"}), 200
 
@@ -109,7 +109,7 @@ def approve_post(post_id: str):
 @post_routes.route("/<post_id>/disapprove", methods=["PATCH"])
 @jwt_required()
 def disapprove_post(post_id: str):
-    dislike_post(post_id)
+    dislike_post(post_id, current_user.id)
 
     return jsonify({"status": "success"}), 200
 

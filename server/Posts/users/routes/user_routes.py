@@ -1,5 +1,7 @@
 from collections import defaultdict
 
+from ..controllers.get_user_likes import get_user_approvals
+
 from ..controllers.account_creation_and_use.get_user import (
     get_user_by_handle,
     get_user_by_id,
@@ -151,7 +153,7 @@ def update_user_images():
 
     if request.files:
         filenames = upload_file()
-    
+
     if filenames is not None and profile_image == "True":
         change_profile_image(current_app, current_user, filenames.get("profile_image"))
 
@@ -223,6 +225,14 @@ def users_subscribed_by_user():
     subscribees = get_subscribees(user_id)
 
     return users_schemas.dump(subscribees), 200
+
+
+@user_routes.route("/<user_id>/likes")
+@jwt_required()
+def get_user_likes(user_id: str):
+    likes = get_user_approvals(user_id)
+
+    return post_schemas.dump(likes), 200
 
 
 @user_routes.route("/<user_id>/reposts")
