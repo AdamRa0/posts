@@ -28,6 +28,17 @@ def get_replies(author_id: str):
     return post_replies
 
 
+def get_media(author_id: str):
+    posts = (
+        db.session.execute(db.select(PostModel).filter_by(author_id=author_id))
+        .scalars()
+        .all()
+    )
+    user_media = [post for post in posts if post.post_file is not None]
+
+    return user_media
+
+
 def get_posts_and_reposts_by_user(author_id: str, page: int, user_id: str):
     """
     Returns all posts created and reposted by specific user

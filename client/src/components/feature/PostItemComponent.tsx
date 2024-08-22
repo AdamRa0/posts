@@ -4,23 +4,26 @@ import {
   MdModeComment,
   MdOutlineRepeat,
 } from "react-icons/md";
-import styles from "./postitemcomponent.module.css";
+import { useNavigate } from "react-router-dom";
 import React, { useContext, useState } from "react";
 
-import dateFormatter from "@helpers/dateFormatter";
-import formatNumber from "@helpers/numericalFormatter";
-import ButtonComponent from "@components/ui/ButtonComponent";
-import { PostData } from "types/data/postData";
+import styles from "./postitemcomponent.module.css";
 
-import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
+import ButtonComponent from "@components/ui/ButtonComponent";
 import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 import { AuthContext } from "@contexts/authContext";
-import { authContextProp } from "types/props/AuthContextProps";
+import dateFormatter from "@helpers/dateFormatter";
+import formatNumber from "@helpers/numericalFormatter";
+import useFetchImage from "@hooks/useFetchImage";
+
+import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
 import AuthPage from "@pages/AuthPage";
-import { useNavigate } from "react-router-dom";
 import approvePostService from "@services/posts/approvePostService";
 import disapprovePostService from "@services/posts/disapprovePostService";
 import repostPostService from "@services/posts/repostPostService";
+
+import { PostData } from "types/data/postData";
+import { authContextProp } from "types/props/AuthContextProps";
 
 type PostItemComponentProps = {
   post: PostData;
@@ -33,6 +36,8 @@ export default function PostItemComponent({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
   const navigate = useNavigate();
+
+  const image = useFetchImage(post.post_file!)
 
   function handleModal(e: { stopPropagation: () => void }) {
     e.stopPropagation();
@@ -86,7 +91,7 @@ export default function PostItemComponent({
       {post.post_file ? (
         <img
           className={styles.postImage}
-          src={post.post_file}
+          src={image}
           alt="Accompanying post image"
         />
       ) : null}
