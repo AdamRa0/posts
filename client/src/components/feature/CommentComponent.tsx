@@ -4,8 +4,10 @@ import {
   MdModeComment,
   MdOutlineRepeat,
 } from "react-icons/md";
-import styles from "./commentcomponent.module.css";
 import React, { useContext, useState } from "react";
+
+import styles from "./commentcomponent.module.css";
+import ListComponent from "../ui/ListComponent";
 
 import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
@@ -15,14 +17,15 @@ import { AuthContext } from "@contexts/authContext";
 import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
 import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
+import useFetchImage from "@hooks/useFetchImage";
 
 import AuthPage from "@pages/AuthPage";
 import approvePostService from "@services/posts/approvePostService";
 import disapprovePostService from "@services/posts/disapprovePostService";
-import { authContextProp } from "types/props/AuthContextProps";
-import { PostData } from "types/data/postData";
-import ListComponent from "../ui/ListComponent";
 import repostPostService from "@services/posts/repostPostService";
+
+import { PostData } from "types/data/postData";
+import { authContextProp } from "types/props/AuthContextProps";
 
 type CommentComponentProps = {
   post: PostData;
@@ -37,6 +40,8 @@ export default function CommentComponent({
   const { user } = useContext<authContextProp>(AuthContext);
 
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${post.id}/create-comment`;
+
+  const image = useFetchImage(post.post_file!)
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
@@ -88,7 +93,7 @@ export default function CommentComponent({
       {post.post_file ? (
         <img
           className={styles.postImage}
-          src={post.post_file}
+          src={image}
           alt="Accompanying post image"
         />
       ) : null}

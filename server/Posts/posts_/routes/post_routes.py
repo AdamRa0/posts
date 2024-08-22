@@ -5,6 +5,7 @@ from ..controllers.get_posts import (
     get_posts,
     get_posts_and_reposts_by_user,
     get_replies,
+    get_media
 )
 from ..controllers.like_dislike_post import like_post, dislike_post
 
@@ -98,6 +99,16 @@ def get_user_replies():
     user_id = request.args.get("user-id")
 
     replies = get_replies(user_id)
+
+    return posts_schema.dump(replies), 200
+
+
+@post_routes.route("/user-media")
+@jwt_required()
+def get_user_media():
+    user_id = request.args.get("user-id")
+
+    replies = get_media(user_id)
 
     return posts_schema.dump(replies), 200
 

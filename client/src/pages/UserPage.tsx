@@ -12,6 +12,7 @@ import { AuthContext } from "@contexts/authContext";
 import formatNumber from "@helpers/numericalFormatter";
 import useFetchUserPosts from "@hooks/useFetchUserPosts";
 import useGetUserLikes from "@hooks/useGetUserLikes";
+import useFetchUserMedia from "@hooks/useFetchUserMedia";
 import useFetchUserReplies from "@hooks/useFetchUserReplies";
 import styles from "@pages/userpage.module.css";
 import { getUserService } from "@services/user/getUserService";
@@ -39,6 +40,7 @@ export default function UserPage(): React.JSX.Element {
   const { posts: userPosts, error } = useFetchUserPosts(userId!);
   const { likes: userLikes, error: likesError } = useGetUserLikes(userId!);
   const { replies, error: repliesError } = useFetchUserReplies(userId!);
+  const { postsWithMedia: media, error: mediaError } = useFetchUserMedia(userId!);
 
   useEffect(() => {
     if (user) {
@@ -269,6 +271,20 @@ export default function UserPage(): React.JSX.Element {
               <p>User has no likes</p>
             ) : (
               <ListComponent data={replies} typeOfData="post" />
+            )
+          ) : null}
+          {/* Media Tab */}
+          {currentTab === TabStates.INMEDIA && !media && mediaError && (
+            <p>Could not fetch likes</p>
+          )}
+          {currentTab === TabStates.INMEDIA &&
+            !repliesError &&
+            media === undefined && <p>Loading...</p>}
+          {currentTab === TabStates.INMEDIA && media ? (
+            media.length === 0 ? (
+              <p>User has no media</p>
+            ) : (
+              <ListComponent data={media} typeOfData="post" />
             )
           ) : null}
         </div>
