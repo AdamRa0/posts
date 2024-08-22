@@ -24,6 +24,13 @@ user_likes = db.Table(
 )
 
 
+user_dislikes = db.Table(
+    "user_dislikes",
+    Column("user_id", UUID, ForeignKey("users.id"), primary_key=True),
+    Column("post_id", UUID, ForeignKey("posts.id"), primary_key=True),
+)
+
+
 class UserModel(db.Model):
     __tablename__ = "users"
     id = Column(UUID, primary_key=True, default=uuid4())
@@ -34,6 +41,12 @@ class UserModel(db.Model):
         "PostModel",
         secondary=user_likes,
         backref="liked_by",
+        cascade="all, delete"
+    )
+    dislikes = db.relationship(
+        "PostModel",
+        secondary=user_dislikes,
+        backref="disliked_by",
         cascade="all, delete"
     )
     network = db.relationship(

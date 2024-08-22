@@ -22,5 +22,6 @@ def dislike_post(post_id: str, user_id: str):
 
     post.disapprovals -= 1
     user.likes.remove(post)
+    user.dislikes.append(post)
 
     db.session.commit()

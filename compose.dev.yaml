@@ -25,7 +25,7 @@ services:
       - ./server:/app
     ports:
       - "5000:5000"
-    command: flask --app Posts run --debug
+    command: "flask --app Posts run --debug && flask --app Posts db upgrade"
 
   client:
     build:
