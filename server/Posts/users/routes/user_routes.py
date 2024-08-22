@@ -30,6 +30,7 @@ from ..controllers.account_management.deactivate_reactivate_user import (
 from ..controllers.account_management.set_unset_account_private import (
     set_profile_privacy,
 )
+from ..controllers.account_management.change_password import change_password
 from ..models.user_schema import UserSchema
 from ...utils.upload_file import upload_file
 
@@ -89,6 +90,16 @@ def get_user_profile():
     user = get_user_by_id(queried_user)
 
     return user_schema.dump(user), 200
+
+
+@user_routes.route("/change-password", methods=["PATCH"])
+@jwt_required()
+def change_user_password():
+    new_password = request.form.get("new_password")
+
+    change_password(current_user.id, new_password)
+
+    return jsonify({"message": "Password change successful"}), 200
 
 
 @user_routes.route("/")
