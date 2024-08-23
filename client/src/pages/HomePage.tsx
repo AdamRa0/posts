@@ -4,6 +4,7 @@ import ListComponent from "@components/ui/ListComponent";
 import useFetchPosts from "@hooks/useFetchPosts";
 
 export default function HomePage(): React.JSX.Element {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [page, setPage] = useState<number>(1);
 
   const { isLoading, posts, error } = useFetchPosts(page);

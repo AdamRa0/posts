@@ -1,24 +1,17 @@
 import { getUserService } from "@services/user/getUserService";
 import { getCookie } from "@helpers/extractCookie";
 import { UUID } from "crypto";
-import { useEffect, useState } from "react";
-import { PostAuthor } from "@/types/data/postAuthorData";
+import { useQuery } from "@tanstack/react-query";
 
-export default function useFetchPostAuthorDetails(authorID: UUID): PostAuthor | undefined {
-    const [author, setAuthor] = useState<PostAuthor>();
-
+export default function useFetchPostAuthorDetails(authorID: UUID) {
     const token = getCookie("csrf_access_token");
-    useEffect(() => {
-        getUserService(token, false, authorID)
-            .then(response => response.json())
-            .then(data => {
-                setAuthor({
-                    username: data.username,
-                    handle: data.handle,
-                    avatar: data.profile_image
-                })
-            })
-    }, [token, authorID]);
+    const userID = authorID;
+    const isUser = false;
+    
+    const { isLoading, data: author, error } = useQuery({
+        queryKey: ['users', token, userID, isUser],
+        queryFn: () => getUserService(token, isUser, userID),
+    })
 
-    return author;
+    return { isLoading, author, error }
 }

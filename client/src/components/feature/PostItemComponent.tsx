@@ -37,7 +37,7 @@ export default function PostItemComponent({
   const { user } = useContext<authContextProp>(AuthContext);
   const navigate = useNavigate();
 
-  const image = useFetchImage(post.post_file!)
+  const { image } = useFetchImage(post.post_file!);
 
   function handleModal(e: { stopPropagation: () => void }) {
     e.stopPropagation();
