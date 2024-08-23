@@ -14,12 +14,6 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
-      '/listen': {
-        target: 'http://localhost:5000',  // URL of your Flask server
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-      },
     }
   },
   resolve: {

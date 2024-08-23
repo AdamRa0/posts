@@ -1,3 +1,4 @@
+from ...app_exception import AppException
 from ..controllers.create_post import create_post
 from ..controllers.delete_post import delete_post
 from ..controllers.get_post import get_post, get_post_by_author_id
@@ -5,7 +6,7 @@ from ..controllers.get_posts import (
     get_posts,
     get_posts_and_reposts_by_user,
     get_replies,
-    get_media
+    get_media,
 )
 from ..controllers.like_dislike_post import like_post, dislike_post
 
@@ -16,17 +17,15 @@ from ..models.post_schema import PostSchema
 from ..models.post_creation_model import PostCreationModel
 from ..models.post_update_model import PostUpdateModel
 
-from ...utils.show_true_path import show_true_path
-from ...utils.streams.format_sse import format_sse
 from ...utils.upload_file import upload_file
 
 from ...follow.controllers.get_sub_subees import get_subscribers
 
-from Posts.announcer import announcer
 
 from flask import Blueprint, jsonify, request, current_app
 from flask_pydantic import validate
 from flask_jwt_extended import jwt_required, current_user
+from werkzeug.exceptions import NotFound
 
 
 post_routes = Blueprint("post_routes", __name__, url_prefix="/api/v1/posts")
@@ -40,12 +39,19 @@ def get_all_posts():
     First route a new visitor will see.
     Will contain all posts sorted by popularity (ratio of approvals to disapprovals)
     """
-    page_number = int(request.args.get("page"))
+    try:
+        page_number = int(request.args.get("page"))
 
-    posts_schema = PostSchema(many=True)
-    posts = get_posts(page=page_number)
+        posts_schema = PostSchema(many=True)
+        posts = get_posts(page=page_number)
 
-    return posts_schema.dump(posts), 200
+        return posts_schema.dump(posts), 200
+    except NotFound as e:
+        raise AppException(
+            user_message="Invalid URL",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/create_post", methods=["POST"])
@@ -63,10 +69,6 @@ def create_new_post():
     )
 
     author_posts = get_post_by_author_id(current_user.id)
-
-    # TODO: Revist when you get SSE's working
-    # msg = format_sse(data=posts_schema.dump(author_posts)[0], event="new-post")
-    # announcer.announce(msg)
 
     return posts_schema.dump(author_posts)[0], 201
 
