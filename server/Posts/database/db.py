@@ -19,6 +19,8 @@ def init_app(app: Flask):
     Sets all config variables
     """
 
+    app.config['TRAP_HTTP_EXCEPTIONS']=True
+
     ENVIRONMENT = os.environ.get("ENVIRONMENT")
 
     if ENVIRONMENT is not None and ENVIRONMENT == "development":
