@@ -1,20 +1,11 @@
-import { useEffect, useState } from "react"
-
 import { getUserLikesService } from "@services/user/getUserLikes";
-import { PostData } from "types/data/postData"
+import { useQuery } from "@tanstack/react-query";
 
-export default function useGetUserLikes(userId: string): { likes: PostData[] | undefined, error: string | undefined } {
-    const [likes, setLikes] = useState<PostData[]>();
-    const [error, setError] = useState<string>();
+export default function useGetUserLikes(userId: string) {
+    const { isLoading, data: likes, error } = useQuery({
+        queryKey: ["likes", userId],
+        queryFn: () => getUserLikesService(userId)
+    });
 
-    useEffect(() => {
-        getUserLikesService(userId).then(response => response.json())
-            .then(data => setLikes(data))
-            .catch(error => {
-                console.log(error);
-                setError("Could not fetch user's likes");
-            });
-    }, [userId])
-
-    return { likes, error };
+    return { isLoading, likes, error };
 }

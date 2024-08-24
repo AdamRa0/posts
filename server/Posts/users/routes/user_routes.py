@@ -4,7 +4,6 @@ from ...app_exception import AppException
 from ..controllers.get_user_likes import get_user_approvals
 
 from ..controllers.account_creation_and_use.get_user import (
-    get_user_by_handle,
     get_user_by_id,
     get_all_registered_users,
 )
@@ -73,7 +72,6 @@ def get_user_profile():
             internal_message=f"Not Found: {str(e)}",
             status_code=404,
         )
-
 
 
 @user_routes.route("/change-password", methods=["PATCH"])
@@ -225,14 +223,20 @@ def users_subscribed_by_user():
 @user_routes.route("/<user_id>/likes")
 @jwt_required()
 def get_user_likes(user_id: str):
-    likes = get_user_approvals(user_id)
+    try:
+        likes = get_user_approvals(user_id)
 
-    return post_schemas.dump(likes), 200
+        return post_schemas.dump(likes), 200
+    except NoResultFound as e:
+        raise AppException(user_message="User not found", status_code=404)
 
 
 @user_routes.route("/<user_id>/reposts")
 @jwt_required()
 def get_user_reposts(user_id: str):
-    reposts = get_reposts_by_user(user_id)
+    try:
+        reposts = get_reposts_by_user(user_id)
 
-    return post_schemas.dump(reposts), 200
+        return post_schemas.dump(reposts), 200
+    except NoResultFound as e:
+        raise AppException(user_message="User not found", status_code=404)

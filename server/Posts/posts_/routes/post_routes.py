@@ -96,31 +96,52 @@ def get_single_post(post_id: str):
 
 @post_routes.route("/user-posts")
 def get_user_posts():
-    user_id = request.args.get("user-id")
-    page = int(request.args.get("page"))
+    try:
+        user_id = request.args.get("user-id")
+        page = int(request.args.get("page"))
 
-    user_posts = get_posts_and_reposts_by_user(user_id, page, user_id)
+        user_posts = get_posts_and_reposts_by_user(user_id, page, user_id)
 
-    return posts_schema.dump(user_posts), 200
+        return posts_schema.dump(user_posts), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="Posts not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/user-replies")
 def get_user_replies():
-    user_id = request.args.get("user-id")
+    try:
+        user_id = request.args.get("user-id")
 
-    replies = get_replies(user_id)
+        replies = get_replies(user_id)
 
-    return posts_schema.dump(replies), 200
+        return posts_schema.dump(replies), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="Replies not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/user-media")
 @jwt_required()
 def get_user_media():
-    user_id = request.args.get("user-id")
+    try:
+        user_id = request.args.get("user-id")
 
-    replies = get_media(user_id)
+        replies = get_media(user_id)
 
-    return posts_schema.dump(replies), 200
+        return posts_schema.dump(replies), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="Media not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/update_post", methods=["PATCH"])

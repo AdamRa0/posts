@@ -37,10 +37,22 @@ export default function UserPage(): React.JSX.Element {
   const [isSubscribedToUser, setIsSubscribedToUser] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
   const { userId } = useParams();
-  const { posts: userPosts, error } = useFetchUserPosts(userId!);
-  const { likes: userLikes, error: likesError } = useGetUserLikes(userId!);
-  const { replies, error: repliesError } = useFetchUserReplies(userId!);
-  const { postsWithMedia: media, error: mediaError } = useFetchUserMedia(userId!);
+  const { isLoading, userPosts, error } = useFetchUserPosts(userId!);
+  const {
+    isLoading: likesLoading,
+    likes,
+    error: likesError,
+  } = useGetUserLikes(userId!);
+  const {
+    isLoading: repliesLoading,
+    replies,
+    error: repliesError,
+  } = useFetchUserReplies(userId!);
+  const {
+    mediaLoading,
+    postsWithMedia: media,
+    mediaError,
+  } = useFetchUserMedia(userId!);
 
   useEffect(() => {
     if (user) {
@@ -232,12 +244,8 @@ export default function UserPage(): React.JSX.Element {
         </div>
         <div className={styles.pageContent}>
           {/* Posts Tab */}
-          {currentTab === TabStates.INPOSTS && !userPosts && error && (
-            <p>Could not fetch posts</p>
-          )}
-          {currentTab === TabStates.INPOSTS &&
-            !error &&
-            userPosts === undefined && <p>Loading...</p>}
+          {currentTab === TabStates.INPOSTS && error && <p>{error.message}</p>}
+          {currentTab === TabStates.INPOSTS && isLoading && <p>Loading...</p>}
           {currentTab === TabStates.INPOSTS && userPosts ? (
             userPosts.length === 0 ? (
               <p>User hasn&apos;t posted yet</p>
@@ -246,26 +254,26 @@ export default function UserPage(): React.JSX.Element {
             )
           ) : null}
           {/* Likes Tab */}
-          {currentTab === TabStates.INLIKES && !userLikes && likesError && (
-            <p>Could not fetch likes</p>
+          {currentTab === TabStates.INLIKES && likesError && (
+            <p>{likesError.message}</p>
           )}
-          {currentTab === TabStates.INLIKES &&
-            !likesError &&
-            userLikes === undefined && <p>Loading...</p>}
-          {currentTab === TabStates.INLIKES && userLikes ? (
-            userLikes.length === 0 ? (
+          {currentTab === TabStates.INLIKES && likesLoading && (
+            <p>Loading...</p>
+          )}
+          {currentTab === TabStates.INLIKES && likes ? (
+            likes.length === 0 ? (
               <p>User has no likes</p>
             ) : (
-              <ListComponent data={userLikes} typeOfData="post" />
+              <ListComponent data={likes} typeOfData="post" />
             )
           ) : null}
           {/* Replies Tab */}
-          {currentTab === TabStates.INREPLIES && !replies && repliesError && (
-            <p>Could not fetch likes</p>
+          {currentTab === TabStates.INREPLIES && repliesError && (
+            <p>{repliesError.message}</p>
           )}
-          {currentTab === TabStates.INREPLIES &&
-            !repliesError &&
-            replies === undefined && <p>Loading...</p>}
+          {currentTab === TabStates.INREPLIES && repliesLoading && (
+            <p>Loading...</p>
+          )}
           {currentTab === TabStates.INREPLIES && replies ? (
             replies.length === 0 ? (
               <p>User has no likes</p>
@@ -274,12 +282,11 @@ export default function UserPage(): React.JSX.Element {
             )
           ) : null}
           {/* Media Tab */}
-          {currentTab === TabStates.INMEDIA && !media && mediaError && (
-            <p>Could not fetch likes</p>
+          {currentTab === TabStates.INMEDIA && mediaError && (
+            <p>{mediaError.message}</p>
           )}
           {currentTab === TabStates.INMEDIA &&
-            !repliesError &&
-            media === undefined && <p>Loading...</p>}
+            mediaLoading && <p>Loading...</p>}
           {currentTab === TabStates.INMEDIA && media ? (
             media.length === 0 ? (
               <p>User has no media</p>

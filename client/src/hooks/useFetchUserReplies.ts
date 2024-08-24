@@ -1,19 +1,11 @@
-import { PostData } from "types/data/postData"
-import { useEffect, useState } from "react"
 import fetchUserRepliesService from "@services/posts/fetchUserRepiesService";
+import { useQuery } from "@tanstack/react-query";
 
-export default function useFetchUserReplies(userId: string): { replies: PostData[] | undefined, error: string | undefined } {
-    const [replies, setReplies] = useState<PostData[]>();
-    const [error, setError] = useState<string>();
+export default function useFetchUserReplies(userId: string) {
+    const { isLoading, data: replies, error } = useQuery({
+        queryKey: ["replies", userId],
+        queryFn: () => fetchUserRepliesService(userId)
+    });
 
-    useEffect(() => {
-        fetchUserRepliesService(userId).then(response => response.json())
-            .then(data => setReplies(data))
-            .catch(error => {
-                setError(error.message);
-                console.log(error);
-            });
-    }, [userId])
-
-    return { replies, error };
+    return { isLoading, replies, error };
 }

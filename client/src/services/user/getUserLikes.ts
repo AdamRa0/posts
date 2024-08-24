@@ -1,6 +1,6 @@
 import { getCookie } from "@helpers/extractCookie";
 
-export async function getUserLikesService(userID: string): Promise<Response> {
+export async function getUserLikesService(userID: string) {
 
     const URL = `/api/v1/users/${userID}/likes`;
     const token = getCookie("csrf_access_token");
@@ -11,5 +11,12 @@ export async function getUserLikesService(userID: string): Promise<Response> {
         headers: headers
     })
 
-    return response;
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`${error.message}`);
+    }
+
+    const data = await response.json();
+
+    return data;
 }
