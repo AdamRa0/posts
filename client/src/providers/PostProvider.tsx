@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { PostContext } from "@contexts/postContext";
 import useFetchPost from "@hooks/useFetchPost";
@@ -11,38 +11,30 @@ import { UUID } from "crypto";
 export default function PostContextProvider({
   children,
 }: PostContextProviderProps) {
-  const [body, setBody] = useState<PostData | undefined>();
-  const [image, setImage] = useState<string>();
 
   const { postId } = useParams();
-  const { post, postImage } = useFetchPost(postId!);
-
-  useEffect(() => {
-    setBody(post);
-    setImage(postImage);
-  }, [post, postImage]);
+  const { post, isLoading } = useFetchPost(postId!);
 
   const commentsById = useMemo(() => {
     const comments = {};
-    body?.children?.forEach((comment) => {
+    post?.children?.forEach((comment) => {
       comments[comment?.parent_id] ||= [];
       comments[comment?.parent_id].push(comment);
     });
     return comments;
-  }, [body?.children]);
+  }, [post]);
 
   function getReplies(id: UUID): PostData[] {
     return commentsById[id] as PostData[];
   }
 
-  if (body === undefined) return <p>Loading...</p>;
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
       <PostContext.Provider
         value={{
-          post: body!,
-          postImage: image!,
+          post,
           replies: getReplies,
           updatePost: useUpdatePost,
           deletePost: useDeletePost,

@@ -25,6 +25,7 @@ from ...follow.controllers.get_sub_subees import get_subscribers
 from flask import Blueprint, jsonify, request, current_app
 from flask_pydantic import validate
 from flask_jwt_extended import jwt_required, current_user
+from sqlalchemy.exc import NoResultFound
 from werkzeug.exceptions import NotFound
 
 
@@ -75,15 +76,22 @@ def create_new_post():
 
 @post_routes.route("/<post_id>")
 def get_single_post(post_id: str):
-    post = get_post(post_id)
+    try:
+        post = get_post(post_id)
 
-    author_subscribers = get_subscribers(post.author_id)
-    author = post.author
+        author_subscribers = get_subscribers(post.author_id)
+        author = post.author
 
-    if author.is_private and current_user not in author_subscribers:
-        return jsonify({"message": "User limits who can view their posts."}), 403
+        if author.is_private and current_user not in author_subscribers:
+            return jsonify({"message": "User limits who can view their posts."}), 403
 
-    return post_schema.dump(post), 200
+        return post_schema.dump(post), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="Post not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/user-posts")

@@ -16,8 +16,6 @@ export default function AuthorDetailsComponent({
 }: authorDetailsComponentProps): React.JSX.Element {
   const { isLoading, author, error } = useFetchPostAuthorDetails(authorID);
 
-  console.log(author);
-
   if (error) {
     toast.error(`${error.message}`);
   }

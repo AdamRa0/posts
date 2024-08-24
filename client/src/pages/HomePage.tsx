@@ -9,6 +9,8 @@ export default function HomePage(): React.JSX.Element {
 
   const { isLoading, posts, error } = useFetchPosts(page);
 
+  const parentPosts = posts?.filter((post) => post.parent_id === null) || [];
+
   if (error)
     return (
       <div className={styles.loaderContainer}>
@@ -27,7 +29,7 @@ export default function HomePage(): React.JSX.Element {
           <p>No posts</p>
         </div>
       ) : (
-        <ListComponent data={posts} typeOfData={"post"} />
+        <ListComponent data={parentPosts} typeOfData={"post"} />
       )}
     </>
   );
