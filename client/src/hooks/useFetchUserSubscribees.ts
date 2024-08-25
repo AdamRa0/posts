@@ -4,8 +4,8 @@ import { UUID } from "crypto";
 
 export default function useFetchUserSubscribees(userId: string | UUID) {
     const { data: subscribees, error: subscribeesError } = useQuery({
-        queryKey: ["subscribees", userId],
-        queryFn: () => fetchSubscribeesService(userId)
+        queryKey: ["user-subscribees", userId],
+        queryFn: () => fetchSubscribeesService(userId),
     });
 
     return { subscribees, subscribeesError };

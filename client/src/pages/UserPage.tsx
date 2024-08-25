@@ -24,6 +24,7 @@ import { authContextProp } from "types/props/AuthContextProps";
 import { User } from "types/data/userData";
 import useFetchUserSubscribers from "@/hooks/useFetchUserSubscribers";
 import useFetchUserSubscribees from "@/hooks/useFetchUserSubscribees";
+import useGetUser from "@/hooks/useGetUser ";
 
 enum TabStates {
   INPOSTS,
@@ -34,7 +35,6 @@ enum TabStates {
 
 export default function UserPage(): React.JSX.Element {
   const [currentTab, setCurrentTab] = useState<TabStates>(TabStates.INPOSTS);
-  const [appUser, setAppUser] = useState<User | undefined>();
   const { user } = useContext<authContextProp>(AuthContext);
 
   const { userId } = useParams();
@@ -56,63 +56,23 @@ export default function UserPage(): React.JSX.Element {
     mediaError,
   } = useFetchUserMedia(userId!);
 
+  const { appUser, appUserLoading } = useGetUser(userId!)
+
   const { subscribers, subscribersError } = useFetchUserSubscribers(userId!);
 
   const { subscribees, subscribeesError } = useFetchUserSubscribees(userId!);
 
-  if (subscribersError) toast.error(subscribersError.message);
+  // if (subscribersError) toast.error(subscribersError.message);
 
-  if (subscribeesError) toast.error(subscribeesError.message);
+  // if (subscribeesError) toast.error(subscribeesError.message);
 
-  const isSubscribedToUser = subscribees.find((subscribee) => subscribee.id === userId);
+  // const isSubscribedToUser = subscribees.find((subscribee) => subscribee.id === userId);
 
-  useEffect(() => {
-    if (user) {
-      if (user.id === userId) {
-        setAppUser(JSON.parse(JSON.stringify(user)));
-      } else {
-        getUserService(undefined, false, userId! as UUID)
-          .then((response) => response.json())
-          .then((data) => {
-            setAppUser({
-              id: data.id,
-              emailAddress: data.email_address,
-              username: data.username,
-              handle: data.handle,
-              bio: data.bio,
-              dateCreated: data.date_created,
-              profileImage: data.profile_image,
-              bannerImage: data.banner_image,
-              isActive: data.is_active,
-              isPrivate: data.is_private,
-            });
-          });
-      }
-    } else {
-      getUserService(undefined, false, userId! as UUID)
-        .then((response) => response.json())
-        .then((data) => {
-          setAppUser({
-            id: data.id,
-            emailAddress: data.email_address,
-            username: data.username,
-            handle: data.handle,
-            bio: data.bio,
-            dateCreated: data.date_created,
-            profileImage: data.profile_image,
-            bannerImage: data.banner_image,
-            isActive: data.is_active,
-            isPrivate: data.is_private,
-          });
-        });
-    }
-  }, [user, userId]);
-
-  function handleSubscribe() {
-    isSubscribedToUser
-      ? unsubscribeToUserService(userId!)
-      : subscribeToUserService(userId!);
-  }
+  // function handleSubscribe() {
+  //   isSubscribedToUser
+  //     ? unsubscribeToUserService(userId!)
+  //     : subscribeToUserService(userId!);
+  // }
 
   return (
     <>
@@ -120,28 +80,28 @@ export default function UserPage(): React.JSX.Element {
         <div className={styles.userPageBanner}>
           <div className={styles.userImages}>
             <div className={styles.userBannerImage}>
-              {appUser === undefined ? (
+              {appUserLoading ? (
                 <p>Loading...</p>
               ) : (
                 <BannerComponent
                   imagePath={
-                    appUser.bannerImage !== "default_banner_image.jpg"
-                      ? `${userId}_${appUser.bannerImage}`
-                      : appUser.bannerImage
+                    appUser.banner_image !== "default_banner_image.jpg"
+                      ? `${userId}_${appUser.banner_image}`
+                      : appUser.banner_image
                   }
                   altText="user banner"
                 />
               )}
             </div>
             <div className={styles.userAvatar}>
-              {appUser === undefined ? (
+              {appUserLoading ? (
                 <p>Loading...</p>
               ) : (
                 <AvatarComponent
                   imagePath={
-                    appUser.profileImage !== "default_profile_image.jpg"
-                      ? `${userId}_${appUser.profileImage}`
-                      : appUser.profileImage
+                    appUser.profile_image !== "default_profile_image.jpg"
+                      ? `${userId}_${appUser.profile_image}`
+                      : appUser.profile_image
                   }
                   altText="user avatar"
                 />
@@ -154,29 +114,30 @@ export default function UserPage(): React.JSX.Element {
           </div>
           <div className={styles.userOtherInfo}>
             {user && user.id !== userId && (
-              <ButtonComponent variant="followButton" onClick={handleSubscribe}>
-                {!isSubscribedToUser ? "Subscribe" : "Unsubscribe"}
-              </ButtonComponent>
+              // <ButtonComponent variant="followButton" onClick={handleSubscribe}>
+              //   {!isSubscribedToUser ? "Subscribe" : "Unsubscribe"}
+              // </ButtonComponent>
+              <></>
             )}
-            <p>{appUser?.bio}</p>
+            <p>{appUser.bio}</p>
             <div className={styles.userJoined}>
               <MdCalendarMonth />{" "}
               {appUser &&
-                new Date(appUser.dateCreated).toLocaleString("en-GB", {
+                new Date(appUser.date_created).toLocaleString("en-GB", {
                   month: "long",
                 })}{" "}
-              {appUser && new Date(appUser.dateCreated).getFullYear()}
+              {appUser && new Date(appUser.date_created).getFullYear()}
             </div>
             <div className={styles.userCommunityCount}>
               <p>
                 <span className={styles.count}>
-                  {formatNumber(subscribees.length)}
+                  {formatNumber(0)}
                 </span>{" "}
                 <span className={styles.countText}>Subscribed-To</span>
               </p>{" "}
               <p>
                 <span className={styles.count}>
-                  {formatNumber(subscribers.length)}
+                  {formatNumber(0)}
                 </span>{" "}
                 <span className={styles.countText}>
                   {subscribers === 1 ? "Subscriber" : "Subscribers"}{" "}

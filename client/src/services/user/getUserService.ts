@@ -1,6 +1,6 @@
 import { UUID } from "crypto";
 
-export async function getUserService(token?: string, isUser: boolean = true, userID?: UUID): Promise<Response> {
+export async function getUserService(token?: string, isUser: boolean = true, userID?: string | UUID) {
 
     const URL = isUser ? "/api/v1/users/profile" : `/api/v1/users/profile?user-id=${userID}`;
 
