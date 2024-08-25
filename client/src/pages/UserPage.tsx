@@ -1,5 +1,4 @@
-import { UUID } from "crypto";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -15,16 +14,14 @@ import useFetchUserPosts from "@hooks/useFetchUserPosts";
 import useGetUserLikes from "@hooks/useGetUserLikes";
 import useFetchUserMedia from "@hooks/useFetchUserMedia";
 import useFetchUserReplies from "@hooks/useFetchUserReplies";
+import useFetchUserSubscribers from "@hooks/useFetchUserSubscribers";
+import useFetchUserSubscribees from "@hooks/useFetchUserSubscribees";
+import useGetUser from "@hooks/useGetUser ";
 import styles from "@pages/userpage.module.css";
-import { getUserService } from "@services/user/getUserService";
-import subscribeToUserService from "@services/user/subscribeToUserService";
 import unsubscribeToUserService from "@services/user/unsubscribeToUserService";
+import subscribeToUserService from "@services/user/subscribeToUserService";
 
 import { authContextProp } from "types/props/AuthContextProps";
-import { User } from "types/data/userData";
-import useFetchUserSubscribers from "@/hooks/useFetchUserSubscribers";
-import useFetchUserSubscribees from "@/hooks/useFetchUserSubscribees";
-import useGetUser from "@/hooks/useGetUser ";
 
 enum TabStates {
   INPOSTS,
@@ -56,23 +53,23 @@ export default function UserPage(): React.JSX.Element {
     mediaError,
   } = useFetchUserMedia(userId!);
 
-  const { appUser, appUserLoading } = useGetUser(userId!)
+  const { appUser, appUserLoading } = useGetUser(userId!);
 
-  const { subscribers, subscribersError } = useFetchUserSubscribers(userId!);
+  const { subscribersLoading, subscribers, subscribersError } = useFetchUserSubscribers(userId!);
 
-  const { subscribees, subscribeesError } = useFetchUserSubscribees(userId!);
+  const { subscribeesLoading, subscribees, subscribeesError } = useFetchUserSubscribees(userId!);
 
-  // if (subscribersError) toast.error(subscribersError.message);
+  if (subscribersError) toast.error(subscribersError.message);
 
-  // if (subscribeesError) toast.error(subscribeesError.message);
+  if (subscribeesError) toast.error(subscribeesError.message);
 
-  // const isSubscribedToUser = subscribees.find((subscribee) => subscribee.id === userId);
+  const isSubscribedToUser = subscribees.find((subscribee) => subscribee.id === userId);
 
-  // function handleSubscribe() {
-  //   isSubscribedToUser
-  //     ? unsubscribeToUserService(userId!)
-  //     : subscribeToUserService(userId!);
-  // }
+  function handleSubscribe() {
+    isSubscribedToUser
+      ? unsubscribeToUserService(userId!)
+      : subscribeToUserService(userId!);
+  }
 
   return (
     <>
@@ -114,12 +111,11 @@ export default function UserPage(): React.JSX.Element {
           </div>
           <div className={styles.userOtherInfo}>
             {user && user.id !== userId && (
-              // <ButtonComponent variant="followButton" onClick={handleSubscribe}>
-              //   {!isSubscribedToUser ? "Subscribe" : "Unsubscribe"}
-              // </ButtonComponent>
-              <></>
+              <ButtonComponent variant="followButton" onClick={handleSubscribe}>
+                {!isSubscribedToUser ? "Subscribe" : "Unsubscribe"}
+              </ButtonComponent>
             )}
-            <p>{appUser.bio}</p>
+            <p>{appUserLoading ? "" : appUser.bio}</p>
             <div className={styles.userJoined}>
               <MdCalendarMonth />{" "}
               {appUser &&
@@ -131,13 +127,13 @@ export default function UserPage(): React.JSX.Element {
             <div className={styles.userCommunityCount}>
               <p>
                 <span className={styles.count}>
-                  {formatNumber(0)}
+                  {subscribeesLoading ? 0 : formatNumber(subscribees.length)}
                 </span>{" "}
                 <span className={styles.countText}>Subscribed-To</span>
               </p>{" "}
               <p>
                 <span className={styles.count}>
-                  {formatNumber(0)}
+                  {subscribersLoading ? 0 : formatNumber(subscribers.length)}
                 </span>{" "}
                 <span className={styles.countText}>
                   {subscribers === 1 ? "Subscriber" : "Subscribers"}{" "}

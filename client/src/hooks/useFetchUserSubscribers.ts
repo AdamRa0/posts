@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { UUID } from "crypto";
 
 export default function useFetchUserSubscribers(userId: string | UUID) {
-    const { data: subscribers, error: subscribersError } = useQuery({
-        queryKey: ["user-subscribers", userId],
+    const { isLoading: subscribersLoading, data: subscribers, error: subscribersError } = useQuery({
+        queryKey: ["subscribers", userId],
         queryFn: () => fetchSubscribersService(userId),
     });
 
-    return { subscribers, subscribersError };
+    return { subscribersLoading, subscribers, subscribersError };
 }
