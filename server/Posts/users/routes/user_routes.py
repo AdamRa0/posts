@@ -1,9 +1,9 @@
 from collections import defaultdict
 
+from ...app_exception import AppException
 from ..controllers.get_user_likes import get_user_approvals
 
 from ..controllers.account_creation_and_use.get_user import (
-    get_user_by_handle,
     get_user_by_id,
     get_all_registered_users,
 )
@@ -41,6 +41,7 @@ from flask import (
     request,
 )
 from flask_jwt_extended import jwt_required, current_user, get_jwt_identity
+from sqlalchemy.exc import NoResultFound
 
 
 user_routes = Blueprint("user_routes", __name__, url_prefix="/api/v1/users")
@@ -50,46 +51,27 @@ users_schemas = UserSchema(many=True)
 post_schemas = PostSchema(many=True)
 
 
-@user_routes.route("/user-handle")
-def get_user_profile_by_handle():
-    user_handle = request.args.get("handle")
-    user = get_user_by_handle(user_handle)
-
-    user_subscribers = get_subscribers(user.id)
-
-    if user is None:
-        return jsonify({"message": "User not found", "status": "fail"}), 404
-
-    if user.is_active is False:
-        return jsonify({"message": "User no longer active"}), 403
-
-    if user.is_private and current_user not in user_subscribers:
-        return (
-            jsonify(
-                {
-                    "message": "Account and its content are available only to approved subscribers"
-                }
-            ),
-            403,
-        )
-
-    return user_schema.dump(user), 200
-
-
 # Route that handles fetching user profile
 # Route also handles fetching post author details
 @user_routes.route("/profile")
 @jwt_required(optional=True)
 def get_user_profile():
-    logged_in_user = get_jwt_identity()
-    queried_user = request.args.get("user-id")
+    try:
+        logged_in_user = get_jwt_identity()
+        queried_user = request.args.get("user-id")
 
-    if logged_in_user and queried_user is None:
-        return user_schema.dump(current_user), 200
+        if logged_in_user and queried_user is None:
+            return user_schema.dump(current_user), 200
 
-    user = get_user_by_id(queried_user)
+        user = get_user_by_id(queried_user)
 
-    return user_schema.dump(user), 200
+        return user_schema.dump(user), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="User not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @user_routes.route("/change-password", methods=["PATCH"])
@@ -217,38 +199,58 @@ def vet_user():
 @user_routes.route("/subscribers")
 @jwt_required(optional=True)
 def subscribers_to_user():
-    query_params = request.args
+    try:
+        query_params = request.args
 
-    user_id = query_params.get("user-id") if query_params else current_user.id
+        user_id = query_params.get("user-id") if query_params else current_user.id
 
-    subscribers = get_subscribers(user_id)
+        subscribers = get_subscribers(user_id)
 
-    return users_schemas.dump(subscribers), 200
+        return users_schemas.dump(subscribers), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="User not found",
+            internal_message=f"NoResutFound: {str(e)}",
+            status_code=404
+        )
 
 
 @user_routes.route("/subscribees")
 @jwt_required(optional=True)
 def users_subscribed_by_user():
-    query_params = request.args
+    try:
+        query_params = request.args
 
-    user_id = query_params.get("user-id") if query_params else current_user.id
+        user_id = query_params.get("user-id") if query_params else current_user.id
 
-    subscribees = get_subscribees(user_id)
+        subscribees = get_subscribees(user_id)
 
-    return users_schemas.dump(subscribees), 200
+        return users_schemas.dump(subscribees), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="User not found",
+            internal_message=f"NoResutFound: {str(e)}",
+            status_code=404
+        )
 
 
 @user_routes.route("/<user_id>/likes")
 @jwt_required()
 def get_user_likes(user_id: str):
-    likes = get_user_approvals(user_id)
+    try:
+        likes = get_user_approvals(user_id)
 
-    return post_schemas.dump(likes), 200
+        return post_schemas.dump(likes), 200
+    except NoResultFound as e:
+        raise AppException(user_message="User not found", status_code=404)
 
 
 @user_routes.route("/<user_id>/reposts")
 @jwt_required()
 def get_user_reposts(user_id: str):
-    reposts = get_reposts_by_user(user_id)
+    try:
+        reposts = get_reposts_by_user(user_id)
 
-    return post_schemas.dump(reposts), 200
+        return post_schemas.dump(reposts), 200
+    except NoResultFound as e:
+        raise AppException(user_message="User not found", status_code=404)

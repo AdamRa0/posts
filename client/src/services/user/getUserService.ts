@@ -1,6 +1,6 @@
 import { UUID } from "crypto";
 
-export async function getUserService(token?: string, isUser: boolean = true, userID?: UUID): Promise<Response> {
+export async function getUserService(token?: string, isUser: boolean = true, userID?: string | UUID) {
 
     const URL = isUser ? "/api/v1/users/profile" : `/api/v1/users/profile?user-id=${userID}`;
 
@@ -10,5 +10,12 @@ export async function getUserService(token?: string, isUser: boolean = true, use
         headers: headers
     })
 
-    return response;
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`${error.message}`);
+    }
+
+    const data = await response.json();
+
+    return data;
 }

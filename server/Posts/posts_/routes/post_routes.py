@@ -1,3 +1,4 @@
+from ...app_exception import AppException
 from ..controllers.create_post import create_post
 from ..controllers.delete_post import delete_post
 from ..controllers.get_post import get_post, get_post_by_author_id
@@ -5,7 +6,7 @@ from ..controllers.get_posts import (
     get_posts,
     get_posts_and_reposts_by_user,
     get_replies,
-    get_media
+    get_media,
 )
 from ..controllers.like_dislike_post import like_post, dislike_post
 
@@ -16,17 +17,16 @@ from ..models.post_schema import PostSchema
 from ..models.post_creation_model import PostCreationModel
 from ..models.post_update_model import PostUpdateModel
 
-from ...utils.show_true_path import show_true_path
-from ...utils.streams.format_sse import format_sse
 from ...utils.upload_file import upload_file
 
 from ...follow.controllers.get_sub_subees import get_subscribers
 
-from Posts.announcer import announcer
 
 from flask import Blueprint, jsonify, request, current_app
 from flask_pydantic import validate
 from flask_jwt_extended import jwt_required, current_user
+from sqlalchemy.exc import NoResultFound
+from werkzeug.exceptions import NotFound
 
 
 post_routes = Blueprint("post_routes", __name__, url_prefix="/api/v1/posts")
@@ -40,12 +40,19 @@ def get_all_posts():
     First route a new visitor will see.
     Will contain all posts sorted by popularity (ratio of approvals to disapprovals)
     """
-    page_number = int(request.args.get("page"))
+    try:
+        page_number = int(request.args.get("page"))
 
-    posts_schema = PostSchema(many=True)
-    posts = get_posts(page=page_number)
+        posts_schema = PostSchema(many=True)
+        posts = get_posts(page=page_number)
 
-    return posts_schema.dump(posts), 200
+        return posts_schema.dump(posts), 200
+    except NotFound as e:
+        raise AppException(
+            user_message="Invalid URL",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/create_post", methods=["POST"])
@@ -64,53 +71,77 @@ def create_new_post():
 
     author_posts = get_post_by_author_id(current_user.id)
 
-    # TODO: Revist when you get SSE's working
-    # msg = format_sse(data=posts_schema.dump(author_posts)[0], event="new-post")
-    # announcer.announce(msg)
-
     return posts_schema.dump(author_posts)[0], 201
 
 
 @post_routes.route("/<post_id>")
 def get_single_post(post_id: str):
-    post = get_post(post_id)
+    try:
+        post = get_post(post_id)
 
-    author_subscribers = get_subscribers(post.author_id)
-    author = post.author
+        author_subscribers = get_subscribers(post.author_id)
+        author = post.author
 
-    if author.is_private and current_user not in author_subscribers:
-        return jsonify({"message": "User limits who can view their posts."}), 403
+        if author.is_private and current_user not in author_subscribers:
+            return jsonify({"message": "User limits who can view their posts."}), 403
 
-    return post_schema.dump(post), 200
+        return post_schema.dump(post), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="Post not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/user-posts")
 def get_user_posts():
-    user_id = request.args.get("user-id")
-    page = int(request.args.get("page"))
+    try:
+        user_id = request.args.get("user-id")
+        page = int(request.args.get("page"))
 
-    user_posts = get_posts_and_reposts_by_user(user_id, page, user_id)
+        user_posts = get_posts_and_reposts_by_user(user_id, page, user_id)
 
-    return posts_schema.dump(user_posts), 200
+        return posts_schema.dump(user_posts), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="Posts not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/user-replies")
 def get_user_replies():
-    user_id = request.args.get("user-id")
+    try:
+        user_id = request.args.get("user-id")
 
-    replies = get_replies(user_id)
+        replies = get_replies(user_id)
 
-    return posts_schema.dump(replies), 200
+        return posts_schema.dump(replies), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="Replies not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/user-media")
 @jwt_required()
 def get_user_media():
-    user_id = request.args.get("user-id")
+    try:
+        user_id = request.args.get("user-id")
 
-    replies = get_media(user_id)
+        replies = get_media(user_id)
 
-    return posts_schema.dump(replies), 200
+        return posts_schema.dump(replies), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="Media not found",
+            internal_message=f"Not Found: {str(e)}",
+            status_code=404,
+        )
 
 
 @post_routes.route("/update_post", methods=["PATCH"])

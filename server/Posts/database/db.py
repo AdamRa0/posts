@@ -1,16 +1,25 @@
 from datetime import timedelta
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
+
 db = SQLAlchemy()
 ma = Marshmallow()
 jwt = JWTManager()
+
+
+@jwt.unauthorized_loader
+def custom_missing_cookie_error(err_msg):
+    return jsonify({
+        "error": "Authorization Required",
+        "message": "You must be logged in to access this resource."
+    }), 401
 
 
 def init_app(app: Flask):
@@ -18,6 +27,8 @@ def init_app(app: Flask):
     Initalizes all app dependecies and creates tables if not exits.
     Sets all config variables
     """
+
+    app.config['TRAP_HTTP_EXCEPTIONS']=True
 
     ENVIRONMENT = os.environ.get("ENVIRONMENT")
 

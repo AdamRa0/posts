@@ -10,11 +10,9 @@ def get_posts(page: int):
     """
     Returns all posts created by registered users
     """
-    # return db.session.execute(db.select(PostModel)).scalars()
     return db.paginate(
         db.select(PostModel).order_by(desc(PostModel.time_created)), page=page
     )
-    # return db.paginate(db.select(PostModel), page=page)
 
 
 def get_replies(author_id: str):

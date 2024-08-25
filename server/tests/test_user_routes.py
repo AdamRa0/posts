@@ -1,23 +1,6 @@
 from werkzeug.datastructures import FileStorage
 
 
-def test_get_user_profile_by_handle(create_new_user_1, test_client):
-    """
-    GIVEN a registered user
-    WHEN visiting said user's profile via their handle
-    THEN the user's data should be available
-    """
-    user_handle = create_new_user_1.handle
-
-    response = test_client.get(
-        "/api/v1/users/user-handle?handle={}".format(user_handle)
-    )
-
-    assert response.status_code == 200
-    assert response.json["username"] == create_new_user_1.username
-    assert response.json["handle"] == create_new_user_1.handle
-
-
 def test_get_user_profile_by_authorized_user(create_new_user_1, test_client):
     """
     GIVEN a registered user
@@ -49,17 +32,24 @@ def test_get_user_profile_by_unauthorized_user(create_new_user_1, test_client):
     WHEN user who isn't registered tries to visit profile
     THEN return unauthorized response
     """
-    user_handle = create_new_user_1.handle
-
-    response = test_client.get(
-        "/api/v1/users/user-handle?handle={}".format(user_handle)
+    data = dict(
+        email_address=create_new_user_1.email_address,
+        password=create_new_user_1.password,
     )
+
+    test_client.post("/api/v1/auth/signin", data=data)
+
+    authorizer = test_client.get_cookie("csrf_access_token")
+
+    header = {"X-CSRF-TOKEN": f"{authorizer.value}"}
+
+    response = test_client.get("/api/v1/users/profile", headers=header)
+
+    user_id = response.json["id"]
 
     test_client.delete_cookie("access_token_cookie")
     test_client.delete_cookie("csrf_access_token")
     test_client.environ_base.clear()
-
-    user_id = response.json["id"]
 
     response = test_client.get("/api/v1/users/profile?user-id={}".format(user_id))
 

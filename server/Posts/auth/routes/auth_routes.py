@@ -1,3 +1,4 @@
+from ...app_exception import AppException
 from ...database.db import jwt
 from ..models.user_signup import UserSignUp
 from ..models.user_signin import UserSignIn
@@ -10,7 +11,6 @@ from ...users.controllers.account_management.deactivate_reactivate_user import (
     account_activation_manager,
 )
 
-
 from flask import Blueprint, jsonify, Response
 from flask_pydantic import validate
 from flask_jwt_extended import (
@@ -18,6 +18,7 @@ from flask_jwt_extended import (
     set_access_cookies,
     unset_access_cookies,
 )
+from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 from werkzeug.security import check_password_hash
 
 
@@ -47,51 +48,52 @@ def user_lookup_callback(_jwt_header, jwt_data):
 @auth_routes.route("/signup", methods=["POST"])
 @validate()
 def signup_user(form: UserSignUp):
-    newly_created_user = create_new_user(form)
 
-    if newly_created_user is None:
-        return (
-            jsonify(
-                {"message": "Failed to create new user. Try again", "status": "fail"}
-            ),
-            400,
+    try:
+        newly_created_user = create_new_user(form)
+        access_token: str = create_access_token(identity=newly_created_user.id)
+
+        response: Response = jsonify({"status": "success"})
+
+        set_access_cookies(response, access_token, max_age=COOKIE_MAX_AGE)
+
+        return response, 201
+    except SQLAlchemyError as e:
+        raise AppException(
+            user_message="Failed to create new user. Try again",
+            internal_message=f"SQLAlchemry Error: {str(e)}",
+            status_code=500,
         )
-
-    access_token: str = create_access_token(identity=newly_created_user.id)
-
-    response: Response = jsonify({"status": "success"})
-
-    set_access_cookies(response, access_token, max_age=COOKIE_MAX_AGE)
-
-    return response, 201
 
 
 @auth_routes.route("/signin", methods=["POST"])
 @validate()
 def signin_user(form: UserSignIn):
-    user = get_user_by_email(form.email_address)
+    try:
+        user = get_user_by_email(form.email_address)
+        if user and not check_password_hash(user.password, form.password):
+            raise AppException(
+                user_message="Your email or password might be wrong. Please try again.",
+                internal_message="Unsuccessful login attempt: wrong password",
+                status_code=401,
+            )
 
-    if user is None:
-        return jsonify({"message": "No such user exists", "status": "fail"}), 404
+        if user.is_active is False:
+            account_activation_manager(user)
 
-    if user and check_password_hash(user.password, form.password) != True:
-        return (
-            jsonify(
-                {"message": "Your email or password might be wrong.", "status": "fail"}
-            ),
-            401,
+        access_token: str = create_access_token(identity=user.id)
+
+        response: Response = jsonify({"status": "success"})
+
+        set_access_cookies(response, access_token, max_age=COOKIE_MAX_AGE)
+
+        return response, 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="User not found. Try again",
+            internal_message=f"SQLAlchemry Error: {str(e)}",
+            status_code=404,
         )
-
-    if user.is_active is False:
-        account_activation_manager(user)
-
-    access_token: str = create_access_token(identity=user.id)
-
-    response: Response = jsonify({"status": "success"})
-
-    set_access_cookies(response, access_token, max_age=COOKIE_MAX_AGE)
-
-    return response, 200
 
 
 @auth_routes.route("/signout")

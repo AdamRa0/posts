@@ -10,7 +10,7 @@ export default function BannerComponent({
   imagePath,
   altText,
 }: BannerComponentProps): React.JSX.Element {
-  const banner = useFetchImage(imagePath);
+  const { image } = useFetchImage(imagePath);
 
-  return <img src={banner} alt={altText} />;
+  return <img src={ image } alt={altText} />;
 }

@@ -1,30 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./homepage.module.css";
 import ListComponent from "@components/ui/ListComponent";
-import { PostData } from "types/data/postData";
 import useFetchPosts from "@hooks/useFetchPosts";
 
 export default function HomePage(): React.JSX.Element {
-  const posts: PostData[] | undefined = useFetchPosts();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [page, setPage] = useState<number>(1);
 
-  useEffect(() => {
-    const eventSrc: EventSource = new EventSource("/listen");
+  const { isLoading, posts, error } = useFetchPosts(page);
 
-    eventSrc.addEventListener("new-post", (event) => {
-      console.log(JSON.stringify(event.data));
-    });
+  const parentPosts = posts?.filter((post) => post.parent_id === null) || [];
 
-    eventSrc.onerror = (err) => {
-      console.log("Event Source failed: " + err);
-      eventSrc.close();
-    };
-
-    return () => eventSrc.close();
-  }, []);
+  if (error)
+    return (
+      <div className={styles.loaderContainer}>
+        <p>Could not fetch posts</p>
+      </div>
+    );
 
   return (
     <>
-      {posts === undefined ? (
+      {isLoading ? (
         <div className={styles.loaderContainer}>
           <p>Loading...</p>
         </div>
@@ -33,7 +29,7 @@ export default function HomePage(): React.JSX.Element {
           <p>No posts</p>
         </div>
       ) : (
-        <ListComponent data={posts} typeOfData={"post"} />
+        <ListComponent data={parentPosts} typeOfData={"post"} />
       )}
     </>
   );

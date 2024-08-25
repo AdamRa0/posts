@@ -11,5 +11,5 @@ def get_user_approvals(user_id: str):
     Returns a users likes
     """
 
-    user = get_user_by_id(user_id);
+    user = get_user_by_id(user_id)
     return user.likes

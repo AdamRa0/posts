@@ -1,18 +1,15 @@
 import getImageService from "@services/media/getImageService";
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function useFetchImage(imagePath: string) {
-    const [image, setImage] = useState<string>("");
+    const imageUri = imagePath;
 
-    useEffect(() => {
-        getImageService(imagePath)
-            .then((response) => response.blob())
-            .then((imageBlob) => {
-                const imageURL = URL.createObjectURL(imageBlob);
-                setImage(imageURL);
-            });
-    }, [imagePath]);
+    const { isLoading, data: imageBlob } = useQuery({
+        queryKey: ["media", imageUri],
+        queryFn: () => getImageService(imageUri)
+    })
 
+    const image = imageBlob ? URL.createObjectURL(imageBlob) : undefined;
 
-    return image;
+    return { isLoading, image };
 }

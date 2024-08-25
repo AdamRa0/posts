@@ -1,15 +1,15 @@
 import os
+import logging
 from datetime import datetime, timezone, timedelta
-from queue import Queue
 
 from .users.routes.user_routes import user_routes
 from .posts_.routes.post_routes import post_routes
 from .media.routes.media_routes import media_routes
 from .auth.routes.auth_routes import auth_routes
 from .database.db import create_tables, init_app
-from .announcer import announcer
+from .app_exception import AppException
 
-from flask import Flask, Response
+from flask import Flask, jsonify
 from flask_jwt_extended import (
     get_jwt,
     get_jwt_identity,
@@ -19,6 +19,21 @@ from flask_jwt_extended import (
 
 
 COOKIE_MAX_AGE: int = 172800
+
+logging.basicConfig(level=logging.ERROR)
+logger = logging.getLogger(__name__)
+
+
+def handle_app_exception(error: AppException):
+    print(error)
+    response: dict[str, str] = {
+        "error": "Error",
+        "message": error.user_message,
+    }
+
+    logger.error(f"Internal error: {error.internal_message}")
+
+    return jsonify(response), error.status_code
 
 
 def create_app():
@@ -47,6 +62,12 @@ def create_app():
     app.register_blueprint(auth_routes)
     app.register_blueprint(media_routes)
 
+    app.register_error_handler(
+        AppException,
+        handle_app_exception
+    )
+
+
     @app.after_request
     def refresh_expiring_tokens(response):
         """
@@ -63,15 +84,5 @@ def create_app():
             return response
         except (RuntimeError, KeyError):
             return response
-
-    @app.route("/listen", methods=["GET"])
-    def listen():
-        def stream():
-            messages: Queue = announcer.listen()
-            while True:
-                msg = messages.get()
-                yield msg
-
-        return Response(stream(), mimetype="text/event-stream")
 
     return app

@@ -12,7 +12,7 @@ export default function AvatarComponent({
   imagePath,
   altText,
 }: AvatarComponentProps): React.JSX.Element {
-  const avatar = useFetchImage(imagePath);
+  const { image } = useFetchImage(imagePath);
 
-  return <img className={styles.authorAvatar} src={avatar} alt={altText} />;
+  return <img className={styles.authorAvatar} src={image} alt={altText} />;
 }
