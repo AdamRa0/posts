@@ -2,6 +2,7 @@ import { UUID } from "crypto";
 import React, { useContext, useEffect, useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import AvatarComponent from "@components/ui/AvatarComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
@@ -21,6 +22,8 @@ import unsubscribeToUserService from "@services/user/unsubscribeToUserService";
 
 import { authContextProp } from "types/props/AuthContextProps";
 import { User } from "types/data/userData";
+import useFetchUserSubscribers from "@/hooks/useFetchUserSubscribers";
+import useFetchUserSubscribees from "@/hooks/useFetchUserSubscribees";
 
 enum TabStates {
   INPOSTS,
@@ -32,11 +35,10 @@ enum TabStates {
 export default function UserPage(): React.JSX.Element {
   const [currentTab, setCurrentTab] = useState<TabStates>(TabStates.INPOSTS);
   const [appUser, setAppUser] = useState<User | undefined>();
-  const [subscribers, setSubscribers] = useState<number>(0);
-  const [subscribees, setSubscribees] = useState<number>(0);
-  const [isSubscribedToUser, setIsSubscribedToUser] = useState<boolean>(false);
   const { user } = useContext<authContextProp>(AuthContext);
+
   const { userId } = useParams();
+
   const { isLoading, userPosts, error } = useFetchUserPosts(userId!);
   const {
     isLoading: likesLoading,
@@ -53,6 +55,16 @@ export default function UserPage(): React.JSX.Element {
     postsWithMedia: media,
     mediaError,
   } = useFetchUserMedia(userId!);
+
+  const { subscribers, subscribersError } = useFetchUserSubscribers(userId!);
+
+  const { subscribees, subscribeesError } = useFetchUserSubscribees(userId!);
+
+  if (subscribersError) toast.error(subscribersError.message);
+
+  if (subscribeesError) toast.error(subscribeesError.message);
+
+  const isSubscribedToUser = subscribees.find((subscribee) => subscribee.id === userId);
 
   useEffect(() => {
     if (user) {
@@ -76,29 +88,6 @@ export default function UserPage(): React.JSX.Element {
             });
           });
       }
-
-      fetch(
-        "/api/v1/users/subscribers?" +
-          new URLSearchParams({ "user-id": userId! })
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          const { id: authId } = JSON.parse(JSON.stringify(user));
-          const { id: subId } = data.find(
-            (sub: { id: User }) => sub.id === authId
-          );
-          setSubscribers(data.length);
-          if (authId === subId) setIsSubscribedToUser(true);
-        })
-        .catch((e) => console.log(e));
-
-      fetch(
-        "/api/v1/users/subscribees?" +
-          new URLSearchParams({ "user-id": userId! })
-      )
-        .then((response) => response.json())
-        .then((data) => setSubscribees(data.length))
-        .catch((e) => console.log(e));
     } else {
       getUserService(undefined, false, userId! as UUID)
         .then((response) => response.json())
@@ -181,13 +170,13 @@ export default function UserPage(): React.JSX.Element {
             <div className={styles.userCommunityCount}>
               <p>
                 <span className={styles.count}>
-                  {formatNumber(subscribees)}
+                  {formatNumber(subscribees.length)}
                 </span>{" "}
                 <span className={styles.countText}>Subscribed-To</span>
               </p>{" "}
               <p>
                 <span className={styles.count}>
-                  {formatNumber(subscribers)}
+                  {formatNumber(subscribers.length)}
                 </span>{" "}
                 <span className={styles.countText}>
                   {subscribers === 1 ? "Subscriber" : "Subscribers"}{" "}
@@ -285,8 +274,9 @@ export default function UserPage(): React.JSX.Element {
           {currentTab === TabStates.INMEDIA && mediaError && (
             <p>{mediaError.message}</p>
           )}
-          {currentTab === TabStates.INMEDIA &&
-            mediaLoading && <p>Loading...</p>}
+          {currentTab === TabStates.INMEDIA && mediaLoading && (
+            <p>Loading...</p>
+          )}
           {currentTab === TabStates.INMEDIA && media ? (
             media.length === 0 ? (
               <p>User has no media</p>

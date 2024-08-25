@@ -199,25 +199,39 @@ def vet_user():
 @user_routes.route("/subscribers")
 @jwt_required(optional=True)
 def subscribers_to_user():
-    query_params = request.args
+    try:
+        query_params = request.args
 
-    user_id = query_params.get("user-id") if query_params else current_user.id
+        user_id = query_params.get("user-id") if query_params else current_user.id
 
-    subscribers = get_subscribers(user_id)
+        subscribers = get_subscribers(user_id)
 
-    return users_schemas.dump(subscribers), 200
+        return users_schemas.dump(subscribers), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="User not found",
+            internal_message=f"NoResutFound: {str(e)}",
+            status_code=404
+        )
 
 
 @user_routes.route("/subscribees")
 @jwt_required(optional=True)
 def users_subscribed_by_user():
-    query_params = request.args
+    try:
+        query_params = request.args
 
-    user_id = query_params.get("user-id") if query_params else current_user.id
+        user_id = query_params.get("user-id") if query_params else current_user.id
 
-    subscribees = get_subscribees(user_id)
+        subscribees = get_subscribees(user_id)
 
-    return users_schemas.dump(subscribees), 200
+        return users_schemas.dump(subscribees), 200
+    except NoResultFound as e:
+        raise AppException(
+            user_message="User not found",
+            internal_message=f"NoResutFound: {str(e)}",
+            status_code=404
+        )
 
 
 @user_routes.route("/<user_id>/likes")
