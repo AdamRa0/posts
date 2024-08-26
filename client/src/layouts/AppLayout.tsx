@@ -1,20 +1,20 @@
 import styles from "./applayout.module.css";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { MdOutlineSettings, MdCreate } from "react-icons/md";
 
 import HeaderComponent from "@components/ui/HeaderComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import PostForm from "@components/feature/forms/PostForm";
-import { AuthContext } from "@contexts/authContext";
+import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
 import AuthPage from "@pages/AuthPage";
-import { authContextProp } from "types/props/AuthContextProps";
 
 export default function AppLayout(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const CREATE_POST_ROUTE: string = "/api/v1/posts/create_post";
 
-  const { user } = useContext<authContextProp>(AuthContext);
+  const { authenticatedUser } = useGetAuthenticatedUser();
+
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
@@ -31,7 +31,7 @@ export default function AppLayout(): React.JSX.Element {
             <MdOutlineSettings />
             Settings
           </NavLink>
-          {user && (
+          {authenticatedUser && (
             <ButtonComponent
               variant="createPostButton"
               onClick={handleModal}
@@ -41,8 +41,8 @@ export default function AppLayout(): React.JSX.Element {
             </ButtonComponent>
           )}
         </div>
-        {isModalOpen && !user ? <AuthPage closeModal={handleModal} /> : null}
-        {isModalOpen && user ? (
+        {isModalOpen && !authenticatedUser ? <AuthPage closeModal={handleModal} /> : null}
+        {isModalOpen && authenticatedUser ? (
           <>
             <PostForm
               handleFormModal={handleModal}

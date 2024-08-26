@@ -6,15 +6,17 @@ export async function signinService({ emailAddress, password }: AuthFormState): 
     form.append("email_address", emailAddress);
     form.append("password", password);
 
-    try {
-        const response: Response = await fetch("/api/v1/auth/signin", {
-            method: "POST",
-            body: form
-        });
+    const response: Response = await fetch("/api/v1/auth/signin", {
+        method: "POST",
+        body: form
+    });
 
-        return response.status;
-    } catch (e) {
-        console.log(e);
-        return 500;
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
     }
+
+    const data = await response.json();
+
+    return data;
 }

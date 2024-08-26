@@ -1,3 +1,3 @@
 export type authPageProps = {
-    closeModal: (event: React.MouseEvent<HTMLElement>) => void;
+    closeModal: (event?: React.MouseEvent<HTMLElement>) => void;
 };

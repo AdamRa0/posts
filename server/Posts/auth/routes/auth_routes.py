@@ -96,10 +96,17 @@ def signin_user(form: UserSignIn):
         )
 
 
-@auth_routes.route("/signout")
+@auth_routes.route("/signout", methods=["POST"])
 def signout_user():
-    response: Response = jsonify({"status": "logged out successfully"})
+    try:
+        response: Response = jsonify({"status": "logged out successfully"})
 
-    unset_access_cookies(response)
+        unset_access_cookies(response)
 
-    return response, 200
+        return response, 200
+    except Exception as e:
+        raise AppException(
+            user_message="Something went wrong.",
+            internal_message=f"Internal server error: {str(e)}",
+            status_code=500
+        )

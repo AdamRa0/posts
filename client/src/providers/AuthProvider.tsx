@@ -1,57 +1,44 @@
-import { signoutService } from "@services/auth/signoutService";
-import { getUserService } from "@services/user/getUserService";
-import { User } from "types/data/userData";
-import { AuthContext } from "@contexts/authContext";
-import { getCookie } from "@helpers/extractCookie";
 import React, { useEffect, useState } from "react";
-import { AuthFormState } from "types/states/authFomState";
-import { signinService } from "@services/auth/signinService";
+
+import { AuthContext } from "@contexts/authContext";
+import { useGetCookie } from "@hooks/useGetCookie";
+import useGetUser from "@hooks/useGetUser ";
+import { useSignOutUser } from "@hooks/useSignoutUser";
+import { useSigninUser } from "@hooks/useSigninUser";
 import { signupService } from "@services/auth/signupService";
+
+import { AuthFormState } from "types/states/authFomState";
 import { AuthContextProviderProps } from "types/props/AuthContextProviderProps";
+import { User } from "types/data/userData";
 
 export default function AuthContextProvider({
   children,
 }: AuthContextProviderProps): React.JSX.Element {
   const [authenticatedUser, setAuthenticatedUser] = useState<User | null>(null);
 
-  const token: string | undefined = getCookie("csrf_access_token");
+  const { cookie: token } = useGetCookie("csrf_access_token");
+
+  const { appUser: user } = useGetUser(undefined, token, true);
+  
+  const { signOut } = useSignOutUser();
+
+  const { signIn } = useSigninUser();
 
   useEffect(() => {
-    getUserService(token!)
-      .then((response) => response.json())
-      .then((data) => {
-        setAuthenticatedUser({
-          id: data.id,
-          emailAddress: data.email_address,
-          username: data.username,
-          handle: data.handle,
-          bio: data.bio,
-          dateCreated: data.date_created,
-          profileImage: data.profile_image,
-          bannerImage: data.banner_image,
-          isActive: data.is_active,
-          isPrivate: data.is_private,
-        });
-      })
-      .catch((e) => console.log(e));
-  }, [token]);
-
-  async function signOutUser() {
-    const statusCode: number = await signoutService();
-
-    if (statusCode === 200) {
-      setAuthenticatedUser(null);
-    }
-  }
-
-  async function signInUser(userDetails: AuthFormState) {
-    const statusCode: number = await signinService(userDetails);
-
-    // Authenticated user set to null as it will be fetched by useEffect during re-render
-    if (statusCode === 200) {
-      setAuthenticatedUser(null);
-    }
-  }
+    if (user)
+      setAuthenticatedUser({
+        id: user.id,
+        emailAddress: user.email_address,
+        username: user.username,
+        handle: user.handle,
+        bio: user.bio,
+        dateCreated: user.date_created,
+        profileImage: user.profile_image,
+        bannerImage: user.banner_image,
+        isActive: user.is_active,
+        isPrivate: user.is_private,
+      });
+  }, [user]);
 
   async function signUpUser(userDetails: AuthFormState) {
     const statusCode: number = await signupService(userDetails);
@@ -67,8 +54,8 @@ export default function AuthContextProvider({
       <AuthContext.Provider
         value={{
           user: authenticatedUser,
-          signOut: signOutUser,
-          signIn: signInUser,
+          signOut,
+          signIn,
           signUp: signUpUser,
         }}
       >

@@ -1,5 +1,14 @@
-export async function signoutService(): Promise<number> {
-    const response = await fetch("/api/v1/auth/signout");
+export async function signoutService() {
+    const response = await fetch("/api/v1/auth/signout", {
+        method: "POST"
+    });
 
-    return response.status;
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+    }
+
+    const data = await response.json();
+
+    return data;
 }

@@ -38,6 +38,6 @@ def test_signin_functionality_404_on_nonexistent_credentials(test_client):
 
 
 def test_signout_functionality(test_client):
-    response = test_client.get("api/v1/auth/signout")
+    response = test_client.post("api/v1/auth/signout")
 
     assert response.status_code == 200

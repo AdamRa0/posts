@@ -10,11 +10,14 @@ import AuthPage from "@pages/AuthPage";
 import { AuthContext } from "@contexts/authContext";
 import { authContextProp } from "types/props/AuthContextProps";
 import AvatarComponent from "./AvatarComponent";
+import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { user, signOut } = useContext<authContextProp>(AuthContext);
+  const { signOut } = useContext<authContextProp>(AuthContext);
+
+  const { authenticatedUser } = useGetAuthenticatedUser();
 
   function handleClick() {
     setIsOptionsMenuOpen(!isOptionsMenuOpen);
@@ -49,7 +52,7 @@ export default function HeaderComponent() {
           </span>
         </div>
         <div className={styles.headerOptions}>
-          {!user ? (
+          {!authenticatedUser ? (
             <>
               <ButtonComponent
                 type="button"
@@ -70,9 +73,9 @@ export default function HeaderComponent() {
             <>
               <AvatarComponent
                 imagePath={
-                  user.profileImage !== "default_profile_image.jpg"
-                    ? `${user.id}_${user.profileImage}`
-                    : user.profileImage
+                  authenticatedUser.profile_image !== "default_profile_image.jpg"
+                    ? `${authenticatedUser.id}_${authenticatedUser.profile_image}`
+                    : authenticatedUser.profile_image
                 }
                 altText="Logged in user avatar"
               />
