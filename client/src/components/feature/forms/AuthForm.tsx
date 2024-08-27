@@ -1,12 +1,14 @@
-import { RenderData } from "types/enums/renderData";
+import React, { useContext, useReducer } from "react";
+
 import styles from "@components/feature/forms/authform.module.css";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import InputComponent from "@components/ui/InputComponent";
-import React, { useContext, useReducer } from "react";
+import { AuthContext } from "@contexts/authContext";
+
+import { AuthFormReducerActions } from "types/actions/authFormReducerActions";
+import { RenderData } from "types/enums/renderData";
 import { AuthFormProps } from "types/props/AuthFormProps";
 import { AuthFormState } from "types/states/authFomState";
-import { AuthFormReducerActions } from "types/actions/authFormReducerActions";
-import { AuthContext } from "@contexts/authContext";
 
 function reducer(
   currentUserDetails: AuthFormState,

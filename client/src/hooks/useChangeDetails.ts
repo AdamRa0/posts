@@ -3,11 +3,11 @@ import toast from "react-hot-toast";
 
 import { updateUserDetailsService } from "@services/user/updateUserDetails";
 
-export function useChangeDetails() {
+export function useChangeDetails(email?: string, handle?: string, username?: string) {
     const queryClient = useQueryClient();
 
     const { mutate: changeDetails } = useMutation({
-        mutationFn: updateUserDetailsService,
+        mutationFn: () => updateUserDetailsService(email, handle, username),
         onSuccess: () => {
             toast.success("Details updated"),
                 queryClient.invalidateQueries({

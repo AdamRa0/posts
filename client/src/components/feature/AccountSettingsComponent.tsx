@@ -30,25 +30,26 @@ function AccountSettingsReducer(_: number, action: ModalTypes): number {
 }
 
 export default function AccountSettingsComponent(): React.JSX.Element {
-  const { authenticatedUser } = useGetAuthenticatedUser();
-
-  const { changeDetails } = useChangeDetails();
-  const { deactivateAccount } = useDeactivateService();
-  const { deleteAccount } = useDeleteAccount();
-
+  
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [email, setEmailAddress] = useState<string>("");
   const [state, dispatch] = useReducer<
-    (currentState: number, action: ModalTypes) => number
+  (currentState: number, action: ModalTypes) => number
   >(AccountSettingsReducer, 0);
+  
+  const { authenticatedUser } = useGetAuthenticatedUser();
 
+  const { changeDetails } = useChangeDetails(email);
+  const { deactivateAccount } = useDeactivateService();
+  const { deleteAccount } = useDeleteAccount();
+  
   function handleModal(): void {
     isModalOpen ? setIsModalOpen(false) : setIsModalOpen(true);
   }
 
   function handleChangeEmailAddressForm(e: { preventDefault: () => void }) {
     e.preventDefault();
-    changeDetails(email);
+    changeDetails();
     handleModal();
   }
 
