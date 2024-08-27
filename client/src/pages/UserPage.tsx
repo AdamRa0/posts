@@ -62,9 +62,9 @@ export default function UserPage(): React.JSX.Element {
 
   if (subscribeesError) toast.error(subscribeesError.message);
 
-  const isSubscribedToUser = subscribees.find(
-    (subscribee) => subscribee.id === userId
-  );
+  const isSubscribedToUser = subscribeesLoading
+    ? []
+    : subscribees.find((subscribee) => subscribee.id === userId);
 
   function handleSubscribe() {
     isSubscribedToUser

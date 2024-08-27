@@ -1,12 +1,6 @@
 import { getCookie } from "@helpers/extractCookie";
 import { PostType } from "types/data/postFormType";
 
-/**
- * Serves as service for both post and comment creation
- * @param postData - The post content and file if file uploaded
- * @param route - backend route to create a post or comment
- */
-
 export default async function createPostService(postData: PostType, route: string) {
     const token: string | undefined = getCookie("csrf_access_token");
 
@@ -16,11 +10,20 @@ export default async function createPostService(postData: PostType, route: strin
 
     if (postData.file !== undefined) postForm.append("file", postData.file)
 
-    await fetch(route, {
+    const response = await fetch(route, {
         method: "POST",
         headers: {
             "X-CSRF-TOKEN": token!
         },
         body: postForm,
     });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+    }
+
+    const data = await response.json();
+
+    return data;
 }

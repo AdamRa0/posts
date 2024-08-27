@@ -1,14 +1,14 @@
-import styles from './postform.module.css';
+import styles from "./postform.module.css";
 
 import InputComponent from "@components/ui/InputComponent";
 import ModalComponent from "@components/ui/ModalComponent";
 import PageOverlayComponent from "@components/ui/PageOverlayComponent";
-import ButtonComponent from "@components/ui/ButtonComponent"; 
+import ButtonComponent from "@components/ui/ButtonComponent";
 import MarkdownEditor from "@uiw/react-markdown-editor";
-import createPostService from '@services/posts/createPostService';
 
 import { PostType } from "types/data/postFormType";
 import React, { useState } from "react";
+import { useCreatePost } from "@/hooks/useCreatePost";
 
 type PostFormProps = {
   handleFormModal: () => void;
@@ -22,6 +22,8 @@ export default function PostForm({
   buttonName,
 }: PostFormProps): React.JSX.Element {
   const [post, setPost] = useState<PostType>({ body: "" });
+
+  const { createPost } = useCreatePost(post, formActionRoute);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     setPost({
@@ -44,9 +46,7 @@ export default function PostForm({
       file: undefined,
     });
 
-    (async () => {
-      await createPostService(post, formActionRoute);
-    })();
+    createPost();
 
     handleFormModal();
   }

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 
 export default function useFetchPosts(page: number) {
     const { isLoading, data: posts, error } = useQuery({
-        queryKey: ["posts", page],
+        queryKey: ["posts"],
         queryFn: () => fetchPostsService(page),
     });
 
