@@ -1,6 +1,6 @@
 import { getCookie } from "@helpers/extractCookie";
 
-export async function updateUserDetailsService(emailAddress?: string, handle?: string, username?: string): Promise<Response> {
+export async function updateUserDetailsService(emailAddress?: string, handle?: string, username?: string) {
 
     const token = getCookie("csrf_access_token");
 
@@ -10,7 +10,7 @@ export async function updateUserDetailsService(emailAddress?: string, handle?: s
 
     const form = new FormData();
 
-    
+
     if (emailAddress) form.append("email_address", emailAddress);
     if (handle) form.append("handle", handle);
     if (username) form.append("username", username);
@@ -21,5 +21,12 @@ export async function updateUserDetailsService(emailAddress?: string, handle?: s
         body: form,
     })
 
-    return response;
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+    }
+
+    const data = await response.json();
+
+    return data;
 }

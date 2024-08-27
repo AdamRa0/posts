@@ -1,12 +1,14 @@
-import ButtonComponent from "@components/ui/ButtonComponent";
-import React, { useEffect, useReducer, useState } from "react";
 import styles from "./accountsettingscomponent.module.css";
+import React, { useEffect, useReducer, useState } from "react";
+
 import AccountSettingsModal from "@components/feature/AccountSettingsModal";
+import ButtonComponent from "@components/ui/ButtonComponent";
 import InputComponent from "@components//ui/InputComponent";
-import { updateUserDetailsService } from "@services/user/updateUserDetails";
-import deactivateUserService from "@services/user/deactivateUserService";
-import deleteUserService from "@services/user/deleteUserService";
-import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
+
+import { useDeleteAccount } from "@hooks/useDeleteAccount";
+import { useChangeDetails } from "@hooks/useChangeDetails";
+import { useDeactivateService } from "@hooks/useDeactivateService";
+import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
 
 enum ModalTypes {
   ACCOUNT_DEACTIVATION,
@@ -30,6 +32,10 @@ function AccountSettingsReducer(_: number, action: ModalTypes): number {
 export default function AccountSettingsComponent(): React.JSX.Element {
   const { authenticatedUser } = useGetAuthenticatedUser();
 
+  const { changeDetails } = useChangeDetails();
+  const { deactivateAccount } = useDeactivateService();
+  const { deleteAccount } = useDeleteAccount();
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [email, setEmailAddress] = useState<string>("");
   const [state, dispatch] = useReducer<
@@ -42,13 +48,15 @@ export default function AccountSettingsComponent(): React.JSX.Element {
 
   function handleChangeEmailAddressForm(e: { preventDefault: () => void }) {
     e.preventDefault();
-    updateUserDetailsService(email);
+    changeDetails(email);
     handleModal();
   }
 
   useEffect(() => {
     if (authenticatedUser) {
-      setEmailAddress(JSON.parse(JSON.stringify(authenticatedUser)).email_address);
+      setEmailAddress(
+        JSON.parse(JSON.stringify(authenticatedUser)).email_address
+      );
     }
   }, [authenticatedUser]);
 
@@ -106,7 +114,7 @@ export default function AccountSettingsComponent(): React.JSX.Element {
               <h4>You can reactivate your account by signing back in</h4>
               <ButtonComponent
                 variant="modalButtonOne"
-                onClick={deactivateUserService}
+                onClick={() => deactivateAccount()}
               >
                 Deactivate Account
               </ButtonComponent>
@@ -131,7 +139,7 @@ export default function AccountSettingsComponent(): React.JSX.Element {
               </h4>
               <ButtonComponent
                 variant="modalButtonThree"
-                onClick={deleteUserService}
+                onClick={() => deleteAccount()}
               >
                 Delete Account
               </ButtonComponent>

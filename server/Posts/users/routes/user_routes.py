@@ -39,9 +39,10 @@ from flask import (
     current_app,
     jsonify,
     request,
+    Response
 )
-from flask_jwt_extended import jwt_required, current_user, get_jwt_identity
-from sqlalchemy.exc import NoResultFound
+from flask_jwt_extended import jwt_required, current_user, get_jwt_identity, unset_access_cookies
+from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 
 
 user_routes = Blueprint("user_routes", __name__, url_prefix="/api/v1/users")
@@ -94,17 +95,35 @@ def get_all_users():
 @user_routes.route("/user/delete", methods=["DELETE"])
 @jwt_required()
 def delete_user():
-    del_user(current_app, current_user)
+    try:
+        del_user(current_app, current_user)
 
-    return jsonify({}), 204
+        response: Response = jsonify({})
+
+        unset_access_cookies(response)
+
+        return response, 204
+    except SQLAlchemyError as e:
+        raise AppException(
+            user_message="Could not delete application. Please try again",
+            internal_message=f"SQLAlchemyError: {str(e)}",
+            status_code=500
+        )
 
 
 @user_routes.route("/deactivate-account", methods=["PATCH"])
 @jwt_required()
 def deactivate_user():
-    account_activation_manager(current_user)
+    try:
+        account_activation_manager(current_user)
 
-    return jsonify({"message": "Account deactivated"}), 200
+        return jsonify({"message": "Account deactivated"}), 200
+    except SQLAlchemyError as e:
+        raise AppException(
+            user_message="Could not deactivate account. Please try again",
+            internal_message=f"SQLAlchemyError: {str(e)}",
+            status_code=500,
+        )
 
 
 @user_routes.route("/set-account-privacy", methods=["PATCH"])
@@ -118,20 +137,27 @@ def set_account_privacy():
 @user_routes.route("/profile/update", methods=["PATCH"])
 @jwt_required()
 def update_user_details():
-    username = request.form.get("username")
-    email_address = request.form.get("email_address")
-    handle = request.form.get("handle")
+    try:
+        username = request.form.get("username")
+        email_address = request.form.get("email_address")
+        handle = request.form.get("handle")
 
-    if username is not None and username != current_user.username:
-        change_username(current_user, username)
-    if email_address is not None and username != current_user.email_address:
-        change_email_address(current_user, email_address)
-    if handle is not None != current_user.handle:
-        change_handle(current_user, handle)
+        if username is not None and username != current_user.username:
+            change_username(current_user, username)
+        if email_address is not None and username != current_user.email_address:
+            change_email_address(current_user, email_address)
+        if handle is not None != current_user.handle:
+            change_handle(current_user, handle)
 
-    updated_user = get_user_by_id(current_user.id)
+        updated_user = get_user_by_id(current_user.id)
 
-    return user_schema.dump(updated_user), 200
+        return user_schema.dump(updated_user), 200
+    except SQLAlchemyError as e:
+        raise AppException(
+            user_message="Could not change details. Please try again",
+            internal_message=f"SQLAlchemyError: {str(e)}",
+            status_code=500
+        )
 
 
 @user_routes.route("/profile/update-image", methods=["PATCH"])
