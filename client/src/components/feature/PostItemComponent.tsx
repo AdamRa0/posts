@@ -5,13 +5,12 @@ import {
   MdOutlineRepeat,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import styles from "./postitemcomponent.module.css";
 
 import ButtonComponent from "@components/ui/ButtonComponent";
 import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
-import { AuthContext } from "@contexts/authContext";
 import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
 import useFetchImage from "@hooks/useFetchImage";
@@ -23,7 +22,7 @@ import disapprovePostService from "@services/posts/disapprovePostService";
 import repostPostService from "@services/posts/repostPostService";
 
 import { PostData } from "types/data/postData";
-import { authContextProp } from "types/props/AuthContextProps";
+import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 type PostItemComponentProps = {
   post: PostData;
@@ -34,7 +33,7 @@ export default function PostItemComponent({
 }: PostItemComponentProps): React.JSX.Element {
   const postAuthor = useFetchPostAuthorDetails(post.author_id);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { user } = useContext<authContextProp>(AuthContext);
+  const { authenticatedUser } = useGetAuthenticatedUser();
   const navigate = useNavigate();
 
   const { image } = useFetchImage(post.post_file!);
@@ -50,7 +49,7 @@ export default function PostItemComponent({
   ) {
     e.stopPropagation();
 
-    if (user === null) {
+    if (authenticatedUser === undefined) {
       setIsModalOpen(true);
       return;
     }

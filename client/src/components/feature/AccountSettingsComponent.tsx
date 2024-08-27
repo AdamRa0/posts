@@ -1,13 +1,12 @@
 import ButtonComponent from "@components/ui/ButtonComponent";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import styles from "./accountsettingscomponent.module.css";
 import AccountSettingsModal from "@components/feature/AccountSettingsModal";
 import InputComponent from "@components//ui/InputComponent";
-import { AuthContext } from "@contexts/authContext";
 import { updateUserDetailsService } from "@services/user/updateUserDetails";
 import deactivateUserService from "@services/user/deactivateUserService";
 import deleteUserService from "@services/user/deleteUserService";
-import { authContextProp } from "types/props/AuthContextProps";
+import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 enum ModalTypes {
   ACCOUNT_DEACTIVATION,
@@ -29,7 +28,7 @@ function AccountSettingsReducer(_: number, action: ModalTypes): number {
 }
 
 export default function AccountSettingsComponent(): React.JSX.Element {
-  const { user } = useContext<authContextProp>(AuthContext);
+  const { authenticatedUser } = useGetAuthenticatedUser();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [email, setEmailAddress] = useState<string>("");
@@ -48,10 +47,10 @@ export default function AccountSettingsComponent(): React.JSX.Element {
   }
 
   useEffect(() => {
-    if (user) {
-      setEmailAddress(JSON.parse(JSON.stringify(user)).emailAddress);
+    if (authenticatedUser) {
+      setEmailAddress(JSON.parse(JSON.stringify(authenticatedUser)).email_address);
     }
-  }, [user]);
+  }, [authenticatedUser]);
 
   return (
     <>

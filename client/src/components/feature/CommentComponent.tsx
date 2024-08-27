@@ -4,7 +4,7 @@ import {
   MdModeComment,
   MdOutlineRepeat,
 } from "react-icons/md";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import styles from "./commentcomponent.module.css";
 import ListComponent from "../ui/ListComponent";
@@ -12,7 +12,6 @@ import ListComponent from "../ui/ListComponent";
 import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import PostForm from "@components/feature/forms/PostForm";
-import { AuthContext } from "@contexts/authContext";
 
 import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
@@ -25,7 +24,7 @@ import disapprovePostService from "@services/posts/disapprovePostService";
 import repostPostService from "@services/posts/repostPostService";
 
 import { PostData } from "types/data/postData";
-import { authContextProp } from "types/props/AuthContextProps";
+import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 type CommentComponentProps = {
   post: PostData;
@@ -37,18 +36,18 @@ export default function CommentComponent({
   const postAuthor = useFetchPostAuthorDetails(post.author_id);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showReplies, setShowReplies] = useState<boolean>(false);
-  const { user } = useContext<authContextProp>(AuthContext);
+  const { authenticatedUser } = useGetAuthenticatedUser();
 
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${post.id}/create-comment`;
 
-  const image = useFetchImage(post.post_file!)
+  const { image } = useFetchImage(post.post_file!)
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
   }
 
   function handlePostInterraction(action: string) {
-    if (user === null) {
+    if (authenticatedUser === undefined) {
       handleModal();
       return;
     }
@@ -148,8 +147,8 @@ export default function CommentComponent({
           />
         </div>
       )}
-      {isModalOpen && !user && <AuthPage closeModal={handleModal} />}
-      {isModalOpen && user && (
+      {isModalOpen && !authenticatedUser && <AuthPage closeModal={handleModal} />}
+      {isModalOpen && authenticatedUser && (
         <PostForm
           handleFormModal={handleModal}
           formActionRoute={CREATE_COMMENT_ROUTE}

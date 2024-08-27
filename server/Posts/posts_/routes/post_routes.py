@@ -25,7 +25,7 @@ from ...follow.controllers.get_sub_subees import get_subscribers
 from flask import Blueprint, jsonify, request, current_app
 from flask_pydantic import validate
 from flask_jwt_extended import jwt_required, current_user
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 from werkzeug.exceptions import NotFound
 
 
@@ -58,20 +58,27 @@ def get_all_posts():
 @post_routes.route("/create_post", methods=["POST"])
 @jwt_required()
 def create_new_post():
-    body = request.form.get("body")
+    try:
+        body = request.form.get("body")
 
-    if request.files:
-        uploaded_file = upload_file()
-    else:
-        uploaded_file = None
+        if request.files:
+            uploaded_file = upload_file()
+        else:
+            uploaded_file = None
 
-    create_post(
-        PostCreationModel(body=body, author_id=current_user.id, post_file=uploaded_file)
-    )
+        create_post(
+            PostCreationModel(body=body, author_id=current_user.id, post_file=uploaded_file)
+        )
 
-    author_posts = get_post_by_author_id(current_user.id)
+        author_posts = get_post_by_author_id(current_user.id)
 
-    return posts_schema.dump(author_posts)[0], 201
+        return posts_schema.dump(author_posts)[0], 201
+    except SQLAlchemyError as e:
+        raise AppException(
+            user_message="Could not create post",
+            internal_message=f"SQLAlchemyError: {str(e)}",
+            status_code=500
+        )
 
 
 @post_routes.route("/<post_id>")

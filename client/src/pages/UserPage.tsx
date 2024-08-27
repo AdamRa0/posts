@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { MdCalendarMonth } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -8,7 +8,6 @@ import ButtonComponent from "@components/ui/ButtonComponent";
 import TabComponent from "@components/ui/TabComponent";
 import ListComponent from "@components/ui/ListComponent";
 import BannerComponent from "@components/ui/BannerComponent";
-import { AuthContext } from "@contexts/authContext";
 import formatNumber from "@helpers/numericalFormatter";
 import useFetchUserPosts from "@hooks/useFetchUserPosts";
 import useGetUserLikes from "@hooks/useGetUserLikes";
@@ -16,12 +15,10 @@ import useFetchUserMedia from "@hooks/useFetchUserMedia";
 import useFetchUserReplies from "@hooks/useFetchUserReplies";
 import useFetchUserSubscribers from "@hooks/useFetchUserSubscribers";
 import useFetchUserSubscribees from "@hooks/useFetchUserSubscribees";
-import useGetUser from "@hooks/useGetUser ";
+import useGetUser, { useGetAuthenticatedUser } from "@hooks/useGetUser ";
 import styles from "@pages/userpage.module.css";
 import unsubscribeToUserService from "@services/user/unsubscribeToUserService";
 import subscribeToUserService from "@services/user/subscribeToUserService";
-
-import { authContextProp } from "types/props/AuthContextProps";
 
 enum TabStates {
   INPOSTS,
@@ -32,7 +29,7 @@ enum TabStates {
 
 export default function UserPage(): React.JSX.Element {
   const [currentTab, setCurrentTab] = useState<TabStates>(TabStates.INPOSTS);
-  const { user } = useContext<authContextProp>(AuthContext);
+  const { authenticatedUser } = useGetAuthenticatedUser();
 
   const { userId } = useParams();
 
@@ -55,15 +52,19 @@ export default function UserPage(): React.JSX.Element {
 
   const { appUser, appUserLoading } = useGetUser(userId!);
 
-  const { subscribersLoading, subscribers, subscribersError } = useFetchUserSubscribers(userId!);
+  const { subscribersLoading, subscribers, subscribersError } =
+    useFetchUserSubscribers(userId!);
 
-  const { subscribeesLoading, subscribees, subscribeesError } = useFetchUserSubscribees(userId!);
+  const { subscribeesLoading, subscribees, subscribeesError } =
+    useFetchUserSubscribees(userId!);
 
   if (subscribersError) toast.error(subscribersError.message);
 
   if (subscribeesError) toast.error(subscribeesError.message);
 
-  const isSubscribedToUser = subscribees.find((subscribee) => subscribee.id === userId);
+  const isSubscribedToUser = subscribeesLoading
+    ? []
+    : subscribees.find((subscribee) => subscribee.id === userId);
 
   function handleSubscribe() {
     isSubscribedToUser
@@ -110,7 +111,7 @@ export default function UserPage(): React.JSX.Element {
             <p>{`${appUser?.handle}`}</p>
           </div>
           <div className={styles.userOtherInfo}>
-            {user && user.id !== userId && (
+            {authenticatedUser && authenticatedUser.id !== userId && (
               <ButtonComponent variant="followButton" onClick={handleSubscribe}>
                 {!isSubscribedToUser ? "Subscribe" : "Unsubscribe"}
               </ButtonComponent>

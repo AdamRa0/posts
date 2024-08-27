@@ -1,17 +1,16 @@
 import styles from "./profilesettingscomponent.module.css";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import InputComponent from "@components/ui/InputComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
-import { AuthContext } from "@contexts/authContext";
 
-import { authContextProp } from "types/props/AuthContextProps";
 import { updateUserDetailsService } from "@/services/user/updateUserDetails";
 import { updateUserImagesService } from "@/services/user/updateUserImages";
+import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 export default function ProfileSettingsComponent(): React.JSX.Element {
-  const { user } = useContext<authContextProp>(AuthContext);
+  const { authenticatedUser: user } = useGetAuthenticatedUser();
 
   const [handle, setHandle] = useState<string>("");
   const [username, setUsername] = useState<string>("");

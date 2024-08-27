@@ -5,4 +5,5 @@ export type AuthFormProps = {
     handleToggle: () => void,
     state: countState,
     dispatchFunc: (param: RenderData) => void,
+    closeModal: () => void,
 }
