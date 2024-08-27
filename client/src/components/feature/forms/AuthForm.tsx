@@ -48,6 +48,7 @@ export default function AuthForm({
   handleToggle,
   state,
   dispatchFunc,
+  closeModal,
 }: AuthFormProps): React.JSX.Element {
   const [userDetails, dispatch] = useReducer(reducer, initialState);
   const { signIn, signUp } = useContext(AuthContext);
@@ -61,9 +62,11 @@ export default function AuthForm({
     switch (state.count) {
       case 0:
         signUp!(userDetails);
+        closeModal();
         break;
       case 1:
         signIn!(userDetails);
+        closeModal();
         break;
       default:
         break;

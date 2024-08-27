@@ -84,6 +84,7 @@ export default function AuthPage({ closeModal }: authPageProps) {
               handleToggle={handleToggle}
               state={state}
               dispatchFunc={dispatch}
+              closeModal={closeModal}
             />
           </div>
         </ModalComponent>

@@ -15,7 +15,6 @@ export default function AppLayout(): React.JSX.Element {
 
   const { authenticatedUser } = useGetAuthenticatedUser();
 
-
   function handleModal() {
     setIsModalOpen(!isModalOpen);
   }
@@ -27,21 +26,22 @@ export default function AppLayout(): React.JSX.Element {
       </div>
       <div className={styles.contentContainer}>
         <div className={styles.someImportantButtons}>
-          <NavLink className={styles.settingsLink} to="/settings">
-            <MdOutlineSettings />
-            Settings
-          </NavLink>
           {authenticatedUser && (
-            <ButtonComponent
-              variant="createPostButton"
-              onClick={handleModal}
-            >
+            <NavLink className={styles.settingsLink} to="/settings">
+              <MdOutlineSettings />
+              Settings
+            </NavLink>
+          )}
+          {authenticatedUser && (
+            <ButtonComponent variant="createPostButton" onClick={handleModal}>
               <MdCreate />
               Post
             </ButtonComponent>
           )}
         </div>
-        {isModalOpen && !authenticatedUser ? <AuthPage closeModal={handleModal} /> : null}
+        {isModalOpen && !authenticatedUser ? (
+          <AuthPage closeModal={handleModal} />
+        ) : null}
         {isModalOpen && authenticatedUser ? (
           <>
             <PostForm

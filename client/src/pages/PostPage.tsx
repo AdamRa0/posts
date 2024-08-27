@@ -12,21 +12,20 @@ import React, { useContext, useState } from "react";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import PostForm from "@components/feature/forms/PostForm";
 import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
-import { AuthContext } from "@contexts/authContext";
 import { PostContext } from "@contexts/postContext";
 import formatNumber from "@helpers/numericalFormatter";
 import dateFormatter from "@helpers/dateFormatter";
 import AuthPage from "@pages/AuthPage";
-import { authContextProp } from "types/props/AuthContextProps";
 import { PostContextProps } from "types/props/PostContextProviderProps";
 import { UUID } from "crypto";
 import ListComponent from "@/components/ui/ListComponent";
 import useFetchImage from "@/hooks/useFetchImage";
+import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 export default function PostPage(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { postId } = useParams();
-  const { user } = useContext<authContextProp>(AuthContext);
+  const { authenticatedUser: user } = useGetAuthenticatedUser();
   const { post, replies } = useContext<PostContextProps>(PostContext);
   const navigate = useNavigate();
 
@@ -107,7 +106,7 @@ export default function PostPage(): React.JSX.Element {
           )}
         </div>
       </div>
-      {isModalOpen && user === null ? (
+      {isModalOpen && user === undefined ? (
         <AuthPage closeModal={handleModal} />
       ) : null}
       {isModalOpen && user ? (
