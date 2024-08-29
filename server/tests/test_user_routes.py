@@ -136,7 +136,7 @@ def test_upload_image(create_new_user_1, test_client):
     }
 
     image_file = FileStorage(
-        stream=open("suprised_anime_woman.png", "rb"),
+        stream=open("./suprised_anime_woman.png", "rb"),
         filename="suprised_anime_woman.png",
     )
 
