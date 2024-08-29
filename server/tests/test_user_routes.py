@@ -157,7 +157,7 @@ def test_upload_image(create_new_user_1, test_client):
             assert response.json["message"] == "Image updated"
         finally:
             directory = "../uploads"
-            pattern = re.compile(r'^suprised_anime_woman\.png$')
+            pattern = re.compile(r'.*suprised_anime_woman\.png$')
 
             for filename in os.listdir(directory):
                 if pattern.match(filename):
