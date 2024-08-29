@@ -5,9 +5,9 @@ import React, { useEffect, useState } from "react";
 import InputComponent from "@components/ui/InputComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
 
-import { updateUserDetailsService } from "@/services/user/updateUserDetails";
-import { updateUserImagesService } from "@/services/user/updateUserImages";
-import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
+import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
+import { useChangeDetails } from "@hooks/useChangeDetails";
+import { useUpdateImage } from "@hooks/useUpdateImage";
 
 export default function ProfileSettingsComponent(): React.JSX.Element {
   const { authenticatedUser: user } = useGetAuthenticatedUser();
@@ -16,6 +16,9 @@ export default function ProfileSettingsComponent(): React.JSX.Element {
   const [username, setUsername] = useState<string>("");
   const [profileImg, setProfileImg] = useState<File>();
   const [bannerImg, setBannerImg] = useState<File>();
+
+  const { changeDetails } = useChangeDetails();
+  const { updateImage } = useUpdateImage();
 
   useEffect(() => {
     if (user) {
@@ -27,27 +30,43 @@ export default function ProfileSettingsComponent(): React.JSX.Element {
   function handleUpdateUsernameAndHandle(e: { preventDefault: () => void }) {
     e.preventDefault();
 
-    const { username: userName, handle: userHandle } = JSON.parse(
-      JSON.stringify(user)
-    );
+    const updatePayload: {
+      email?: string;
+      handle?: string;
+      username?: string;
+    } = {};
 
-    if (username !== userName && handle === userHandle)
-      updateUserDetailsService(undefined, undefined, username);
+    if (handle) {
+      updatePayload.handle = handle;
+    }
 
-    if (handle !== userHandle && username === userName)
-      updateUserDetailsService(undefined, handle, undefined);
+    if (username) {
+      updatePayload.username = username;
+    }
 
-    if (handle !== userHandle && username !== userName)
-      updateUserDetailsService(undefined, handle, username);
+    if (Object.keys(updatePayload).length > 0) {
+      changeDetails(updatePayload);
+    }
   }
 
   function handleUpdateUserImages(e: { preventDefault: () => void }) {
     e.preventDefault();
 
-    if (profileImg) updateUserImagesService(profileImg, undefined);
-    if (bannerImg) updateUserImagesService(undefined, bannerImg);
+    if (profileImg) {
+      updateImage({ profileImg });
+      setProfileImg(undefined);
+    }
 
-    if (bannerImg && profileImg) updateUserImagesService(profileImg, bannerImg);
+    if (bannerImg) {
+      updateImage({ bannerImg });
+      setBannerImg(undefined);
+    }
+
+    if (profileImg && bannerImg) {
+      updateImage({ profileImg, bannerImg });
+      setProfileImg(undefined);
+      setBannerImg(undefined);
+    }
   }
 
   return (

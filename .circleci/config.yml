@@ -14,6 +14,9 @@ jobs:
     steps:
       - checkout:
           path: ~/posts
+      - run:
+          name: List files in test directory
+          command: ls -lR ~/posts/server/tests
       - python/install-packages:
           pkg-manager: pip
       - run:

@@ -1,6 +1,6 @@
 import { getCookie } from "@helpers/extractCookie";
 
-export async function updateUserImagesService(profileImage?: File, bannerImage?: File): Promise<Response> {
+export async function updateUserImagesService(profileImage?: File, bannerImage?: File) {
 
     const token = getCookie("csrf_access_token");
 
@@ -26,5 +26,12 @@ export async function updateUserImagesService(profileImage?: File, bannerImage?:
         body: form,
     })
 
-    return response;
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`${error.message}`);
+    }
+
+    const data = await response.json();
+
+    return data;
 }

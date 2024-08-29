@@ -17,7 +17,7 @@ def get_posts(page: int):
 
 def get_replies(author_id: str):
     posts = (
-        db.session.execute(db.select(PostModel).filter_by(author_id=author_id))
+        db.session.execute(db.select(PostModel).filter_by(author_id=author_id).order_by(desc(PostModel.time_created)))
         .scalars()
         .all()
     )
@@ -46,7 +46,7 @@ def get_posts_and_reposts_by_user(author_id: str, page: int, user_id: str):
     user_id: User who's post you wish to get
     """
     posts = (
-        db.session.execute(db.select(PostModel).filter_by(author_id=author_id))
+        db.session.execute(db.select(PostModel).filter_by(author_id=author_id).order_by(desc(PostModel.time_created)))
         .scalars()
         .all()
     )

@@ -82,11 +82,7 @@ export default function UserPage(): React.JSX.Element {
                 <p>Loading...</p>
               ) : (
                 <BannerComponent
-                  imagePath={
-                    appUser.banner_image !== "default_banner_image.jpg"
-                      ? `${userId}_${appUser.banner_image}`
-                      : appUser.banner_image
-                  }
+                  imagePath={appUser.banner_image}
                   altText="user banner"
                 />
               )}
@@ -96,11 +92,7 @@ export default function UserPage(): React.JSX.Element {
                 <p>Loading...</p>
               ) : (
                 <AvatarComponent
-                  imagePath={
-                    appUser.profile_image !== "default_profile_image.jpg"
-                      ? `${userId}_${appUser.profile_image}`
-                      : appUser.profile_image
-                  }
+                  imagePath={appUser.profile_image}
                   altText="user avatar"
                 />
               )}
