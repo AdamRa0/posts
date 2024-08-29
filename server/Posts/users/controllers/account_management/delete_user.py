@@ -18,18 +18,16 @@ def del_user(app: Flask, user: UserModel):
     """
     UPLOAD_FOLDER_PATH = app.config["UPLOAD_FOLDER"]
 
-    prefix = user.id
-
     db = get_db()
 
-    for filename in os.listdir(UPLOAD_FOLDER_PATH):
-        if filename.startswith(str(prefix)):
-            filename = os.path.join(UPLOAD_FOLDER_PATH, filename)
+    if user.profile_image != "default_profile_image.jpg":
+        pfp_filename = os.path.join(UPLOAD_FOLDER_PATH, user.profile_image)
+        os.remove(pfp_filename) 
 
-            try:
-                os.remove(filename)
-            except Exception as e:
-                print("Error: %s, %s", e.filename, e.strerror)
+    if user.banner_image != "default_banner_image.jpg":
+        banner_filename = os.path.join(UPLOAD_FOLDER_PATH, user.banner_image)
+        os.remove(banner_filename) 
+
 
     db.session.delete(user)
     db.session.commit()

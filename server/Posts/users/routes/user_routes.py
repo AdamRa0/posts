@@ -174,8 +174,6 @@ def update_user_images():
             if request.files:
                 filenames = upload_file()
 
-                print(f"Files: {filenames}")
-
             if filenames is not None and profile_image == "True":
                 change_profile_image(
                     current_app, current_user, filenames.get("profile_image")
@@ -185,6 +183,7 @@ def update_user_images():
                 change_banner_image(
                     current_app, current_user, filenames.get("banner_image")
                 )
+
             return jsonify({"message": "Image updated"}), 200
 
         except Exception as e:
@@ -195,6 +194,7 @@ def update_user_images():
                 status_code=400,
             )
     except Exception as e:
+        print(e)
         raise AppException(
             user_message="Could not upload image. Please try again",
             internal_message=f"str{e}",

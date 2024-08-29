@@ -60,7 +60,8 @@ def change_profile_image(app: Flask, user: UserModel, filename: str):
     """
     UPLOAD_FOLDER_PATH = app.config["UPLOAD_FOLDER"]
 
-    if user.profile_image != "default_profile_image.jpg":
+    if user.profile_image != "default_profile_image.jpg" and os.path.exists(
+        os.path.join(UPLOAD_FOLDER_PATH, user.profile_image)):
         os.remove(os.path.join(UPLOAD_FOLDER_PATH, user.profile_image))
 
     user.profile_image = filename

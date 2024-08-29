@@ -1,8 +1,6 @@
 import os
 from werkzeug.datastructures import FileStorage
 
-print(f"{os.getcwd()}")
-
 
 def test_get_user_profile_by_authorized_user(create_new_user_1, test_client):
     """
