@@ -1,3 +1,5 @@
+import os
+
 from werkzeug.datastructures import FileStorage
 
 
@@ -145,6 +147,9 @@ def test_upload_image(create_new_user_1, test_client):
     response = test_client.patch(
         "/api/v1/users/profile/update-image", headers=header, data=data
     )
+
+    # Remove image after getting positive reponse
+    os.remove("../uploads/suprised_anime_woman.png")
 
     assert response.status_code == 200
     assert response.json["message"] == "Image updated"

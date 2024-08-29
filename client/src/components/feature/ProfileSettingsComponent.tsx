@@ -7,8 +7,7 @@ import ButtonComponent from "@components/ui/ButtonComponent";
 
 import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
 import { useChangeDetails } from "@hooks/useChangeDetails";
-
-import { updateUserImagesService } from "@services/user/updateUserImages";
+import { useUpdateImage } from "@hooks/useUpdateImage";
 
 export default function ProfileSettingsComponent(): React.JSX.Element {
   const { authenticatedUser: user } = useGetAuthenticatedUser();
@@ -18,7 +17,8 @@ export default function ProfileSettingsComponent(): React.JSX.Element {
   const [profileImg, setProfileImg] = useState<File>();
   const [bannerImg, setBannerImg] = useState<File>();
 
-  const { changeDetails } = useChangeDetails(undefined, handle, username);
+  const { changeDetails } = useChangeDetails();
+  const { updateImage } = useUpdateImage();
 
   useEffect(() => {
     if (user) {
@@ -30,16 +30,43 @@ export default function ProfileSettingsComponent(): React.JSX.Element {
   function handleUpdateUsernameAndHandle(e: { preventDefault: () => void }) {
     e.preventDefault();
 
-    changeDetails();
+    const updatePayload: {
+      email?: string;
+      handle?: string;
+      username?: string;
+    } = {};
+
+    if (handle) {
+      updatePayload.handle = handle;
+    }
+
+    if (username) {
+      updatePayload.username = username;
+    }
+
+    if (Object.keys(updatePayload).length > 0) {
+      changeDetails(updatePayload);
+    }
   }
 
   function handleUpdateUserImages(e: { preventDefault: () => void }) {
     e.preventDefault();
 
-    if (profileImg) updateUserImagesService(profileImg, undefined);
-    if (bannerImg) updateUserImagesService(undefined, bannerImg);
+    if (profileImg) {
+      updateImage({ profileImg });
+      setProfileImg(undefined);
+    }
 
-    if (bannerImg && profileImg) updateUserImagesService(profileImg, bannerImg);
+    if (bannerImg) {
+      updateImage({ bannerImg });
+      setBannerImg(undefined);
+    }
+
+    if (profileImg && bannerImg) {
+      updateImage({ profileImg, bannerImg });
+      setProfileImg(undefined);
+      setBannerImg(undefined);
+    }
   }
 
   return (

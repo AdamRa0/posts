@@ -34,14 +34,13 @@ from ..controllers.account_management.change_password import change_password
 from ..models.user_schema import UserSchema
 from ...utils.upload_file import upload_file
 
-from flask import (
-    Blueprint,
-    current_app,
-    jsonify,
-    request,
-    Response
+from flask import Blueprint, current_app, jsonify, request, Response
+from flask_jwt_extended import (
+    jwt_required,
+    current_user,
+    get_jwt_identity,
+    unset_access_cookies,
 )
-from flask_jwt_extended import jwt_required, current_user, get_jwt_identity, unset_access_cookies
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 
 
@@ -107,7 +106,7 @@ def delete_user():
         raise AppException(
             user_message="Could not delete application. Please try again",
             internal_message=f"SQLAlchemyError: {str(e)}",
-            status_code=500
+            status_code=500,
         )
 
 
@@ -156,7 +155,7 @@ def update_user_details():
         raise AppException(
             user_message="Could not change details. Please try again",
             internal_message=f"SQLAlchemyError: {str(e)}",
-            status_code=500
+            status_code=500,
         )
 
 
@@ -166,20 +165,41 @@ def update_user_images():
     """
     Updates user profile or banner image
     """
-    profile_image = request.form.get("profile_image")
-    banner_image = request.form.get("banner_image")
-    filenames = defaultdict(str)
+    try:
+        profile_image = request.form.get("profile_image")
+        banner_image = request.form.get("banner_image")
+        filenames = defaultdict(str)
 
-    if request.files:
-        filenames = upload_file()
+        try:
+            if request.files:
+                filenames = upload_file()
 
-    if filenames is not None and profile_image == "True":
-        change_profile_image(current_app, current_user, filenames.get("profile_image"))
+                print(f"Files: {filenames}")
 
-    if filenames is not None and banner_image == "True":
-        change_banner_image(current_app, current_user, filenames.get("banner_image"))
+            if filenames is not None and profile_image == "True":
+                change_profile_image(
+                    current_app, current_user, filenames.get("profile_image")
+                )
 
-    return jsonify({"message": "Image updated"}), 200
+            if filenames is not None and banner_image == "True":
+                change_banner_image(
+                    current_app, current_user, filenames.get("banner_image")
+                )
+            return jsonify({"message": "Image updated"}), 200
+
+        except Exception as e:
+            print(e)
+            raise AppException(
+                user_message="Ensure image is either jpeg, png or gif",
+                internal_message=f"{str(e)}",
+                status_code=400,
+            )
+    except Exception as e:
+        raise AppException(
+            user_message="Could not upload image. Please try again",
+            internal_message=f"str{e}",
+            status_code=500,
+        )
 
 
 @user_routes.route("/<user_id>/subscribe", methods=["PATCH"])
@@ -237,7 +257,7 @@ def subscribers_to_user():
         raise AppException(
             user_message="User not found",
             internal_message=f"NoResutFound: {str(e)}",
-            status_code=404
+            status_code=404,
         )
 
 
@@ -256,7 +276,7 @@ def users_subscribed_by_user():
         raise AppException(
             user_message="User not found",
             internal_message=f"NoResutFound: {str(e)}",
-            status_code=404
+            status_code=404,
         )
 
 
