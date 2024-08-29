@@ -1,6 +1,3 @@
-import os
-import re
-
 from werkzeug.datastructures import FileStorage
 
 
@@ -138,32 +135,19 @@ def test_upload_image(create_new_user_1, test_client):
         "X-CSRF-TOKEN": f"{authorizer.value}",
     }
 
-    image_file_path = "tests/suprised_anime_woman.png"
-    
-    with open(image_file_path, "rb") as image_file:
-        file_storage = FileStorage(
-            stream=image_file,
-            filename="suprised_anime_woman.png",
-        )
+    image_file = FileStorage(
+        stream=open("suprised_anime_woman.png", "rb"),
+        filename="suprised_anime_woman.png",
+    )
 
-        data = {"profile_image": "True", "profile_img": file_storage}
+    data = {"profile_image": "True", "profile_img": image_file}
 
-        try:
-            response = test_client.patch(
-                "/api/v1/users/profile/update-image", headers=header, data=data
-            )
+    response = test_client.patch(
+        "/api/v1/users/profile/update-image", headers=header, data=data
+    )
 
-            assert response.status_code == 200
-            assert response.json["message"] == "Image updated"
-        finally:
-            directory = "../uploads"
-            pattern = re.compile(r'.*suprised_anime_woman\.png$')
-
-            for filename in os.listdir(directory):
-                if pattern.match(filename):
-                    file_path = os.path.join(directory, filename)
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
+    assert response.status_code == 200
+    assert response.json["message"] == "Image updated"
 
 
 def test_get_user_subscribers(create_new_user_1, test_client):
