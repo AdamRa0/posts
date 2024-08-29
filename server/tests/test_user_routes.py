@@ -1,3 +1,4 @@
+import os
 from werkzeug.datastructures import FileStorage
 
 
@@ -139,7 +140,7 @@ def test_upload_image(create_new_user_1, test_client):
         stream=open("./suprised_anime_woman.png", "rb"),
         filename="suprised_anime_woman.png",
     )
-
+    print(f"{os.getcwd()}")
     data = {"profile_image": "True", "profile_img": image_file}
 
     response = test_client.patch(
