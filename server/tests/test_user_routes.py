@@ -1,4 +1,5 @@
 import os
+import re
 
 from werkzeug.datastructures import FileStorage
 
@@ -137,22 +138,32 @@ def test_upload_image(create_new_user_1, test_client):
         "X-CSRF-TOKEN": f"{authorizer.value}",
     }
 
-    image_file = FileStorage(
-        stream=open("tests/suprised_anime_woman.png", "rb"),
-        filename="suprised_anime_woman.png",
-    )
+    image_file_path = "tests/suprised_anime_woman.png"
+    
+    with open(image_file_path, "rb") as image_file:
+        file_storage = FileStorage(
+            stream=image_file,
+            filename="suprised_anime_woman.png",
+        )
 
-    data = {"profile_image": "True", "profile_img": image_file}
+        data = {"profile_image": "True", "profile_img": file_storage}
 
-    response = test_client.patch(
-        "/api/v1/users/profile/update-image", headers=header, data=data
-    )
+        try:
+            response = test_client.patch(
+                "/api/v1/users/profile/update-image", headers=header, data=data
+            )
 
-    # Remove image after getting positive reponse
-    os.remove("../uploads/suprised_anime_woman.png")
+            assert response.status_code == 200
+            assert response.json["message"] == "Image updated"
+        finally:
+            directory = "../uploads"
+            pattern = re.compile(r'^suprised_anime_woman\.png$')
 
-    assert response.status_code == 200
-    assert response.json["message"] == "Image updated"
+            for filename in os.listdir(directory):
+                if pattern.match(filename):
+                    file_path = os.path.join(directory, filename)
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
 
 
 def test_get_user_subscribers(create_new_user_1, test_client):
