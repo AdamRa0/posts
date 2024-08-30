@@ -3,20 +3,20 @@ import React, { useState } from "react";
 import ButtonComponent from "@components/ui/ButtonComponent";
 import InputComponent from "@components/ui/InputComponent";
 import AccountSettingsModal from "@components/feature/AccountSettingsModal";
-import { changePasswordService } from "@services/user/changePasswordService";
+import { useChangePassword } from "@hooks/useChangePassword";
 
 export default function SafetyAndPrivacySettingsComponent(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
+  const { changePassword } = useChangePassword();
 
   function handleModal() {
     isModalOpen ? setIsModalOpen(false) : setIsModalOpen(true);
   }
 
-  function handleChangePassword(e: { preventDefault: () => void; }) {
+  function handleChangePassword(e: { preventDefault: () => void }) {
     e.preventDefault();
-    changePasswordService(password);
-    setPassword("")
+    changePassword({ password });
   }
 
   return (

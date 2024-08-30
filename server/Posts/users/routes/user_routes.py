@@ -77,11 +77,18 @@ def get_user_profile():
 @user_routes.route("/change-password", methods=["PATCH"])
 @jwt_required()
 def change_user_password():
-    new_password = request.form.get("new_password")
+    try:
+        new_password = request.form.get("new_password")
 
-    change_password(current_user.id, new_password)
+        change_password(current_user.id, new_password)
 
-    return jsonify({"message": "Password change successful"}), 200
+        return jsonify({"message": "Password change successful"}), 200
+    except SQLAlchemyError as e:
+        return AppException(
+            user_message="Could not change password",
+            internal_message=f"{str(e)}",
+            status_code=500,
+        )
 
 
 @user_routes.route("/")
