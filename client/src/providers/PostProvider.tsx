@@ -14,6 +14,7 @@ export default function PostContextProvider({
 
   const { postId } = useParams();
   const { post, isLoading } = useFetchPost(postId!);
+  const { deletePost } = useDeletePost();
 
   const commentsById = useMemo(() => {
     const comments = {};
@@ -37,7 +38,7 @@ export default function PostContextProvider({
           post,
           replies: getReplies,
           updatePost: useUpdatePost,
-          deletePost: useDeletePost,
+          deletePost,
         }}
       >
         {children}

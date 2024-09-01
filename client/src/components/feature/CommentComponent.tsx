@@ -3,6 +3,7 @@ import {
   MdOutlineThumbUp,
   MdModeComment,
   MdOutlineRepeat,
+  MdDelete,
 } from "react-icons/md";
 import React, { useState } from "react";
 
@@ -17,6 +18,8 @@ import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
 import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
 import useFetchImage from "@hooks/useFetchImage";
+import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
+import useDeletePost from "@hooks/useDeletePost";
 
 import AuthPage from "@pages/AuthPage";
 import approvePostService from "@services/posts/approvePostService";
@@ -24,7 +27,6 @@ import disapprovePostService from "@services/posts/disapprovePostService";
 import repostPostService from "@services/posts/repostPostService";
 
 import { PostData } from "types/data/postData";
-import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 type CommentComponentProps = {
   post: PostData;
@@ -40,7 +42,8 @@ export default function CommentComponent({
 
   const CREATE_COMMENT_ROUTE: string = `/api/v1/posts/${post.id}/create-comment`;
 
-  const { image } = useFetchImage(post.post_file!)
+  const { image } = useFetchImage(post.post_file!);
+  const { deletePost } = useDeletePost();
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
@@ -55,6 +58,10 @@ export default function CommentComponent({
     switch (action) {
       case "approve":
         approvePostService(post.id);
+        break;
+
+      case "delete":
+        deletePost({ postId: post.id });
         break;
 
       case "disapprove":
@@ -133,6 +140,14 @@ export default function CommentComponent({
           <MdModeComment />
           Reply
         </ButtonComponent>
+        {authenticatedUser && authenticatedUser.id === post.author_id && (
+          <ButtonComponent
+            variant="postInteractionButton"
+            onClick={() => handlePostInterraction("delete")}
+          >
+            <MdDelete style={{ color: "red" }} />
+          </ButtonComponent>
+        )}
       </div>
       {post.children!.length > 0 && (
         <ButtonComponent variant="linkButton" onClick={handleShowReplies}>
@@ -147,7 +162,9 @@ export default function CommentComponent({
           />
         </div>
       )}
-      {isModalOpen && !authenticatedUser && <AuthPage closeModal={handleModal} />}
+      {isModalOpen && !authenticatedUser && (
+        <AuthPage closeModal={handleModal} />
+      )}
       {isModalOpen && authenticatedUser && (
         <PostForm
           handleFormModal={handleModal}

@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 
 import { AuthContext } from "@contexts/authContext";
 import { changePasswordService } from "@services/user/changePasswordService";
-import { useNavigate } from "react-router-dom";
 
 
 export function useChangePassword() {

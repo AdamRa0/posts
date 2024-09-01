@@ -5,6 +5,7 @@ import {
   MdOutlineThumbUp,
   MdArrowBack,
   MdAdd,
+  MdDelete
 } from "react-icons/md";
 import styles from "./postpage.module.css";
 import React, { useContext, useState } from "react";
@@ -26,7 +27,7 @@ export default function PostPage(): React.JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { postId } = useParams();
   const { authenticatedUser: user } = useGetAuthenticatedUser();
-  const { post, replies } = useContext<PostContextProps>(PostContext);
+  const { post, replies, deletePost } = useContext<PostContextProps>(PostContext);
   const navigate = useNavigate();
 
   const comments = replies(postId! as UUID);
@@ -90,6 +91,14 @@ export default function PostPage(): React.JSX.Element {
               ? formatNumber(post!.comments)
               : post!.comments}
           </ButtonComponent>
+          {user && user.id === post!.author_id && (
+            <ButtonComponent variant="postInteractionButton" onClick={() => {
+              deletePost({postId: postId! as UUID});
+              handleBackNavigation();
+            }}>
+              <MdDelete style={{ color: "red" }} />
+            </ButtonComponent>
+          )}
         </div>
         <div>
           <ButtonComponent variant="addCommentButton" onClick={handleModal}>
