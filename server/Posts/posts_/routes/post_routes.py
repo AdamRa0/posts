@@ -179,9 +179,16 @@ def disapprove_post(post_id: str):
 @post_routes.route("/<post_id>", methods=["DELETE"])
 @jwt_required()
 def delete_user_post(post_id: str):
-    delete_post(current_app, post_id)
+    try:
+        delete_post(current_app, post_id)
 
-    return jsonify({}), 204
+        return jsonify({}), 204
+    except Exception as e:
+        raise AppException(
+            user_message="Could not delete post",
+            internal_message=f"{str(e)}",
+            status_code=500
+        )
 
 
 @post_routes.route("/<post_id>/repost", methods=["PATCH"])

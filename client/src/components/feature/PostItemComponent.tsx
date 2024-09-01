@@ -3,6 +3,7 @@ import {
   MdOutlineThumbUp,
   MdModeComment,
   MdOutlineRepeat,
+  MdDelete,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
@@ -15,6 +16,8 @@ import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
 import useFetchImage from "@hooks/useFetchImage";
 
+import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
+import useDeletePost from "@hooks/useDeletePost";
 import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
 import AuthPage from "@pages/AuthPage";
 import approvePostService from "@services/posts/approvePostService";
@@ -22,7 +25,6 @@ import disapprovePostService from "@services/posts/disapprovePostService";
 import repostPostService from "@services/posts/repostPostService";
 
 import { PostData } from "types/data/postData";
-import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 type PostItemComponentProps = {
   post: PostData;
@@ -37,6 +39,7 @@ export default function PostItemComponent({
   const navigate = useNavigate();
 
   const { image } = useFetchImage(post.post_file!);
+  const { deletePost } = useDeletePost();
 
   function handleModal(e: { stopPropagation: () => void }) {
     e.stopPropagation();
@@ -57,6 +60,10 @@ export default function PostItemComponent({
     switch (action) {
       case "approve":
         approvePostService(post.id);
+        break;
+
+      case "delete":
+        deletePost({ postId: post.id });
         break;
 
       case "disapprove":
@@ -131,6 +138,14 @@ export default function PostItemComponent({
           <MdModeComment />
           {post.comments >= 1000 ? formatNumber(post.comments) : post.comments}
         </ButtonComponent>
+        {authenticatedUser && authenticatedUser.id === post.author_id && (
+          <ButtonComponent
+            variant="postInteractionButton"
+            onClick={(e) => handlePostInterraction(e, "delete")}
+          >
+            <MdDelete style={{ color: "red" }} />
+          </ButtonComponent>
+        )}
       </div>
       {isModalOpen ? <AuthPage closeModal={(e) => handleModal(e)} /> : null}
     </>

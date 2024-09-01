@@ -15,7 +15,7 @@ def delete_post(app: Flask, post_id: str):
     post_to_delete: PostModel = get_post(post_id)
 
     if post_to_delete.post_file is not None:
-        os.remove(UPLOAD_FOLDER_PATH, post_to_delete.post_file)
+        os.remove(os.path.join(UPLOAD_FOLDER_PATH, post_to_delete.post_file))
 
     if post_to_delete.parent is not None:
         post_to_delete.parent.comments -= 1
