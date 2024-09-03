@@ -19,7 +19,8 @@ export default function HeaderComponent() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const { signOut } = useContext<authContextProp>(AuthContext);
-  const { usersLoading, users } = useGetUsers();
+  const { users } = useGetUsers();
+  const [queriedUsers, setQueriedUsers] = useState(users);
 
   const { authenticatedUser } = useGetAuthenticatedUser();
 
@@ -34,6 +35,11 @@ export default function HeaderComponent() {
   function handleOpenModal() {
     setIsOptionsMenuOpen(false);
     setIsModalOpen(true);
+  }
+
+  function handleSearch(query: string) {
+    const filteredUsers = users.filter((user) => user.handle.includes(query));
+    setQueriedUsers([...filteredUsers]);
   }
 
   return (
@@ -52,6 +58,7 @@ export default function HeaderComponent() {
             placeholder="Search Posts"
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
+            onChange={(e) => handleSearch(e.target.value)}
           />
           <span className={styles.searchLogoContainer}>
             <MdSearch className={styles.searchLogo} />
@@ -105,12 +112,16 @@ export default function HeaderComponent() {
         ) : null}
       </header>
       {isModalOpen ? <AuthPage closeModal={handleCloseModal} /> : null}
-      {isFocus && <div className={styles.queryContentContainer}
-        tabIndex={0}
-        onClick={(e) => e.preventDefault()}
-        onMouseDown={(e) => e.preventDefault()}>
-        <ListComponent data={users} typeOfData="user"/>
-      </div>}
+      {isFocus && (
+        <div
+          className={styles.queryContentContainer}
+          tabIndex={0}
+          onClick={(e) => e.preventDefault()}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <ListComponent data={queriedUsers} typeOfData="user" />
+        </div>
+      )}
     </>
   );
 }
