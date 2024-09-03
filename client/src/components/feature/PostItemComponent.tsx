@@ -1,7 +1,10 @@
 import {
+  MdOutlineThumbDownAlt,
   MdOutlineThumbDown,
+  MdOutlineThumbUpAlt,
   MdOutlineThumbUp,
   MdModeComment,
+  MdOutlineRepeatOn,
   MdOutlineRepeat,
   MdDelete,
 } from "react-icons/md";
@@ -18,10 +21,10 @@ import useFetchImage from "@hooks/useFetchImage";
 
 import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
 import useDeletePost from "@hooks/useDeletePost";
+import { useApprovePost, useUnapprovePost } from "@hooks/useApproveUnApprovePost";
+import { useDispprovePost, useUndisapprovePost } from "@hooks/usedisapproveUnDisapprovePost";
 import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
 import AuthPage from "@pages/AuthPage";
-import approvePostService from "@services/posts/approvePostService";
-import disapprovePostService from "@services/posts/disapprovePostService";
 import repostPostService from "@services/posts/repostPostService";
 
 import { PostData } from "types/data/postData";
@@ -40,6 +43,20 @@ export default function PostItemComponent({
 
   const { image } = useFetchImage(post.post_file!);
   const { deletePost } = useDeletePost();
+  const { approve } = useApprovePost();
+  const { unapprove } = useUnapprovePost();
+  const { disapprove } = useDispprovePost();
+  const { undisapprove } = useUndisapprovePost();
+
+  const postLiked = post.liked_by.find(
+    (userLiked) => userLiked.id === authenticatedUser.id
+  );
+  const postDisliked = post.disliked_by.find(
+    (userDisliked) => userDisliked.id === authenticatedUser.id
+  );
+  const postReposted = post.reposted_by.find(
+    (userReposted) => userReposted.id === authenticatedUser.id
+  );
 
   function handleModal(e: { stopPropagation: () => void }) {
     e.stopPropagation();
@@ -59,7 +76,7 @@ export default function PostItemComponent({
 
     switch (action) {
       case "approve":
-        approvePostService(post.id);
+        postLiked ? unapprove(post.id) : approve(post.id);
         break;
 
       case "delete":
@@ -67,7 +84,7 @@ export default function PostItemComponent({
         break;
 
       case "disapprove":
-        disapprovePostService(post.id);
+        postDisliked ? undisapprove(post.id) : disapprove(post.id);
         break;
 
       case "comment":
@@ -105,8 +122,13 @@ export default function PostItemComponent({
         <ButtonComponent
           variant="postInteractionButton"
           onClick={(e) => handlePostInterraction(e, "approve")}
+          disabled={postDisliked}
         >
-          <MdOutlineThumbUp />
+          {postLiked ? (
+            <MdOutlineThumbUp />
+          ) : (
+            <MdOutlineThumbUpAlt />
+          )}
           {post.approvals >= 1000
             ? formatNumber(post.approvals)
             : post.approvals}
@@ -114,8 +136,13 @@ export default function PostItemComponent({
         <ButtonComponent
           variant="postInteractionButton"
           onClick={(e) => handlePostInterraction(e, "disapprove")}
+          disabled={postLiked}
         >
-          <MdOutlineThumbDown />
+          {authenticatedUser && postDisliked ? (
+            <MdOutlineThumbDown />
+          ) : (
+            <MdOutlineThumbDownAlt />
+          )}
           {post.disapprovals >= 1000
             ? formatNumber(post.disapprovals)
             : post.disapprovals}
@@ -124,7 +151,11 @@ export default function PostItemComponent({
           variant="postInteractionButton"
           onClick={(e) => handlePostInterraction(e, "repost")}
         >
-          <MdOutlineRepeat />
+          {authenticatedUser && postReposted ? (
+            <MdOutlineRepeatOn />
+          ) : (
+            <MdOutlineRepeat />
+          )}
           {post.reposts
             ? post.reposts >= 1000
               ? formatNumber(post.reposts)

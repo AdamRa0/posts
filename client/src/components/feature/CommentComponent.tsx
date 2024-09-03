@@ -22,8 +22,7 @@ import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
 import useDeletePost from "@hooks/useDeletePost";
 
 import AuthPage from "@pages/AuthPage";
-import approvePostService from "@services/posts/approvePostService";
-import disapprovePostService from "@services/posts/disapprovePostService";
+import {approvePostService} from "@services/posts/approvePostService";
 import repostPostService from "@services/posts/repostPostService";
 
 import { PostData } from "types/data/postData";
@@ -65,7 +64,7 @@ export default function CommentComponent({
         break;
 
       case "disapprove":
-        disapprovePostService(post.id);
+        // disapprovePostService(post.id);
         break;
 
       case "reply":
