@@ -1,4 +1,5 @@
 import { UUID } from "crypto"
+import { User } from "./userData"
 
 export type PostData = {
     id: UUID,
@@ -13,4 +14,7 @@ export type PostData = {
     time_created: Date,
     time_edited: Date,
     post_file?: string,
+    liked_by: User[],
+    disliked_by: User[],
+    reposted_by: User[],
 }

@@ -16,12 +16,31 @@ def like_post(post_id: str, user_id: str):
     db.session.commit()
 
 
+def unlike_post(post_id: str, user_id: str):
+    post = get_post(post_id)
+    user = get_user_by_id(user_id)
+
+    post.approvals -= 1
+    user.likes.remove(post)
+
+    db.session.commit()
+
+
 def dislike_post(post_id: str, user_id: str):
     post = get_post(post_id)
     user = get_user_by_id(user_id)
 
-    post.disapprovals -= 1
-    user.likes.remove(post)
+    post.disapprovals += 1
     user.dislikes.append(post)
+
+    db.session.commit()
+
+
+def undislike_post(post_id: str, user_id: str):
+    post = get_post(post_id)
+    user = get_user_by_id(user_id)
+
+    post.disapprovals -= 1
+    user.dislikes.remove(post)
 
     db.session.commit()

@@ -1,9 +1,12 @@
 import {
-  MdOutlineThumbDown,
-  MdOutlineThumbUp,
   MdModeComment,
   MdOutlineRepeat,
   MdDelete,
+  MdOutlineRepeatOn,
+  MdOutlineThumbDownAlt,
+  MdOutlineThumbUpAlt,
+  MdThumbDown,
+  MdThumbUp,
 } from "react-icons/md";
 import React, { useState } from "react";
 
@@ -20,11 +23,17 @@ import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
 import useFetchImage from "@hooks/useFetchImage";
 import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
 import useDeletePost from "@hooks/useDeletePost";
+import {
+  useApprovePost,
+  useUnapprovePost,
+} from "@hooks/useApproveUnApprovePost";
+import {
+  useDispprovePost,
+  useUndisapprovePost,
+} from "@hooks/usedisapproveUnDisapprovePost";
+import { useRemoveRepost, useRepost } from "@hooks/useRepostRemoveRepost";
 
 import AuthPage from "@pages/AuthPage";
-import approvePostService from "@services/posts/approvePostService";
-import disapprovePostService from "@services/posts/disapprovePostService";
-import repostPostService from "@services/posts/repostPostService";
 
 import { PostData } from "types/data/postData";
 
@@ -44,6 +53,22 @@ export default function CommentComponent({
 
   const { image } = useFetchImage(post.post_file!);
   const { deletePost } = useDeletePost();
+  const { approve } = useApprovePost();
+  const { unapprove } = useUnapprovePost();
+  const { disapprove } = useDispprovePost();
+  const { undisapprove } = useUndisapprovePost();
+  const { repost } = useRepost();
+  const { removeRepost } = useRemoveRepost();
+
+  const postLiked = post.liked_by.find(
+    (userLiked) => userLiked.id === authenticatedUser.id
+  );
+  const postDisliked = post.disliked_by.find(
+    (userDisliked) => userDisliked.id === authenticatedUser.id
+  );
+  const postReposted = post.reposted_by.find(
+    (userReposted) => userReposted.id === authenticatedUser.id
+  );
 
   function handleModal() {
     setIsModalOpen(!isModalOpen);
@@ -57,7 +82,7 @@ export default function CommentComponent({
 
     switch (action) {
       case "approve":
-        approvePostService(post.id);
+        postLiked ? unapprove(post.id) : approve(post.id);
         break;
 
       case "delete":
@@ -65,15 +90,15 @@ export default function CommentComponent({
         break;
 
       case "disapprove":
-        disapprovePostService(post.id);
+        postDisliked ? undisapprove(post.id) : disapprove(post.id);
+        break;
+
+      case "repost":
+        postReposted ? removeRepost(post.id) : repost(post.id);
         break;
 
       case "reply":
         handleModal();
-        break;
-
-      case "repost":
-        repostPostService(post.id);
         break;
 
       default:
@@ -107,8 +132,9 @@ export default function CommentComponent({
         <ButtonComponent
           variant="postInteractionButton"
           onClick={() => handlePostInterraction("approve")}
+          disabled={postDisliked}
         >
-          <MdOutlineThumbUp />
+          {postLiked ? <MdThumbUp /> : <MdOutlineThumbUpAlt />}
           {post.approvals >= 1000
             ? formatNumber(post.approvals)
             : post.approvals}
@@ -116,8 +142,13 @@ export default function CommentComponent({
         <ButtonComponent
           variant="postInteractionButton"
           onClick={() => handlePostInterraction("disapprove")}
+          disabled={postLiked}
         >
-          <MdOutlineThumbDown />
+          {authenticatedUser && postDisliked ? (
+            <MdThumbDown />
+          ) : (
+            <MdOutlineThumbDownAlt />
+          )}
           {post.disapprovals >= 1000
             ? formatNumber(post.disapprovals)
             : post.disapprovals}
@@ -126,7 +157,11 @@ export default function CommentComponent({
           variant="postInteractionButton"
           onClick={() => handlePostInterraction("repost")}
         >
-          <MdOutlineRepeat />
+          {authenticatedUser && postReposted ? (
+            <MdOutlineRepeatOn />
+          ) : (
+            <MdOutlineRepeat />
+          )}
           {post.reposts
             ? post.reposts >= 1000
               ? formatNumber(post.reposts)

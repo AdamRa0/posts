@@ -8,7 +8,12 @@ from ..controllers.get_posts import (
     get_replies,
     get_media,
 )
-from ..controllers.like_dislike_post import like_post, dislike_post
+from ..controllers.like_dislike_post import (
+    like_post,
+    dislike_post,
+    unlike_post,
+    undislike_post,
+)
 
 from ..controllers.repost_derepost import repost, del_repost
 from ..controllers.update_post import update_post
@@ -67,7 +72,9 @@ def create_new_post():
             uploaded_file = None
 
         create_post(
-            PostCreationModel(body=body, author_id=current_user.id, post_file=uploaded_file)
+            PostCreationModel(
+                body=body, author_id=current_user.id, post_file=uploaded_file
+            )
         )
 
         author_posts = get_post_by_author_id(current_user.id)
@@ -77,7 +84,7 @@ def create_new_post():
         raise AppException(
             user_message="Could not create post",
             internal_message=f"SQLAlchemyError: {str(e)}",
-            status_code=500
+            status_code=500,
         )
 
 
@@ -163,17 +170,61 @@ def patch_post(body: PostUpdateModel):
 @post_routes.route("/<post_id>/approve", methods=["PATCH"])
 @jwt_required()
 def approve_post(post_id: str):
-    like_post(post_id, current_user.id)
+    try:
+        like_post(post_id, current_user.id)
 
-    return jsonify({"status": "success"}), 200
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        raise AppException(
+            user_message="Failed to like post. Please try again",
+            internal_message=str(e),
+            status_code=500,
+        )
+
+
+@post_routes.route("/<post_id>/unapprove", methods=["PATCH"])
+@jwt_required()
+def unapprove_post(post_id: str):
+    try:
+        unlike_post(post_id, current_user.id)
+
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        raise AppException(
+            user_message="Failed to unlike post. Please try again",
+            internal_message=str(e),
+            status_code=500,
+        )
 
 
 @post_routes.route("/<post_id>/disapprove", methods=["PATCH"])
 @jwt_required()
 def disapprove_post(post_id: str):
-    dislike_post(post_id, current_user.id)
+    try:
+        dislike_post(post_id, current_user.id)
 
-    return jsonify({"status": "success"}), 200
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        raise AppException(
+            user_message="Failed to dislike post. Please try again",
+            internal_message=str(e),
+            status_code=500,
+        )
+
+
+@post_routes.route("/<post_id>/undisapprove", methods=["PATCH"])
+@jwt_required()
+def undisapprove_post(post_id: str):
+    try:
+        undislike_post(post_id, current_user.id)
+
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        raise AppException(
+            user_message="Failed to undislike post. Please try again",
+            internal_message=str(e),
+            status_code=500,
+        )
 
 
 @post_routes.route("/<post_id>", methods=["DELETE"])
@@ -187,24 +238,38 @@ def delete_user_post(post_id: str):
         raise AppException(
             user_message="Could not delete post",
             internal_message=f"{str(e)}",
-            status_code=500
+            status_code=500,
         )
 
 
 @post_routes.route("/<post_id>/repost", methods=["PATCH"])
 @jwt_required()
 def repost_post(post_id: str):
-    repost(post_id, current_user.id)
+    try:
+        repost(post_id, current_user.id)
 
-    return jsonify({"status": "success"}), 200
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        raise AppException(
+            user_message="Failed to repost post. Please try again",
+            internal_message=str(e),
+            status_code=500,
+        )
 
 
 @post_routes.route("/<post_id>/remove-repost", methods=["PATCH"])
 @jwt_required()
 def remove_repost(post_id: str):
-    del_repost(post_id, current_user.id)
+    try:
+        del_repost(post_id, current_user.id)
 
-    return jsonify({"status": "success"}), 200
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        raise AppException(
+            user_message="Failed to remove repost. Please try again",
+            internal_message=str(e),
+            status_code=500,
+        )
 
 
 @post_routes.route("/<post_id>/create-comment", methods=["POST"])
