@@ -2,20 +2,25 @@ import { MdSearch } from "react-icons/md";
 import { FiMoreHorizontal, FiLogIn } from "react-icons/fi";
 import { useContext, useState } from "react";
 
+import AvatarComponent from "./AvatarComponent";
+import ListComponent from "./ListComponent";
 import styles from "./headercomponent.module.css";
 
 import InputComponent from "@components/ui/InputComponent";
 import ButtonComponent from "@components/ui/ButtonComponent";
-import AuthPage from "@pages/AuthPage";
 import { AuthContext } from "@contexts/authContext";
+import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
+import useGetUsers from "@hooks/useGetUsers";
+import AuthPage from "@pages/AuthPage";
 import { authContextProp } from "types/props/AuthContextProps";
-import AvatarComponent from "./AvatarComponent";
-import { useGetAuthenticatedUser } from "@/hooks/useGetUser ";
 
 export default function HeaderComponent() {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isFocus, setIsFocus] = useState<boolean>(false);
   const { signOut } = useContext<authContextProp>(AuthContext);
+  const { users } = useGetUsers();
+  const [queriedUsers, setQueriedUsers] = useState(users);
 
   const { authenticatedUser } = useGetAuthenticatedUser();
 
@@ -32,6 +37,11 @@ export default function HeaderComponent() {
     setIsModalOpen(true);
   }
 
+  function handleSearch(query: string) {
+    const filteredUsers = users.filter((user) => user.handle.includes(query));
+    setQueriedUsers([...filteredUsers]);
+  }
+
   return (
     <>
       <header className={styles.header}>
@@ -46,6 +56,9 @@ export default function HeaderComponent() {
             className={"search"}
             type="text"
             placeholder="Search Posts"
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
+            onChange={(e) => handleSearch(e.target.value)}
           />
           <span className={styles.searchLogoContainer}>
             <MdSearch className={styles.searchLogo} />
@@ -99,6 +112,16 @@ export default function HeaderComponent() {
         ) : null}
       </header>
       {isModalOpen ? <AuthPage closeModal={handleCloseModal} /> : null}
+      {isFocus && (
+        <div
+          className={styles.queryContentContainer}
+          tabIndex={0}
+          onClick={(e) => e.preventDefault()}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <ListComponent data={queriedUsers} typeOfData="user" />
+        </div>
+      )}
     </>
   );
 }

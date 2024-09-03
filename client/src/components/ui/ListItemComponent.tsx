@@ -2,6 +2,7 @@ import styles from "./listitemcomponent.module.css";
 
 import { useNavigate } from "react-router-dom";
 
+import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
 import PostItemComponent from "@components/feature/PostItemComponent";
 import CommentComponent from "@components/feature/CommentComponent";
 
@@ -20,7 +21,7 @@ export default function ListItemComponent({
   const link =
     typeOfData === "post"
       ? `/post/${item.id}`
-      : `/user/${(item as User).id}`;
+      : `/user/${item.id}`;
 
   const navigate = useNavigate();
 
@@ -42,6 +43,9 @@ export default function ListItemComponent({
         {typeOfData === "post" && <PostItemComponent post={item as PostData} />}
         {typeOfData === "comment" && (
           <CommentComponent post={item as PostData} />
+        )}
+        {typeOfData === "user" && (
+          <AuthorDetailsComponent authorID={item.id} />
         )}
       </li>
     </>
