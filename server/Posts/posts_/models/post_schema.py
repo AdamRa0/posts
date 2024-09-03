@@ -12,6 +12,7 @@ class PostSchema(ma.Schema):
     disapprovals = fields.Int()
     reposts = fields.Int()
     comments = fields.Int()
+    parent = fields.Nested(lambda: PostSchema(exclude=("children",)))
     parent_id = fields.UUID()
     children = fields.List(fields.Nested(lambda: PostSchema))
     liked_by = fields.List(fields.Nested(lambda: UserSchema))

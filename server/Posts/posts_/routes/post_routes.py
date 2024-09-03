@@ -266,7 +266,7 @@ def remove_repost(post_id: str):
         return jsonify({"status": "success"}), 200
     except Exception as e:
         raise AppException(
-            user_message="Failed to unrepost post. Please try again",
+            user_message="Failed to remove repost. Please try again",
             internal_message=str(e),
             status_code=500,
         )

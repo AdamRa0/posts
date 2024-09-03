@@ -1,12 +1,12 @@
 import {
   MdOutlineThumbDownAlt,
-  MdOutlineThumbDown,
   MdOutlineThumbUpAlt,
-  MdOutlineThumbUp,
   MdModeComment,
   MdOutlineRepeatOn,
   MdOutlineRepeat,
   MdDelete,
+  MdThumbUp,
+  MdThumbDown,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
@@ -15,17 +15,24 @@ import styles from "./postitemcomponent.module.css";
 
 import ButtonComponent from "@components/ui/ButtonComponent";
 import AuthorDetailsComponent from "@components/ui/AuthorDetailsComponent";
+
 import dateFormatter from "@helpers/dateFormatter";
 import formatNumber from "@helpers/numericalFormatter";
-import useFetchImage from "@hooks/useFetchImage";
 
+import useFetchImage from "@hooks/useFetchImage";
 import { useGetAuthenticatedUser } from "@hooks/useGetUser ";
 import useDeletePost from "@hooks/useDeletePost";
-import { useApprovePost, useUnapprovePost } from "@hooks/useApproveUnApprovePost";
-import { useDispprovePost, useUndisapprovePost } from "@hooks/usedisapproveUnDisapprovePost";
+import {
+  useApprovePost,
+  useUnapprovePost,
+} from "@hooks/useApproveUnApprovePost";
+import {
+  useDispprovePost,
+  useUndisapprovePost,
+} from "@hooks/usedisapproveUnDisapprovePost";
 import useFetchPostAuthorDetails from "@hooks/useFetchPostAuthorDetails";
+import { useRemoveRepost, useRepost } from "@hooks/useRepostRemoveRepost";
 import AuthPage from "@pages/AuthPage";
-import repostPostService from "@services/posts/repostPostService";
 
 import { PostData } from "types/data/postData";
 
@@ -47,6 +54,8 @@ export default function PostItemComponent({
   const { unapprove } = useUnapprovePost();
   const { disapprove } = useDispprovePost();
   const { undisapprove } = useUndisapprovePost();
+  const { repost } = useRepost();
+  const { removeRepost } = useRemoveRepost();
 
   const postLiked = post.liked_by.find(
     (userLiked) => userLiked.id === authenticatedUser.id
@@ -92,7 +101,7 @@ export default function PostItemComponent({
         break;
 
       case "repost":
-        repostPostService(post.id);
+        postReposted ? removeRepost(post.id) : repost(post.id);
         break;
 
       default:
@@ -124,11 +133,7 @@ export default function PostItemComponent({
           onClick={(e) => handlePostInterraction(e, "approve")}
           disabled={postDisliked}
         >
-          {postLiked ? (
-            <MdOutlineThumbUp />
-          ) : (
-            <MdOutlineThumbUpAlt />
-          )}
+          {postLiked ? <MdThumbUp /> : <MdOutlineThumbUpAlt />}
           {post.approvals >= 1000
             ? formatNumber(post.approvals)
             : post.approvals}
@@ -139,7 +144,7 @@ export default function PostItemComponent({
           disabled={postLiked}
         >
           {authenticatedUser && postDisliked ? (
-            <MdOutlineThumbDown />
+            <MdThumbDown />
           ) : (
             <MdOutlineThumbDownAlt />
           )}
