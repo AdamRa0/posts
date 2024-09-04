@@ -1,5 +1,5 @@
 from ...app_exception import AppException
-from ...database.db import jwt
+from ...database.db import jwt, mail
 from ..models.user_signup import UserSignUp
 from ..models.user_signin import UserSignIn
 from ...users.controllers.account_creation_and_use.create_user import create_new_user
@@ -11,13 +11,14 @@ from ...users.controllers.account_management.deactivate_reactivate_user import (
     account_activation_manager,
 )
 
-from flask import Blueprint, jsonify, Response
+from flask import Blueprint, jsonify, Response, request
 from flask_pydantic import validate
 from flask_jwt_extended import (
     create_access_token,
     set_access_cookies,
     unset_access_cookies,
 )
+from flask_mail import Message #type: ignore
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 from werkzeug.security import check_password_hash
 
@@ -108,5 +109,37 @@ def signout_user():
         raise AppException(
             user_message="Something went wrong.",
             internal_message=f"Internal server error: {str(e)}",
+            status_code=500
+        )
+
+
+@auth_routes.route("/forgot-username", methods=['POST'])
+def forgot_username():
+    email_address = request.form.get("email_address")
+
+    user = get_user_by_email(email_address)
+
+    if not user:
+        raise AppException(
+            user_message="User not found.",
+            status_code=404
+        )
+
+    try:
+        msg = Message(subject="Retrieved username", sender="posts@posts.io", recipients=[str(user.email_address)])
+
+        msg.body = f"""
+        Your recovered username is {user.username}
+
+        Please do not send an email to this address.
+        """
+
+        mail.send(msg)
+
+        return jsonify({ "status": "success" }), 200
+    except Exception as e:
+        raise AppException(
+            user_message="Could not send mail. Please try again.",
+            internal_message=str(e),
             status_code=500
         )

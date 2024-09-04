@@ -5,10 +5,12 @@ import ButtonComponent from "@components/ui/ButtonComponent";
 import InputComponent from "@components/ui/InputComponent";
 import { AuthContext } from "@contexts/authContext";
 
+import { useForgetUsername } from "@hooks/useForgotUsername";
 import { AuthFormReducerActions } from "types/actions/authFormReducerActions";
 import { RenderData } from "types/enums/renderData";
 import { AuthFormProps } from "types/props/AuthFormProps";
 import { AuthFormState } from "types/states/authFomState";
+import toast from "react-hot-toast";
 
 function reducer(
   currentUserDetails: AuthFormState,
@@ -55,6 +57,8 @@ export default function AuthForm({
   const [userDetails, dispatch] = useReducer(reducer, initialState);
   const { signIn, signUp } = useContext(AuthContext);
 
+  const { forgotUsername } = useForgetUsername();
+
   function handleOnChange(dispatchType: string, data: string) {
     dispatch({ type: dispatchType, data: data });
   }
@@ -68,6 +72,11 @@ export default function AuthForm({
         break;
       case 1:
         signIn!(userDetails);
+        closeModal();
+        break;
+      case 2:
+        forgotUsername(userDetails.emailAddress);
+        toast.success("You should receive your username shortly.")
         closeModal();
         break;
       default:

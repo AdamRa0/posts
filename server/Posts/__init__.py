@@ -16,8 +16,6 @@ from flask_jwt_extended import (
     create_access_token,
     set_access_cookies,
 )
-from flask_mail import Message
-
 
 COOKIE_MAX_AGE: int = 172800
 
