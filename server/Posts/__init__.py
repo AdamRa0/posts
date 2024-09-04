@@ -6,7 +6,7 @@ from .users.routes.user_routes import user_routes
 from .posts_.routes.post_routes import post_routes
 from .media.routes.media_routes import media_routes
 from .auth.routes.auth_routes import auth_routes
-from .database.db import create_tables, init_app
+from .database.db import create_tables, init_app, mail
 from .app_exception import AppException
 
 from flask import Flask, jsonify
@@ -16,7 +16,6 @@ from flask_jwt_extended import (
     create_access_token,
     set_access_cookies,
 )
-
 
 COOKIE_MAX_AGE: int = 172800
 
@@ -84,5 +83,6 @@ def create_app():
             return response
         except (RuntimeError, KeyError):
             return response
+
 
     return app

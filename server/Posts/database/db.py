@@ -7,11 +7,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from flask_mail import Mail # type: ignore
 
 
 db = SQLAlchemy()
 ma = Marshmallow()
 jwt = JWTManager()
+mail = Mail()
 
 
 @jwt.unauthorized_loader
@@ -46,8 +48,15 @@ def init_app(app: Flask):
         app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=2)
         app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
         app.config["UPLOAD_FOLDER"] = "uploads"
+        app.config['MAIL_SERVER']= os.environ.get("MAIL_SERVER")
+        app.config['MAIL_PORT'] = os.environ.get("MAIL_PORT")
+        app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
+        app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
+        app.config['MAIL_USE_TLS'] = os.environ.get("MAIL_USE_TLS")
+        app.config['MAIL_USE_SSL'] = os.environ.get("MAIL_USE_SSL")
 
     CORS(app)
+    mail.init_app(app)
     db.init_app(app)
     Migrate(app, db)
     ma.init_app(app)

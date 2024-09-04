@@ -25,6 +25,14 @@ To run the project locally, first make the following changes.
   - JWT_ACCESS_TOKEN_EXPIRES
   - MAX_CONTENT_LENGTH
   - UPLOAD_FOLDER
+  - MAIL_SERVER
+  - MAIL_PORT
+  - MAIL_USERNAME
+  - MAIL_PASSWORD
+  - MAIL_USE_TLS
+  - MAIL_USE_SSL
+
+- The mail environemnt variables and their values are from the MailTrap delivery platform.
 
 - Inside the client folder, change the vite.config.ts file from
 ```typescript
@@ -82,6 +90,8 @@ docker compose up -f compose.dev.yaml --build
 - Pydantic
 - PyTest
 - ReactJS
+- ReactQuery
+- MailTrap
 
 ## Acknowledgments
 - [Banner Image by Rasmus Smedstrup Mortensen on Unsplash](https://unsplash.com/photos/_ZtPsxAomeI?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink)
