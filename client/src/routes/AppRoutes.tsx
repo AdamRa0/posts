@@ -1,10 +1,13 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import AppLayout from "@layouts/AppLayout";
+
 import HomePage from "@pages/HomePage";
 import UserPage from "@pages/UserPage";
 import SettingsPage from "@pages/SettingsPage";
 import PostPage from "@pages/PostPage";
-import AppLayout from "@layouts/AppLayout";
+import ResetPassword from "@pages/ResetPassword";
 import PostContextProvider from "@providers/PostProvider";
 
 const routes = createBrowserRouter([
@@ -32,6 +35,15 @@ const routes = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: "/reset-password",
+        children: [
+          {
+            path: ":userId",
+            element: <ResetPassword />,
+          }
+        ]
       },
     ],
   },

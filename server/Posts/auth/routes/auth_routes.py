@@ -1,3 +1,4 @@
+from ...users.controllers.account_management.change_password import change_password
 from ...app_exception import AppException
 from ...database.db import jwt, mail
 from ..models.user_signup import UserSignUp
@@ -143,3 +144,46 @@ def forgot_username():
             internal_message=str(e),
             status_code=500
         )
+
+
+@auth_routes.route("/reset-password", methods=['POST', 'PATCH'])
+def reset_password():
+    if request.method == "POST":
+        try:
+            username = request.form.get("username")
+            email_address = request.form.get("email_address")
+            user = get_user_by_email(email_address) 
+
+            if not user or user.username != username:
+                raise AppException(
+                    user_message="User not found.",
+                    internal_message="User not found",
+                    status_code=404
+                )
+            msg = Message(subject="Reset Password", sender="posts@posts.io", recipients=[str(user.email_address)])
+
+            msg.html = f"<b>Hey {user.username}</b>, to reset password <a href='http://localhost:5173/reset-password/{user.id}'>Click here</a>."
+
+            mail.send(msg)
+
+            return jsonify({ "status": "success" }), 200
+        except Exception as e:
+            raise AppException(
+                user_message="Could not send mail. Please try again.",
+                internal_message=str(e),
+                status_code=500
+            )
+        
+    if request.method == "PATCH":
+        try:
+            new_password = request.form.get("password")
+            id = request.form.get("id")
+            change_password(id, new_password)
+
+            return jsonify({"message": "Password change successful"}), 200
+        except SQLAlchemyError as e:
+            return AppException(
+                user_message="Could not change password",
+                internal_message=f"{str(e)}",
+                status_code=500,
+            )

@@ -1,4 +1,5 @@
 import React, { useContext, useReducer } from "react";
+import toast from "react-hot-toast";
 
 import styles from "@components/feature/forms/authform.module.css";
 import ButtonComponent from "@components/ui/ButtonComponent";
@@ -6,11 +7,12 @@ import InputComponent from "@components/ui/InputComponent";
 import { AuthContext } from "@contexts/authContext";
 
 import { useForgetUsername } from "@hooks/useForgotUsername";
+import { useResetPassword } from "@hooks/useResetPassword";
+
 import { AuthFormReducerActions } from "types/actions/authFormReducerActions";
 import { RenderData } from "types/enums/renderData";
 import { AuthFormProps } from "types/props/AuthFormProps";
 import { AuthFormState } from "types/states/authFomState";
-import toast from "react-hot-toast";
 
 function reducer(
   currentUserDetails: AuthFormState,
@@ -57,13 +59,14 @@ export default function AuthForm({
   const [userDetails, dispatch] = useReducer(reducer, initialState);
   const { signIn, signUp } = useContext(AuthContext);
 
-  const { forgotUsername } = useForgetUsername();
+  const { forgotUsername, error } = useForgetUsername();
+  const { resetPassword } = useResetPassword();
 
   function handleOnChange(dispatchType: string, data: string) {
     dispatch({ type: dispatchType, data: data });
   }
 
-  function handleFormSubmit(e: { preventDefault: () => void; }) {
+  function handleFormSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
     switch (state.count) {
       case 0:
@@ -76,7 +79,19 @@ export default function AuthForm({
         break;
       case 2:
         forgotUsername(userDetails.emailAddress);
-        toast.success("You should receive your username shortly.")
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success("You should receive your username shortly.");
+        }
+        closeModal();
+        break;
+      case 3:
+        resetPassword({
+          emailAddress: userDetails.emailAddress,
+          username: userDetails.username,
+        });
+        toast.success("You should receive password reset link shortly.");
         closeModal();
         break;
       default:
