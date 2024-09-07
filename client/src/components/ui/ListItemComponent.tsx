@@ -12,11 +12,13 @@ import { User } from "types/data/userData";
 type ListComponentData = {
   item: PostData | User;
   typeOfData: string;
+  reff?: React.LegacyRef<HTMLLIElement>
 };
 
 export default function ListItemComponent({
   item,
   typeOfData,
+  reff
 }: ListComponentData): React.JSX.Element {
   const link =
     typeOfData === "post"
@@ -39,6 +41,7 @@ export default function ListItemComponent({
         key={item.id}
         onClick={(e) => handleNavigate(e)}
         tabIndex={0}
+        ref={typeOfData === "post" ? reff : undefined}
       >
         {typeOfData === "post" && <PostItemComponent post={item as PostData} />}
         {typeOfData === "comment" && (
