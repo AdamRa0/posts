@@ -2,12 +2,6 @@ import fetchUserPostsService from "@services/posts/fetchUserPosts";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 export default function useFetchUserPosts(userId: string) {
-    // const { isLoading, data: userPosts, error } = useQuery({
-    //     queryKey: ["posts", userId, page],
-    //     queryFn: () => fetchUserPostsService(userId, page.toString())
-    // });
-
-    // return { isLoading, userPosts, error };
     const {
         data,
         error,
