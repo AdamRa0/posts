@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { MdCalendarMonth } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -33,7 +34,11 @@ export default function UserPage(): React.JSX.Element {
 
   const { userId } = useParams();
 
-  const { isLoading, userPosts, error } = useFetchUserPosts(userId!);
+  const { ref, inView } = useInView();
+
+  const { data, error, status, fetchNextPage, hasNextPage } = useFetchUserPosts(
+    userId!
+  );
   const {
     isLoading: likesLoading,
     likes,
@@ -64,7 +69,19 @@ export default function UserPage(): React.JSX.Element {
 
   const isSubscribedToUser = subscribeesLoading
     ? []
-    : subscribees.find((subscribee) => subscribee.id === userId);
+    : subscribees.find((subscribee: { id: string | undefined; }) => subscribee.id === userId);
+
+  const userPosts = useMemo(() => {
+    return data?.pages.reduce((acc, page) => {
+      return [...acc, ...page];
+    }, []);
+  }, [data]);
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
 
   function handleSubscribe() {
     isSubscribedToUser
@@ -184,12 +201,12 @@ export default function UserPage(): React.JSX.Element {
         <div className={styles.pageContent}>
           {/* Posts Tab */}
           {currentTab === TabStates.INPOSTS && error && <p>{error.message}</p>}
-          {currentTab === TabStates.INPOSTS && isLoading && <p>Loading...</p>}
+          {currentTab === TabStates.INPOSTS && status === "pending" && <p>Loading...</p>}
           {currentTab === TabStates.INPOSTS && userPosts ? (
             userPosts.length === 0 ? (
               <p>User hasn&apos;t posted yet</p>
             ) : (
-              <ListComponent data={userPosts} typeOfData="post" />
+              <ListComponent data={userPosts} typeOfData="post" reff={ref}/>
             )
           ) : null}
           {/* Likes Tab */}
