@@ -1,15 +1,31 @@
-import React, { useState } from "react";
 import styles from "./homepage.module.css";
+
+import { UUID } from "crypto";
+import React, { useEffect, useMemo } from "react";
+import { useInView } from "react-intersection-observer";
+
 import ListComponent from "@components/ui/ListComponent";
 import useFetchPosts from "@hooks/useFetchPosts";
 
 export default function HomePage(): React.JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [page, setPage] = useState<number>(1);
+  const { posts, error, status, fetchNextPage, hasNextPage } = useFetchPosts();
+  const { ref, inView } = useInView();
 
-  const { isLoading, posts, error } = useFetchPosts(page);
+  const data = useMemo(() => {
+    return posts?.pages.reduce((acc, page) => {
+      return [...acc, ...page];
+    }, []);
+  }, [posts]);
 
-  const parentPosts = posts?.filter((post) => post.parent_id === null) || [];
+  const parentPosts =
+    data?.filter((post: { parent_id: UUID }) => post.parent_id === null) ||
+    [];
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
 
   if (error)
     return (
@@ -20,16 +36,16 @@ export default function HomePage(): React.JSX.Element {
 
   return (
     <>
-      {isLoading ? (
+      {status === "pending" ? (
         <div className={styles.loaderContainer}>
           <p>Loading...</p>
         </div>
-      ) : posts.length === 0 ? (
+      ) : data.length === 0 ? (
         <div className={styles.container}>
           <p>No posts</p>
         </div>
       ) : (
-        <ListComponent data={parentPosts} typeOfData={"post"} />
+        <ListComponent data={parentPosts} typeOfData={"post"} reff={ref} />
       )}
     </>
   );
